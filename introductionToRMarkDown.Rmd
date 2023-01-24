@@ -5,6 +5,18 @@ date: "2023-01-22"
 output: pdf_document
 ---
 
+# YAML header
+
+### The YAML header is written just above this line
+
+and output can be:- output: pdf_document output: html_document This code can only be run when we use three - with open and close
+
+# Date
+
+### We can use dynamic date in R mark Down
+
+date: "Last edited`r format(Sys.time, '%d %B, %Y')`"
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
@@ -28,3 +40,33 @@ plot(pressure)
 ```
 
 Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+CTRL + SHIFT + K is used to Knit the file
+
+To give heading we can use hash \# Like this:-
+
+# Heading1
+
+## Heading2
+
+### Heading3
+
+To write code we can write like this:- `code`
+
+To bold the text, we can write like this:- **Bold** or **bold**
+
+To italics the text we can write like this:- *italics* or *italics*
+
+To strike through the text we can write like this:- ~~Hello~~
+
+R code can be written here:-
+
+```{r}
+a <- 3+4
+a
+# this is a comment and this is a code chunk
+```
+
+This is how we can add hyperlink:- [Google Image link](https://1.bp.blogspot.com/-RET3jzHjUdI/Xd2Z3zO_bVI/AAAAAAAAE-g/m9gTuElmcasdxzCVfI7QrKs6wmFpwW6zQCLcBGAsYHQ/s1600/image10.jpg)
+
+![](https://1.bp.blogspot.com/-RET3jzHjUdI/Xd2Z3zO_bVI/AAAAAAAAE-g/m9gTuElmcasdxzCVfI7QrKs6wmFpwW6zQCLcBGAsYHQ/s1600/image10.jpg)
