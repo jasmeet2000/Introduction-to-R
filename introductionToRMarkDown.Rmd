@@ -67,6 +67,6 @@ a
 # this is a comment and this is a code chunk
 ```
 
-This is how we can add hyperlink:- [Google Image link](https://1.bp.blogspot.com/-RET3jzHjUdI/Xd2Z3zO_bVI/AAAAAAAAE-g/m9gTuElmcasdxzCVfI7QrKs6wmFpwW6zQCLcBGAsYHQ/s1600/image10.jpg)
+<!-- This is how we can add hyperlink:- [Google Image link](https://1.bp.blogspot.com/-RET3jzHjUdI/Xd2Z3zO_bVI/AAAAAAAAE-g/m9gTuElmcasdxzCVfI7QrKs6wmFpwW6zQCLcBGAsYHQ/s1600/image10.jpg) -->
 
-![](https://1.bp.blogspot.com/-RET3jzHjUdI/Xd2Z3zO_bVI/AAAAAAAAE-g/m9gTuElmcasdxzCVfI7QrKs6wmFpwW6zQCLcBGAsYHQ/s1600/image10.jpg)
+<!-- ![](https://1.bp.blogspot.com/-RET3jzHjUdI/Xd2Z3zO_bVI/AAAAAAAAE-g/m9gTuElmcasdxzCVfI7QrKs6wmFpwW6zQCLcBGAsYHQ/s1600/image10.jpg) -->
