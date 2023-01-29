@@ -46,3 +46,4 @@ reviews_df <- data.frame(scores, comments)
 # Create and print out a list, called departed_list
 departed_list <- list(movie_title, movie_actors, reviews_df, avg_review)
 departed_list
+
