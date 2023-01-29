@@ -77,3 +77,19 @@ visitors <- all_wars_matrix / 5
 
 # Print the estimate to the console
 visitors
+
+#3D matrix
+vector1 <- c(5, 9, 3,9)
+vector2 <- c(10, 11,2,7)
+column.names <- c("COL1", "COL2")
+row.names <- c("ROW1", "ROW2")
+matrix.names <- c("Matrix1", "Matrix2")
+
+# Take these vectors as input to the array.
+result <- array(c(vector1, vector2), dim = c(2, 2, 2,2),
+                dimnames = list(row.names, column.names,
+                                matrix.names))
+result
+
+#How to access 3d matrix
+result[,2,2]  
