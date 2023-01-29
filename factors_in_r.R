@@ -10,4 +10,14 @@
 
 # A good example of a categorical variable is sex. In many circumstances you can limit the sex 
 # categories to "Male" or "Female". (Sometimes you may need different categories. For example, 
-# you may need to consider chromosomal variation, hermaphroditic animals, or different cultural norms, but you will always have a finite number of categories.)
+# you may need to consider chromosomal variation, hermaphroditic animals, or different cultural norms,
+# but you will always have a finite number of categories.)
+
+# Sex vector
+sex_vector <- c("Male", "Female", "Female", "Male", "Male")
+
+# Convert sex_vector to a factor
+factor_sex_vector <- factor(sex_vector)
+
+# Print out factor_sex_vector
+factor_sex_vector
