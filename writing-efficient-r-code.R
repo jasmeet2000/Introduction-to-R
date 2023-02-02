@@ -32,7 +32,25 @@ system.time(readRDS("movies.rds"))
                                                                 # an existing) object.
 
 
+#-----------------------------------------------------------------------
+# The microbenchmark() function makes it easier to compare multiple function calls
+# at once by compiling all the relevant information in a data frame. It does this
+# by running each function call multiple times, recording the time it took for the
+# function to run each time, then computing summary statistics for each expression
+# as you can see here.
 
+# Load the microbenchmark package
+library(microbenchmark)
+
+# Compare the two functions
+compare <- microbenchmark(read.csv("movies.csv"), 
+                          readRDS("movies.rds"), 
+                          times = 10)
+
+# Print compare
+compare
+
+# the mean time of read.csv() compared to readRDS() is 9 times slower 
 
 
 
