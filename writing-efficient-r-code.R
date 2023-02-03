@@ -52,15 +52,19 @@ compare
 
 # the mean time of read.csv() compared to readRDS() is 9 times slower 
 
+#____________________________________________
+vectors <- list(
+  A = c(9, 1, NA, 4, 3),
+  B = c(7,  NA,  4,  4,  1,  NA, 10,  8)
+)
 
+convert_to_seconds <- 
+  function
+(minutes) {
+  seconds = minutes * 60
+  cat(seconds, " seconds")
+}
 
-
-
-
-
-
-
-
-
-
+convert_to_seconds(33)
+#_______________________________________
 
