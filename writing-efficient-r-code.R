@@ -67,4 +67,19 @@ convert_to_seconds <-
 
 convert_to_seconds(33)
 #_______________________________________
+# Load the benchmarkme package
+library(benchmarkme)
 
+# Assign the variable ram to the amount of RAM on this machine
+ram <- get_ram()
+ram
+
+# Assign the variable cpu to the cpu specs
+cpu <- get_cpu()
+cpu
+#--------------------
+# Run the io benchmark
+res <- benchmark_io(runs = 1, size = 5)
+
+# Plot the results
+plot(res)
