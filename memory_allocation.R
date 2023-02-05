@@ -175,5 +175,80 @@ improved_move <- function(is_double) {
 # This is just random chance
 microbenchmark(improved_move, move, times = 1e5)
 
+#_______________________________________________________________________________
+# How many cores does this machine have?
+# Load the parallel package
+library("parallel")
+
+# Store the number of cores in the object no_of_cores
+no_of_cores <- detectCores()
+
+# Print no_of_cores
+no_of_cores
+#_______________________________________________________________________________
+# What sort of problems benefit from parallel computing?
+# Moving to parApply
+# To run code in parallel using the parallel package, the basic workflow has three steps.
+
+# Create a cluster using makeCluster().
+# Do some work.
+# Stop the cluster using stopCluster().
+# The simplest way to make a cluster is to pass a number to makeCluster(). This 
+# creates a cluster of the default type, running the code on that many cores.
+
+# The object dd is a data frame with 10 columns and 100 rows. The following code 
+# uses apply() to calculate the column medians:
+  
+apply(dd, 2, median)
+# To run this in parallel, you swap apply() for parApply(). The arguments to this
+# function are the same, except that it takes a cluster argument before the usual
+# apply() arguments.
+
+# Determine the number of available cores
+library("parallel")
+
+# Create a cluster via makeCluster
+no_of_cores <- detectCores()
+cl <- makeCluster(2)
+
+# Parallelize this code
+parApply(cl, dd , 2 , median)
+
+# Stop the cluster
+stopCluster(cl)
+
+#_______________________________________________________________________________
+library("parallel")
+# Create a cluster via makeCluster (2 cores)
+no_of_cores <- detectCores()
+cl <- makeCluster(2)
+
+# Export the play() function to the cluster
+clusterExport(cl, "play")
+
+# Re-write sapply as parSapply
+# res <- sapply(1:100, function(i) play())
+res <- parSapply(cl,1:100, function(i) play())
+
+# Stop the cluster
+stopCluster(cl)
+#_______________________________________________________________________________
+# Timings parSapply()
+# Set the number of games to play
+no_of_games <- 1e5
+
+# Time serial version
+system.time(serial <- sapply(1:no_of_games, function(i) play()))
+
+# Set up cluster
+no_of_cores <- detectCores()
+cl <- makeCluster(4)
+clusterExport(cl, "play")
+
+# Time parallel version
+system.time(par <- serial)
+
+# Stop cluster
+stopCluster(cl)
 
 
