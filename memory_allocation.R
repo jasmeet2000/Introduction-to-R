@@ -72,4 +72,85 @@ microbenchmark(mat[1, ], df[1, ])
 # whereas that of a row doesn't have to be. Do you see the pattern here?
 
 #___________________________________________________________________________________
+# What is code profiling
+# How does profvis profile a function?
+# It records the call stack at regular intervals.
+#------------------------------------------------------------------
+# Load the data set
+data(movies, package = "ggplot2movies") 
+
+# Load the profvis package
+library("profvis")
+
+# Profile the following code with the profvis function
+profvis({
+    # Load and select data
+    comedies <- movies[movies$Comedy == 1, ]
+    
+    # Plot data of interest
+    plot(comedies$year, comedies$rating)
+    
+    # Loess regression line
+    model <- loess(rating ~ year, data = comedies)
+    j <- order(comedies$year)
+    
+    # Add fitted line to the plot
+    lines(comedies$year[j], model$fitted[j], col = "red")
+  }) 
+## Remember the closing brackets!
+#_______________________________________________________________________________
+# Profvis: Larger example
+
+# Load the microbenchmark package
+library("microbenchmark")
+
+# Change the data frame to a matrix
+# One of the parts of the code that profvis highlighted was the line where we 
+# generated the possible dice rolls and stored the results in a data frame:
+  
+# The previous data frame solution is defined
+# d() Simulates 6 dices rolls
+d <- function() {
+  data.frame(
+    d1 = sample(1:6, 3, replace = TRUE),
+    d2 = sample(1:6, 3, replace = TRUE)
+  )
+}
+# We can optimize this code by making two improvements:
+  
+# Switching from a data frame to a matrix
+# Generating the 6 dice rolls in a single step
+# This gives
+
+m <- function() {
+  matrix(sample(1:6, 6, replace = TRUE), ncol = 2)
+}
+
+# Use microbenchmark to time m() and d()
+microbenchmark(
+  data.frame_solution = d(),
+  matrix_solution     = m()
+)
+#-------------------------------------------------------------------------------
+# Example data
+rolls <- matrix(1:6, nrow = 3, ncol = 2)
+
+# Define the previous solution 
+app <- function(x) {
+  apply(x, 1, sum)
+}
+
+# Define the new solution
+r_sum <- function(x) {
+  rowSums(x)
+}
+
+# Compare the methods
+microbenchmark(
+  app_sol = app(rolls),
+  r_sum_sol = r_sum(rolls)
+)
+#-------------------------------------------------------------------------------
+
+
 
