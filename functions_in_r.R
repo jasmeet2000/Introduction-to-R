@@ -110,9 +110,48 @@ require(ggvis)
 #search(), to look at the currently attached packages
 search()
 
+#_______________________________________________________________________________
+# Note the arguments to median()
+args(median)
 
+#_______________________________________________________________________________
+coin_sides <- c("head", "tail")
 
+# Sample from coin_sides once
+sample <- function(x, size, replace = FALSE, prob = NULL) 
+{
+  if (length(x) == 1L && is.numeric(x) && is.finite(x) && x >= 
+      1) {
+    if (missing(size)) 
+      size <- x
+    sample.int(x, size, replace, prob)
+  }
+  else {
+    if (missing(size)) 
+      size <- length(x)
+    x[sample.int(length(x), size, replace, prob)]
+  }
+}
 
+sample(coin_sides,size=1)
+
+# From previous steps
+toss_coin <- function() {
+  coin_sides <- c("head", "tail")
+  sample(coin_sides, 1)
+}
+
+# Call the function
+toss_coin()
+#_______________________________________________________________________________
+# Update the function to return n coin tosses
+toss_coin <- function(n_flips) {
+  coin_sides <- c("head", "tail")
+  sample(coin_sides, n_flips,replace = TRUE)
+}
+
+# Generate 10 coin tosses
+toss_coin(n_flips=10)
 
 
 
