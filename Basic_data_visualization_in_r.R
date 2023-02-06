@@ -70,5 +70,97 @@ pie(table(mtcars$cyl),labels=c("V4","V6","V8"), col=c("white","gray","black"),
 # Pie charts are a bad way of displaying information.
 
 #----- ----- ------  ----- ----- ------  ----- ----- ------  ----- -----  ------
+# Histograms
+
+# To visualize the distribution of continuous measurements, we can use a histograma
+mtcars$hp
+
+# A histogram also measures frequencies, but in targeting a numeric-continuous 
+# variable, it’s first necessary to “bin” the observed data, meaning to define 
+# intervals and then count the number of continuous observations that fall within 
+# each one. The size of this interval is known as the binwidth.
+
+hist(mtcars$hp)
+# This is a right or positive skew
+
+hist(mtcars$hp,breaks=seq(0,400,25),col="gray",main="Horsepower",xlab="HP")
+abline(v=c(mean(mtcars$hp),median(mtcars$hp)),lty=c(2,3),lwd=2)
+legend("topright",legend=c("mean HP","median HP"),lty=c(2,3),lwd=2)
+
+
+#---------------
+# Histograms using ggplot
+qplot(mtcars$hp)
+# `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+
+qplot(mtcars$hp,geom="blank",main="Horsepower",xlab="HP")
++ geom_histogram(color="black",fill="white",breaks=seq(0,400,25),
+                 closed="right")
++ geom_vline(mapping=aes(xintercept=c(mean(mtcars$hp),median(mtcars$hp)),
+                         linetype=factor(c("mean","median"))),show.legend=TRUE)
++ scale_linetype_manual(values=c(2,3)) + labs(linetype="")
+
+#----- ----- ------  ----- ----- ------  ----- ----- ------  ----- ----- ------
+# Box-and-Whisker Plots (or boxplot)
+
+hist(quakes$mag)
+boxplot(quakes$mag)
+# IQR 
+# Mathematically,
+# IQR = Q3 – Q1
+
+# where,
+# Q3 upper quartile value
+# Q1 lower quartile value
+# Dark bold line in the middle of the box is median
+# circle points are the outliers
+
+# -----------------------
+# Side-by-Side Boxplots
+
+stations.fac <- cut(quakes$stations,breaks=c(0,50,100,150))
+stations.fac[1:5]
+
+boxplot(quakes$mag~stations.fac, xlab="# stations detected",ylab="Magnitude",col="gray")
+
+qplot(stations.fac,quakes$mag,geom="boxplot", xlab="# stations detected",ylab="Magnitude")
+
+#_________________________________________________________________________________________
+# Scatterplots
+
+plot(iris[,4],iris[,3],type="n",xlab="Petal Width (cm)", ylab="Petal Length (cm)")
+
+points(iris[iris$Species=="setosa",4], iris[iris$Species=="setosa",3],pch=19,col="black")
+
+points(iris[iris$Species=="virginica",4], iris[iris$Species=="virginica",3],pch=19,col="gray")
+
+points(iris[iris$Species=="versicolor",4], iris[iris$Species=="versicolor",3],pch=1,col="black")
+
+legend("topleft",legend=c("setosa","virginica","versicolor"), col=c("black","gray","black"),pch=c(19,19,1))
+
+#--------------
+# For two objects
+
+iris_pch <- rep(19,nrow(iris))
+iris_pch[iris$Species=="versicolor"] <- 1
+iris_col <- rep("black",nrow(iris))
+iris_col[iris$Species=="virginica"] <- "gray"
+  
+plot(iris[,4],iris[,3],col=iris_col,pch=iris_pch, xlab="Petal Width (cm)",ylab="Petal Length (cm)")
+
+# Multi Scatterplots
+
+pairs(iris[,1:4],pch=iris_pch,col=iris_col,cex=0.75)
+
+qplot(iris[,4],iris[,3],xlab="Petal width",ylab="Petal length",
+         shape=iris$Species) + scale_shape_manual(values=4:6) + labs(shape="Species")
+
+# Scatterplot matrix (GGally)
+install.packages("GGally")
+library("GGally") 
+ggpairs(iris,mapping=aes(col=Species),axisLabels="internal")
+
+
+
 
 
