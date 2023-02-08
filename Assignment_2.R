@@ -39,7 +39,7 @@ q3 -q1
 quantile(mtcars$disp)
 IQR(mtcars$disp)
 
-#_______________________________________
+#______________________________________________________________________________________________________________
 
 # The following items require you to use the “Orange” dataset in R. To find out the field names and units of 
 # measurement, type “? Orange” into your R console. (6 marks)
@@ -73,7 +73,7 @@ plot(orange_dataset$age, orange_dataset$circumference
 # C) Is the relationship weak, moderate, or strong?
 # ANS: strong
 
-#_____________________________________________________
+#_______________________________________________________________________________________________________________
 
 # The following items require you to use the table to the right.  (6 marks)
 
@@ -120,7 +120,7 @@ barplot(student_table_proportions,beside=FALSE,horiz=FALSE,las=1
 # c) Without performing further analysis, describe your observations of the differences in majors
 #    between men and women. What do you see when you look at this plot? (2 marks)
 
-
+#______________________________________________________________________________________________________________
 
 
 
