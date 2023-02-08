@@ -16,7 +16,6 @@ round(mean_mpg,4)
 sd_cyl <- sd(car_dataset$cyl)
 round(sd_cyl,4)
 
-
 # c) If you were to choose a measure of central tendency for the gross horsepower across all vehicles in the 
 # mtcars database, would you choose the mean or the median? Why? (2 marks)
 
