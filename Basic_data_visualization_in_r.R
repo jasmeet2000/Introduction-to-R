@@ -1,4 +1,4 @@
-# _______________________________ BASIC DATA VISUALIZATION _________________________________________
+# _______________________________ BASIC DATA VISUALIZATION ________________________
 # Data visualization is an important part of a statistical analysis. The 
 # visualization tools appropriate for a given data set are dependent upon the 
 # types of variables
@@ -72,7 +72,8 @@ pie(table(mtcars$cyl),labels=c("V4","V6","V8"), col=c("white","gray","black"),
 #----- ----- ------  ----- ----- ------  ----- ----- ------  ----- -----  ------
 # Histograms
 
-# To visualize the distribution of continuous measurements, we can use a histograma
+# To visualize the distribution of continuous measurements, we can use a 
+# histograma
 mtcars$hp
 
 # A histogram also measures frequencies, but in targeting a numeric-continuous 
