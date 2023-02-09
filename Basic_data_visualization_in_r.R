@@ -45,7 +45,7 @@ barplot(cyl.freq.matrix,beside=TRUE,horiz=TRUE,las=1,
 
 
 # help 
-?barplot
+?barplot 
 
 qplot(factor(mtcars$cyl),geom="bar")
 # Note here that the relevant geom is "bar"
