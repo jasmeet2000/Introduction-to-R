@@ -141,3 +141,4 @@ legend("bottomleft",
        col=c("black","blue","black","darkmagenta","darkgreen","red","red"),
        lwd=c(1,NA,NA,NA,NA,2,2),pt.cex=c(NA,1,1,2,2,NA,NA))
 
+
