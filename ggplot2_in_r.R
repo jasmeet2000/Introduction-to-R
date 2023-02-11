@@ -77,4 +77,3 @@ qplot(x,y,color=ptype,shape=ptype) + geom_point(size=4) +
 # mapping, aes --> Geom aesthetic mapping
 # geom_segment --> Add line segments geom
 # geom_hline   --> Add horizontal lines geom
-
