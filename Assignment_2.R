@@ -67,8 +67,16 @@ plot(orange_dataset$age, orange_dataset$circumference
      , cex=1.2
      , pch="o") 
 
-
-  # Describe the relationship presented in your plot in the following terms and justify your answer: (3 marks)
+unique(orange_dataset$Tree)
+plot(orange_dataset$circumference, orange_dataset$age
+     , xlab = "Circumference of trees (in mm)"
+     , ylab = "Age of trees (in days)"
+     , main= "Relationship between tree age \nand the trunk circumference"
+     , pch=19, cex=1.2
+     , col=Orange$Tree)
+legend('topleft',sort(levels(orange_dataset$Tree)),col=1:length(levels(orange_dataset$Tree)),pch=19)
+abline( lm(orange_dataset$age~orange_dataset$circumference))
+# Describe the relationship presented in your plot in the following terms and justify your answer: (3 marks)
 
 # A) Is the relationship positive, negative, or is there no relationship?
 # Ans: positive
@@ -78,7 +86,7 @@ plot(orange_dataset$age, orange_dataset$circumference
 
 # C) Is the relationship weak, moderate, or strong?
 # ANS: strong
-corr(orange_dataset$age, orange_dataset$circumference)
+round(cor(orange_dataset$circumference, orange_dataset$age),4)
 
 #_______________________________________________________________________________________________________________
 
