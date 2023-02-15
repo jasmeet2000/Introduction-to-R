@@ -186,6 +186,45 @@ barplot(table(survey$Exer)
 
 #____________________________________________________________________________________
 # ----------------------- Plotting Regions and Margins ------------------------------
+# For any single plot created using base R graphics, there are three
+# regions that make up the image:-
+# 1. plot region
+# 2. figure region
+# 3. outer region (outer margins)
+
+# We specify these as vectors of length 4 in a particular order; each of the four 
+# elements corresponds to one of the four sides: c(bottom, left, top, right).
+
+# The graphical parameters oma (outer margin) and mar (figure margin) are used to control
+# these amounts. They are initialized through a call to par() before you
+# begin to draw any new plot.
+
+# =====================  Default Spacing  ======================
+
+?par
+
+# We can find your default figure margin settings with a call to par in R:-
+par()$oma    # By default, oma=c(0, 0, 0, 0) there is no outer margin set.
+
+par()$mar    # The default figure margin space is mar=c(5.1, 4.1, 4.1, 2.1).
+
+# For example, observe the margin space in both oma and mar
+plot(1:10)
+box(which="figure",lty=2)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

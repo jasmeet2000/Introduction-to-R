@@ -1,0 +1,119 @@
+---
+title: "**R Assignment - 2**"
+author: "Jasmeet Singh Saini - 0758054"
+date: "`r Sys.Date()`"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Question 1 - Probability
+
+## A corner store sells sunglasses. It is known that the average number of sunglasses purchased per customer is 2.5 with a standard deviation of 1. Assume that each customer can only buy a whole number of sunglasses and that the number of sunglasses bought per customer follows a binomial distribution (i.e., each customer’s sunglass purchase(s) can be represented as a binomial random variable).
+
+The average number of sunglasses purchased per customer can't be accurately modeled by a binomial distribution, as it is not a discrete probability distribution. Instead, it appears to be a continuous random variable. The binomial distribution is more appropriate for counting the number of successes in a fixed number of independent trials, where each trial has the same probability of success.
+
+In a binomial distribution, the expected value is given by the formula:
+
+$$
+B(n,p)
+$$
+
+where, 
+
+$n$ is the number of trials,
+
+$p$ is the probability of success.
+
+### a) Determine the binomial parameters $n$ and $p$ (round $n$ to the nearest whole number).
+
+We also know that the variance of the binomial distribution is given by $np(1-p)$ , and the standard deviation $\sigma$ is the square root of the variance. As given below,
+$$
+\sigma = \sqrt{npq}
+$$
+
+where,
+
+$q$ is the probability of failure in each trial, $q = 1-p$.
+
+We know that the average number of sunglasses purchased per customer is 2.5, that is,  $\mu = np$, which is the expected value of the binomial distribution. And we have the standard deviation, $\sigma = 1$,
+
+```{r}
+m <- 2.5         # m is mean
+std <- 1         # std is standard deviation
+q <- (std^2)/m   
+p <- 1 - q
+n <- m/p
+p
+round(n)
+```
+
+The value of binomial parameters, $n = 4$ and $p = 0.6$ 
+
+Hence, the distribution can be represented as:
+
+$$
+B(n = 4, p = 0.6)
+$$
+
+### b) What do the parameters $n$ and $p$ represent in the context of this question? (There is no “right” answer, necessarily, but think about what could make sense here.)
+
+In the context of this question, the binomial parameters $n$ and $p$ represent the number of trials and the probability of success, respectively, for the purchase of sunglasses by each customer.
+
+$n$ represents the number of times a customer attempts to buy a pair of sunglasses, and $p$ represents the probability of success of each attempt, that is, the probability of a customer actually buying a pair of sunglasses.
+
+In this case, we assume that each customer can only buy a whole number of sunglasses and that the number of sunglasses bought per customer follows a binomial distribution. Therefore, the parameters $n$ and $p$ give us an idea of the distribution of the number of sunglasses sold per customer, as well as the variability in the number of sunglasses sold across customers.
+
+### c) Determine the number of customers in a random sample of of 75 customers that are expected to purchase at least 3 sunglasses.
+
+We can use the binomial distribution formula to calculate the probability that a customer purchases at least 3 sunglasses:
+$$
+P(X \ge 3) = 1 - P(X < 3)
+$$
+where,
+$X$ is the number of sunglasses purchased by a customer, 
+$P(X < 3)$ is the cumulative probability that a customer purchases 0, 1, or 2 sunglasses.
+
+Hence, the probability that a customer purchases at least 3 sunglasses can be calculated by Binomial Distribution, as given below:
+
+$$
+P(X\ge3) \sim B(n = 4, p = 0.6)
+$$
+
+```{r}
+x <- 3      # x is number of sunglasses expected
+n <- 4
+p <- 0.6
+p_at_least_3 <- pbinom(q = x - 1, size = n, prob = p, lower.tail = FALSE)
+p_at_least_3
+```
+
+Therefore, the probability that a customer purchases at least 3 sunglasses is **0.4752**.
+
+Now, let's use this probability to calculate the expected number of customers out of a random sample of 75 customers who are expected to purchase at least 3 sunglasses.
+
+Let, $X$ be the number of customers in the sample who purchase at least 3 sunglasses. $X$ follows a binomial distribution with parameters $n$ = 75 (the sample size) and $p$ = 0.4752 (the probability of success).
+
+The expected value of $X$ is given by:
+$$
+E(X) or \mu = np
+$$
+
+```{r}
+sample <- 75                        # sample of 75 customers
+customers <- sample * p_at_least_3  # number of customer purchases at least 3 sunglasses 
+round(customers)
+```
+Rounding to the nearest whole number, we can expect around **36 customers** out of a random sample of 75 customers to purchase at least 3 sunglasses.
+
+### d) Use the normal approximation to the binomial distribution to find the probability that 30 or fewer customers in this sample of 75 buy at least 3 sunglasses.
+
+### e) What is the relative error of this approximation? (To answer that, you should find the exact probability!)
+
+
+
+
+
+
