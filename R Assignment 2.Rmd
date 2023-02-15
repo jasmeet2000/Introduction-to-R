@@ -200,20 +200,130 @@ Answer of b
 
 ## A survey was conducted to determine customer satisfaction with their shampoos. Of the 45 customers who use Head and Shoulders, 23 were satisfied with the product and would not want to switch. Of the 70 customers who use Dove shampoo, 42 were satisfied with the product and would not want to switch. The company funding the research wants to know if the proportion of customers who are satisfied with the shampoos is the same between these two groups.
 
-Start Answer
-
 ### a) Conduct a hypothesis test to determine if the proportion of satisfied customers is the same. (Use $\alpha$ = 0.1).
 
-Answer of a 
+Let, 
 
-### b) Construct a _parametric_ 90% confidence interval for the true difference in proportions. (You do not need to check assumptions for part b).)
+$n_{hs}$ be the number of customers using Head and Shoulders,
 
-Answer of b
+$n_{d}$ be the number of customers using  Dove respectively,
 
+$success_{hs}$ be the customers who are satisfied using Head and Shoulders,
 
+$success_{d}$ be the customers who are satisfied using Dove,
 
+$\hat{p}_{hs}$ be the sample proportion of customers who are satisfied using Head and Shoulders,
 
+$\hat{p}_{d}$ be the sample proportion of customers who are satisfied Dove.
 
+Since, we have given the number of customers using Head & Shoulders and Dove as, *n_hs* and *n_d*, that is, 45 and 70 respectively. The customers who are satisfied using Head & Shoulders and Dove as, *succes_hs* and *succes_d*, that is, 23 and 42 respectively. Also, $\alpha$ (level of significance) is given as 0.1 :
 
+```{r}
+alpha <- 0.1 
+n_hs <- 45            
+n_d <- 70              
+succes_hs <- 23         
+succes_d <- 42        
+p_hs <- succes_hs / n_hs  
+p_d <- succes_d / n_d
+```
+The sample proportion of customers who are satisfied using Head & Shoulders, and Dove is *p_hs* = **0.5111** and *p_d* = **0.6** respectively. 
 
+**Step 1 : Hypothesis & Assumptions**
+
+**Hypothesis :**
+
+Let $p_{hs}$ and $p_{d}$ be the proportion of customers who are satisfied with Head and Shoulders and Dove respectively.
+
+The null hypothesis ($H_{0}$) is that the proportion of satisfied customers is the same between the two groups ($p_{hs} = p_{d}$), and the alternative hypothesis ($H_{A}$) is that the proportions are different ($p_{hs} \neq p_{d}$). So, the $H_{0}$ and $H_{A}$ is:
+
+$$
+H_{0} : p_{hs}-p_{d}\ =0 \ \ \ \ \ vs \ \ \ \ \  H_{A} : p_{hs} \neq p_{d}  
+$$
+
+**Assumptions : **
+
+$p_{0}\ = 0$, the pooled proportion  will be calculate. It is given by:
+
+```{r}
+pp <- (succes_hs + succes_d)/(n_hs + n_d)   
+pp
+```
+
+To apply CLT, the below conditions must be met:
+
+a. **Independence** : To check for independence, we know that, people using both the shampoos are less than 10% of total population . Hence, this condition is satisfied.
+
+b. **Success / Failure Conditions** : In order to use the Normal distribution to check this claim, we need at least 10 expected successes and 10 expected failures.
+
+```{r}
+# For Group of Head & Shoulders's Customer:-
+  # 1. Success: customers satisfied with hs
+  n_hs*pp >= 10      
+  # 2. Failure: customers not satisfied with hs
+  n_hs*(1-pp) >= 10
+  
+#For Group of Dove's Customer:-
+  # 1. Success: customers satisfied with dove
+  n_d*pp >= 10
+  # 2. Failure: customers not satisfied with dove
+  n_d*(1-pp) >= 10   
+  
+```
+
+Therefore, the above conditions is true. And we can apply *CLT*, by use the **Parametric Approach**.
+
+**Step 2 : Test Statistic and p-value**
+
+The test statistic and p-value is:
+
+```{r}
+std_err_ht <- sqrt(pp*(1-pp)*(1/n_hs + 1/n_d))
+z_stat <- (p_hs - p_d) / std_err_ht            
+p_val <- 2*pnorm(abs(z_stat), lower.tail = FALSE) 
+round(z_stat,2)
+round(p_val,2)
+```
+
+The test statistic is **-0.94** and $p$-value equals **0.35**. That is,
+$$
+Z_{stat} = -0.94 \ \ and \ \  p-value = 0.35 
+$$
+
+**Step 3 : Statistical Decision**
+
+Comparing the $p$-value with the level of significance:
+
+```{r}
+p_val > alpha
+```
+
+Therefore, **we accept $H_{0}$, Null Hypothesis** because $p$-value is greater than $\alpha$, level of significance.
+
+**Step 4 : Conclusion**
+
+From our sample, there is not enough evidence to support the alternative hypothesis and therefore
+we would conclude that the claim, "The proportion of satisfied customers is the same between the two Shampoo, that is, Head & Shoulders and Dove Shampoo", is accurate.
+
+### b) Construct a _parametric_ 90% confidence interval for the true difference in proportions. (You do not need to check assumptions for part b).
+
+### Step 1 : Assumptions
+
+In the above part we have check the CLT conditions. So we are good to use Parametric approach for calculating the Confidence Intervals.
+
+### Step 2 : Calculating Confidence Intervals
+
+Here, *std_err_ci* is standard error under confidence interval. So, the confidence interval will be:
+
+```{r}
+std_err_ci <- sqrt(p_hs * (1 - p_hs) / n_hs + p_d * (1 - p_d) / n_d)       
+z_star <- qnorm((1 - 0.90)/2, lower.tail = FALSE) 
+confidence_interval <- round((p_hs - p_d) + c(-1, 1)*z_star * std_err_ci,2) 
+confidence_interval
+```
+The 90% confidence interval for the difference in proportions is **(-0.24,0.07)**.
+
+### Step 3 : Conclusion
+
+We can be 90% confident that the true difference in proportions between satisfied customers of Head and Shoulders and Dove shampoos lies between **(-0.24,0.07)**. Since the interval contains zero, we cannot conclude that the proportions are different at a significance level 
 
