@@ -110,7 +110,107 @@ Rounding to the nearest whole number, we can expect around **36 customers** out 
 
 ### d) Use the normal approximation to the binomial distribution to find the probability that 30 or fewer customers in this sample of 75 buy at least 3 sunglasses.
 
-### e) What is the relative error of this approximation? (To answer that, you should find the exact probability!)
+We can use the normal approximation to the binomial distribution to find the probability that 30 or fewer customers in a sample of 75 buy at least 3 sunglasses and is given by:
+
+$$
+P(X \le 30) \sim Bin(n = 75, p = 0.4752)
+$$
+
+```{r}
+p_exact <- pbinom(q = 30, size = sample, prob = p_at_least_3, lower.tail = TRUE)
+p_exact
+```
+
+Thus, the probability that 30 or fewer customers in this sample of 75 buy at least 3 sunglasses calculated through Binomial Distribution is **`r round(p_exact,4)`**.
+
+While applying normal approximation to binomial approximation, $\mu > 10$ (or $np > 10$). Here, $n$ is the random sample of 75 people and $p$ is the probability that a customer purchases at least 3 sunglasses.
+
+
+```{r}
+sample * p_at_least_3 > 10           
+sample *( 1 - p_at_least_3 ) > 10       
+```
+
+As the above conditions are me. So, normal approximation can be performed using the given formula:
+
+$$
+B(n,p) \sim N(\mu,\sigma)
+$$
+The mean and standard deviation is given by $\mu = np$ and $\sigma = \sqrt{npq}$ respectively. Hence, the mean and standard deviation for normal distribution is:
+
+```{r}
+mean_n <- sample * p_at_least_3                
+mean_n                            # mean for normal distribution 
+sd_n <- sqrt(sample * (p_at_least_3) * (1 - p_at_least_3))
+round(sd_n,2)                     # standard deviation for normal distribution
+```
+
+Thus, the mean for normal distribution is **`r round(mean_n,4)`** and standard deviation is **`r round(sd_n,2)`**.
+
+We can use the continuity correction and approximate the binomial distribution with a normal distribution with mean, $\mu = `r round(mean_n,4)`$ and standard deviation, $\sigma = `r round(sd_n,2)`$. However, correction can be applied from $P(X \le 30)$ to $P(X < 30.5)$ and it is given by normal distribution as:
+
+$$
+P(X \le 30) \sim N(\mu = 35.64, \sigma = 4.32)
+$$
+```{r}
+approx_p <- pnorm(q = 30.5, mean = mean_n, sd = sd_n, lower.tail = TRUE)
+approx_p
+```
+
+Therefore, the probability that 30 or fewer customers in this sample of 75 buy at least 3 sunglasses is approximately **`r approx_p`**.
+
+### e) What is the relative error of this approximation? (To answer that, you should find the exact probability!).
+
+The relative error, $re$ for the approximation is given by:
+
+$$
+re = (exact - approx)/exact
+$$
+
+where,
+
+*approx* is the probability calculated using the normal approximation,
+
+*exact* is the exact probability calculated using the binomial distribution.
+
+```{r}
+re <- (abs((p_exact - approx_p))/p_exact)*100
+round(re,2)
+```
+The Relative Error, $re$  for the above approximation is **0.22**.
+
+
+# Question 2 : Hypothesis Testing and Confidence Intervals
+
+**Required Data** : soy.csv
+
+## A very thorough hobby farmer plants 550 soy plant seeds in 2023. Based on his many years of past experience, 91% of all soy plant seeds he has planted have sprouted.
+
+Start Answer
+
+### a) The farmer randomly samples 50 seeds and then records in a spreadsheet whether each seed sprouted or not (see soy.csv). Did a larger proportion of seeds sprout in 2023 compared to past years? (Use $\alpha$ = 0.05)
+
+Answer of a 
+
+### b) Provide a 90% non-parametric confidence interval using 1,000 bootstrapped samples for the true proportion of seeds that sprouted in 2023.
+
+Answer of b
+
+# Question 3 : Hypothesis Testing and Confidence Intervals
+
+## A survey was conducted to determine customer satisfaction with their shampoos. Of the 45 customers who use Head and Shoulders, 23 were satisfied with the product and would not want to switch. Of the 70 customers who use Dove shampoo, 42 were satisfied with the product and would not want to switch. The company funding the research wants to know if the proportion of customers who are satisfied with the shampoos is the same between these two groups.
+
+Start Answer
+
+### a) Conduct a hypothesis test to determine if the proportion of satisfied customers is the same. (Use $\alpha$ = 0.1).
+
+Answer of a 
+
+### b) Construct a _parametric_ 90% confidence interval for the true difference in proportions. (You do not need to check assumptions for part b).)
+
+Answer of b
+
+
 
 
 
