@@ -186,15 +186,148 @@ The Relative Error, $re$  for the above approximation is **0.22**.
 
 ## A very thorough hobby farmer plants 550 soy plant seeds in 2023. Based on his many years of past experience, 91% of all soy plant seeds he has planted have sprouted.
 
-Start Answer
-
 ### a) The farmer randomly samples 50 seeds and then records in a spreadsheet whether each seed sprouted or not (see soy.csv). Did a larger proportion of seeds sprout in 2023 compared to past years? (Use $\alpha$ = 0.05)
 
-Answer of a 
+Let's say, 
+
+**$n = 50$**, the randomly samples of seed that farmer planted in 2023,
+
+**$success$**, the number of soy seeds sprouted in 2023 (from the data set in soy.csv),
+
+**$\hat{p}$**, the proportion of soy seeds that were planted and sprouted in 2023
+
+$\alpha = 0.05$, the level of significance,
+
+```{r}
+alpha <- 0.05
+n <- 50  
+p0 <- 0.91
+
+soy_data <- read.csv("C:\\Users\\jasme\\OneDrive\\Documents\\Introduction to R\\soy.csv")[,2]
+
+success <- length(soy_data[soy_data==TRUE])
+
+p_hat <- success/n          
+```
+
+**Step 1 : Hypothesis & Assumptions**
+
+**Hypothesis :**
+
+Let $p$ be denote the true proportion of seeds that sprouted in past years. The null hypothesis ($H_{0}$) and the alternative hypothesis ($H_{A}$) is given as:
+
+$$
+H_{0} : p \le0.91 \ \ \ vs \ \ \ H_{A} : p > 0.91 
+$$
+
+**Assumptions : **
+
+To apply CLT, the below conditions must be met:
+
+a. **Independence** : To check for independence, we know that, 50 soy seeds are randomly sampled and are less than 10% of total seeds planted (550). Hence, this condition is satisfied.
+
+b. **Success / Failure Conditions** : In order to check this condition, we need at least 10 expected successes and 10 expected failures.
+
+
+```{r}
+# Success : seeds sprouted
+n*p0 >= 10  
+
+# Failures : seeds did not sprout
+n*(1 - p0) >= 10 
+```
+
+Hence, the above condition is not met because the number of failure is less than 10.
+
+Now, we will not use parametric approach to find confidence intervals (or CLT cannot be applied). Also, we will be using Non-parametric approach.
+
+**Step 2 : Simulation**
+
+Here, the number of simulations is *num_sim*, that is, 1000. 
+
+```{r}
+num_sim <- 1000                   
+
+phat_sim <- numeric(num_sim)
+for (i in 1:num_sim){
+  cur_samp <- sample(c(0, 1), size = n, replace = TRUE
+                     , prob = c(1-p0, p0))
+  phat_sim[i] <- mean(cur_samp)
+}
+```
+
+Calculating the $p$-value:
+
+```{r}
+pval_sim <- (length(which(phat_sim >= p_hat)) + 1) / (num_sim + 1)
+pval_sim
+```
+Comparing the $p$-value with the level of significance:
+
+```{r}
+pval_sim > alpha
+```
+
+**Step 3 : Statistical Decision**
+
+Therefore, **we fail to reject $H_{0}$, Null Hypothesis** because $p$-value is greater than $\alpha$, level of significance.
+
+**Step 4 : Conclusion**
+
+There is not enough evidence to support the alternative hypothesis, and therefore we conclude that a large 
+proportion of seeds sprouted in 2023 as compared to past years.
+
 
 ### b) Provide a 90% non-parametric confidence interval using 1,000 bootstrapped samples for the true proportion of seeds that sprouted in 2023.
 
-Answer of b
+**Step 1 : Assumptions**
+
+To apply CLT, the below conditions must be met:
+
+a. **Independence** : To check for independence, we know that, 50 soy seeds are randomly sampled and are less than 10% of total seeds planted (550). Hence, this condition is satisfied.
+
+b. **Success / Failure Conditions** : In order to check this condition, we need at least 10 expected successes and 10 expected failures.
+
+
+```{r}
+# Success : seeds sprouted
+success >= 10      
+# Failures : seeds did not sprout
+1-success >= 10    
+```
+
+
+Hence, the above condition is not met because the number of failure is less than 10.
+
+Therefore, CLT cannot be applied and thus, we cannot use to parametric approach to find confidence intervals. We will be using Non-parametric approach for the same.
+
+**Step 2 : Simulation**
+
+Constructing a 90% non-parametric confidence interval using 1000 bootstrapped samples for the true proportion of seeds that sprouted in 2023.
+
+
+```{r}
+set.seed(1000)
+num_sim_ci <- 1000                  
+phat_sim_ci <- numeric(num_sim) 
+
+for (i in 1:num_sim_ci){
+  cur_samp_ci <- sample(c(0,1), size = num_sim_ci, replace = TRUE
+                     , prob = c(1-p_hat,p_hat))
+  phat_sim_ci[i] <- mean(cur_samp_ci)
+}
+```
+
+The confidence intervals will be,
+
+```{r}
+round(quantile(phat_sim_ci, probs <- c(0.05,0.95)),2)
+```
+**Step 3 : Conclusion**
+
+ We are 90% confident that the true proportion of soy seeds sprouted in 2023 is in the interval **(0.91,0.93)**.
+
+
 
 # Question 3 : Hypothesis Testing and Confidence Intervals
 
@@ -254,7 +387,7 @@ To apply CLT, the below conditions must be met:
 
 a. **Independence** : To check for independence, we know that, people using both the shampoos are less than 10% of total population . Hence, this condition is satisfied.
 
-b. **Success / Failure Conditions** : In order to use the Normal distribution to check this claim, we need at least 10 expected successes and 10 expected failures.
+b. **Success / Failure Conditions** : In order to check this condition, we need at least 10 expected successes and 10 expected failures.
 
 ```{r}
 # For Group of Head & Shoulders's Customer:-
@@ -298,7 +431,7 @@ Comparing the $p$-value with the level of significance:
 p_val > alpha
 ```
 
-Therefore, **we accept $H_{0}$, Null Hypothesis** because $p$-value is greater than $\alpha$, level of significance.
+Therefore, **we fail to reject the $H_{0}$, Null Hypothesis** because $p$-value is greater than $\alpha$, level of significance.
 
 **Step 4 : Conclusion**
 
