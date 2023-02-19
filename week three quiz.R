@@ -1,14 +1,14 @@
 #ques 1
-test = chisq.test(c(25,20,38,50,22),correct = FALSE)
+test = chisq.test(c(29,41,47,23,54),correct = FALSE);test
 str(test)
 qchisq(0.01, df = 4, lower.tail = FALSE)
 
 #ques 2
-n = 50
-c = c(0.22,0.22, 0.25, 0.30, 0.01)*n ;c
+n = 100
+c = c(0.44, 0.25, 0.30, 0.01)*n ;c
 
 # ques 3
-test = chisq.test(x = c(85, 53, 33, 49),
+test = chisq.test(x = c(99, 58, 36, 57),
                   p = c(.16, .44, .27, .13), correct = FALSE); test
 str(test)
 test$expected
@@ -24,7 +24,7 @@ str(test)
 test$expected
 test$p.value < 0.01
 
-qchisq(0.05, df = 3, lower.tail = FALSE)
+qchisq(0.01, df = 3, lower.tail = FALSE)
 
 # ques 5
 
