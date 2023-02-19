@@ -16,13 +16,13 @@ test$p.value<0.025
 qchisq(0.025, df = 3, lower.tail = FALSE)
 
 #ques 4
-dataframe = data.frame(pre = c(238,82,37,15),
-                       post = c(175,64,59,36))
+dataframe = data.frame(pre = c(230,77,32,23),
+                       post = c(160,63,59,39))
 
 test = chisq.test(dataframe, correct=FALSE ); test
 str(test)
 test$expected
-test$p.value < 0.05
+test$p.value < 0.01
 
 qchisq(0.05, df = 3, lower.tail = FALSE)
 
