@@ -303,29 +303,28 @@ Therefore, CLT cannot be applied and thus, we cannot use to parametric approach 
 
 **Step 2 : Simulation**
 
-Constructing a 90% non-parametric confidence interval using 1000 bootstrapped samples for the true proportion of seeds that sprouted in 2023.
+Constructing a 90% non-parametric confidence interval using **1000 bootstrapped samples** for the true proportion of seeds that sprouted in 2023.
 
 
 ```{r}
-set.seed(1000)
-num_sim_ci <- 1000                  
-phat_sim_ci <- numeric(num_sim) 
-
-for (i in 1:num_sim_ci){
-  cur_samp_ci <- sample(c(0,1), size = num_sim_ci, replace = TRUE
-                     , prob = c(1-p_hat,p_hat))
-  phat_sim_ci[i] <- mean(cur_samp_ci)
+library(boot)
+set.seed(0758054)
+sample_proportion <- function(x, index){
+mean(x[index])
 }
+sample_boot <- boot(soy_data, statistic = sample_proportion, R = 1000)
+
 ```
 
-The confidence intervals will be,
+The 90% confidence intervals for bootstrap samples will be,
 
 ```{r}
-round(quantile(phat_sim_ci, probs <- c(0.05,0.95)),2)
+confidence_interval = boot.ci(sample_boot, conf = 0.90, type = 'bca')
+confidence_interval
 ```
 **Step 3 : Conclusion**
 
- We are 90% confident that the true proportion of soy seeds sprouted in 2023 is in the interval **(0.91,0.93)**.
+ We are 90% confident that the true proportion of soy seeds sprouted in 2023 is in the interval **(0.80,0.96)**.
 
 
 
@@ -459,4 +458,5 @@ The 90% confidence interval for the difference in proportions is **(-0.24,0.07)*
 ### Step 3 : Conclusion
 
 We can be 90% confident that the true difference in proportions between satisfied customers of Head and Shoulders and Dove shampoos lies between **(-0.24,0.07)**. Since the interval contains zero, we cannot conclude that the proportions are different at a significance level 
+
 
