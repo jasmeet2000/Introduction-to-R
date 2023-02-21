@@ -324,7 +324,7 @@ confidence_interval
 ```
 **Step 3 : Conclusion**
 
- We are 90% confident that the true proportion of soy seeds sprouted in 2023 is in the interval **(0.80,0.96)**.
+ We are 90% confident that the true proportion of soy seeds sprouted in 2023 is in the interval **(0.81,0.96)**.
 
 
 
