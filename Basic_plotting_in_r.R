@@ -131,7 +131,7 @@ arrows(x0=8,y0=14,x1=11,y1=2.5)
 # on the coordinates provided with the arguments x and y.
 text(x=8,y=15,labels="sweet spot")
 
-#----- ----- ------  ----- ----- ------  ----- ----- ------
+#-----  -----  ------   -----  -----  ------   -----  -----  ------
 # To label all the diffrent points (of diffrent colours), we can use legend().
 
 legend("bottomleft",
@@ -140,5 +140,6 @@ legend("bottomleft",
        pch=c(NA,19,1,4,3,NA,NA),lty=c(4,NA,NA,NA,NA,2,3),
        col=c("black","blue","black","darkmagenta","darkgreen","red","red"),
        lwd=c(1,NA,NA,NA,NA,2,2),pt.cex=c(NA,1,1,2,2,NA,NA))
+
 
 
