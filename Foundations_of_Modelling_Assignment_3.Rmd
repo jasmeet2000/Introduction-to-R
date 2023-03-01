@@ -1,0 +1,156 @@
+---
+title: "**AMOD-5210H: Foundations of Modelling**"
+author: "Jasmeet Singh Saini"
+date: "`r Sys.Date()`"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+After Loading required packages and then reading the excel file.
+
+```{r}
+library(readxl)
+dataset_excel <- read_excel("ass3data.xlsx")
+```
+Let's performing data extraction.
+ 
+```{r}
+set.seed(0758054)
+index <- sample(1:nrow(dataset_excel),200)
+AMOD5210 <- dataset_excel[index, ] 
+```
+ 
+# Question 1
+
+## Report the frequencies for males and females in your subsample, as well as the mean, median, standard deviation, minimum and maximum values for the variable “age”.
+
+
+```{r}
+table(AMOD5210$Gender)
+```
+Hence, the _frequency_ for males and females is **81** and **119** respectively.
+
+The mean, median, standard deviation, minimum and maximum values for the variable “age” is given below,
+
+```{r}
+#Minimum
+min(AMOD5210$Age, na.rm = TRUE) 
+
+#Maximum
+max(AMOD5210$Age, na.rm = TRUE)  
+```
+
+The *minimum* and *maximum values* for the variable “age” is **19** and **79** respectively.
+
+```{r}
+#Standard Deviation
+sd(AMOD5210$Age, na.rm = TRUE)  
+
+#Mean 
+mean(AMOD5210$Age, na.rm = TRUE) 
+
+# Median
+median(AMOD5210$Age, na.rm = TRUE) 
+```
+
+The *Standard Deviation*, *Mean* and *Median* values for the variable “age” is **14.19257**, **46.41** and **46** respectively.
+
+```{r}
+library(psych)
+describe(AMOD5210$Age)
+```
+\newpage
+
+# Question 2
+
+## Are the continuous variables of “age”, “AG”, and “LTW” in your subsample normally distributed? If not, how would you describe these distributions and what could you do to make them more normal? 
+
+To check the continuous variables of “age”, “AG”, and “LTW” in the normally distributed, we will use Shapiro-Wilks test.
+
+### For "age"
+
+Let's test for “age”
+```{r}
+shapiro.test(AMOD5210$Age)
+```
+This how a histogram looks like:
+```{r}
+hist(AMOD5210$Age, xlab = "Age"
+     , ylab = "Number of People"
+     , main = "Age Distribution of First-time Gamblers"
+     , prob = FALSE
+     , col = "pink")
+
+```
+
+By Shapiro-Wilk normality test the p-value < 0.05. Hence, it is not normally distributed.
+
+### For "AG"
+
+Let's test for “AG” (continuous variable for age of 1st time gambling for money).
+```{r}
+shapiro.test(AMOD5210$AG)
+```
+
+This how a histogram looks like:
+```{r}
+hist(AMOD5210$AG, xlab = "AG"
+     , ylab = "Number of People"
+     , main = "AG Distribution of First-time Gamblers"
+     , prob = FALSE
+     , col = "pink")
+
+```
+
+By Shapiro-Wilk normality test the p-value < 0.05. Hence, it is not normally distributed. 
+
+### For "LTW"
+
+Finally, let's test for “LTW”  (continuous variable for estimated lifetime winnings from gambling)
+
+```{r}
+shapiro.test(AMOD5210$LTW)
+```
+
+This how a histogram looks like:
+
+```{r}
+hist(AMOD5210$LTW, xlab = "Winners"
+     , ylab = "Number of People"
+     , main = "Lifetime winnings distribution from gambling"
+     , prob = FALSE
+     , col = "pink")
+```
+
+
+By Shapiro-Wilk normality test the p-value < 0.05. Hence, it is not normally distributed. 
+
+\newpage
+
+# Question 3
+
+##  Using an appropriate inferential statistic, determine whether males and females scored significantly different on any of the variables “AG”, “LTW”, and “gambled”. Also, evaluate and comment on whether the basic assumptions of your chosen statistic were met. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
