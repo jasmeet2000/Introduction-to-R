@@ -228,7 +228,7 @@ Now, to test for homogeneity of variance, we will use Levene Test.
 # Test for homogeneity of variance(Levene Test)
 levene_test(AMOD5210, LTW ~ Gender)
 ```
-Here, $p < 0.05$, Therefore, the variance of male and female is homogeneous.
+Here, $p < 0.05$, Therefore, the variance of male and female is non homogeneous.
 
 Since, the condition or assumptions is not met during testing. Now, we will test using t-test to get the conclusion between the score of males and females on the variable "LTW".
 
@@ -243,6 +243,9 @@ As $p > 0.05$, therefore, we have enough evidence to **accept** the __Null Hypot
 
 abc
 
+$$
+- X -
+$$
 \newpage
 
 # Question 4
