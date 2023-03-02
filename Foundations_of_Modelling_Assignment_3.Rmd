@@ -246,6 +246,14 @@ abc
 $$
 - X -
 $$
+### Inferential statistic for "Gambled" variable.
+
+### Step 1 :
+
+### Step 2 :
+
+### Step 3 :
+
 \newpage
 
 # Question 4
