@@ -134,16 +134,239 @@ By Shapiro-Wilk normality test the p-value < 0.05. Hence, it is not normally dis
 
 ##  Using an appropriate inferential statistic, determine whether males and females scored significantly different on any of the variables “AG”, “LTW”, and “gambled”. Also, evaluate and comment on whether the basic assumptions of your chosen statistic were met. 
 
+### Inferential statistic for "AG" variable.
+
+### Step 1 :  Hypothesis & assumptions
+
+Let's define **Null Hypothesis** $H_{o}$ and **Alternative Hypothesis** $H_{A}$ to use inferential statistic.
+
+$H_{o} :$ There is no significantly difference between the score of males and females on the variable "AG" (that is, age of first time gambling).
+
+$H_{A} :$ There is significantly difference between the score of males and females on the variable "AG" (that is, age of first time gambling). 
+
+Let’s organize the data by group and get some descriptive statistics:
+```{r}
+library(rstatix)
+group_by_gender <- group_by(AMOD5210, Gender)
+get_summary_stats(group_by_gender,AG,type="mean_sd")
+```
+Now, we need to test some **assumptions**. Firstly, let's check for extreme outliers.
+```{r}
+identify_outliers(group_by_gender, AG)
+```
+
+Here, we get extreme outliers in the AG variable. But, we will perform the t-test.
+
+### Step 2 : Testing
+
+Now, we will test for normality using **Shapiro-Wilks Test**.
+
+```{r}
+# To test using Shapiro-Wilks
+shapiro_test(group_by_gender, AG)
+```
+Here, $p < 0.05$ for male as well as female. It not a normal distribution and we will use t-test, that is, Levene Test.
+
+Now, to test for homogeneity of variance, we will use Levene Test.
+```{r}
+# Test for homogeneity of variance(Levene Test)
+levene_test(AMOD5210, AG ~ Gender)
+```
+Here, $p > 0.05$, Therefore, the variance of male and female is non-homogeneous.
+
+Since, the condition or assumptions is not met during testing. Now, we will test using t-test to get the conclusion between the score of males and females on the variable "AG".
+
+Now, let's run t-test for independent.
+```{r}
+t_test(AG ~ Gender, data = AMOD5210, var.equal = TRUE)
+```
+
+As $p < 0.05$, therefore, we have enough evidence to **reject** the __Null Hypothesis__, that is, there is a significantly difference between the score of males and females on the variable "AG".
+
+### Step 3 : Conclusion
+The current study sought to determine whether or not there is a significantly difference between the score of males and females on the variable "AG". A 200 random samples were taken from a dataset of 3947 observation(81 males, 119 female).The sample contained few extreme outliers. A Shapiro-Wilks test didn't demonstrated normality. Moreover, Levene’s test demonstrated non-heterogeneity of variance. The mean of "AG" for male was 19.580(SD = 8.637) and for female it was 23.417(SD = 9.550). An independent sample T-test showed that, $t(194) = 2.880084$, $p < 0.05$, concluding that the mean difference in “AG” between male and female in the sample was statistically significant. 
+
+$$ 
+- X -
+$$
+
+### Inferential statistic for "LTW" variable.
+
+### Step 1 :  Hypothesis & assumptions
+
+Let's define **Null Hypothesis** $H_{o}$ and **Alternative Hypothesis** $H_{A}$ to use inferential statistic.
+
+$H_{o} :$ There is no significantly difference between the score of males and females on the variable "LTW" (that is, lifetime winnings from gambling).
+
+$H_{A} :$ There is significantly difference between the score of males and females on the variable "LTW" (that is, lifetime winnings from gambling). 
+
+Let’s organize the data by group and get some descriptive statistics:
+```{r}
+library(rstatix)
+get_summary_stats(group_by_gender,LTW,type="mean_sd")
+```
+Now, we need to test some **assumptions**. Firstly, let's check for extreme outliers.
+
+```{r}
+identify_outliers(group_by_gender, LTW)
+```
+
+Here, we get extreme outliers in the LTW variable. But, we will perform the t-test.
+
+### Step 2 : Testing
+
+Now, we will test for normality using **Shapiro-Wilks Test**.
+
+```{r}
+# To test using Shapiro-Wilks
+shapiro_test(group_by_gender, LTW)
+```
+Here, $p < 0.05$ for male as well as female. It a not normal distribution and we will use t-test, that is, Levene Test.
+
+Now, to test for homogeneity of variance, we will use Levene Test.
+```{r}
+# Test for homogeneity of variance(Levene Test)
+levene_test(AMOD5210, LTW ~ Gender)
+```
+Here, $p < 0.05$, Therefore, the variance of male and female is homogeneous.
+
+Since, the condition or assumptions is not met during testing. Now, we will test using t-test to get the conclusion between the score of males and females on the variable "LTW".
+
+Now, let's run t-test for independent.
+```{r}
+t_test(LTW ~ Gender, data = AMOD5210, var.equal = TRUE)
+```
+
+As $p > 0.05$, therefore, we have enough evidence to **accept** the __Null Hypothesis__, that is, there is a no significantly difference between the score of males and females on the variable "LTW".
+
+### Step 3 : Conclusion
+
+abc
+
+\newpage
+
+# Question 4
+
+## Using an appropriate inferential statistic, determine whether marital status is significantly dependent on reporting an early or late onset of gambling (“Onset”)?
+
+### Step 1: Hypothesis
+
+Let's define **Null Hypothesis** $H_{o}$ and **Alternative Hypothesis** $H_{A}$ to use inferential statistic.
+$$
+H_{o} : Marital \ Status \ is \ NOT \ significantly \ dependent \ on \ reporting \ an \ early \ or \ late \ onset \ of \ gambling.
+$$
+$$
+H_{A} :  Marital \ Status \ is \ significantly \ dependent \ on \ reporting \ an \ early \ or \ late \ onset \ of \ gambling.
+$$
+
+### Step 2: Testing
+
+To conduct the Test of Independence, that is, **Chi-Squared Test**, we need to build the table of frequency for Onset and MS:
+
+```{r}
+frequency_table <- table(AMOD5210$Onset, AMOD5210$MS)
+frequency_table
+```
+
+For Chi-Squared Test, we know
+```{r}
+chisq.test(x = frequency_table, correct = FALSE)
+```
+Since p > 0.05, we have enough evidence to accept **Null Hypothesis** $H_{o}$, that is, Marital status is not
+dependent on the Onset of gambling.
+
+We know there is an effect, but we don't know where that effect is since we have a 2 x 3 contingency table.We need to perform a post-hoc test to know where the effect is
+
+```{r}
+# First, let's install and load a useful package
+#install.packages("chisq.posthoc.test")
+library(chisq.posthoc.test)
+# Now, let's run a chi-square post-hoc test
+chisq.posthoc.test(frequency_table)
+```
+
+### Step 3: Conclusion
+
+The present research seeks to determine whether marital status is significantly dependent on reporting an early or late onset of gambling. A 200 sample of (81 Males, 119 Female) were taken and then divided based on marital
+status: Single $(N = 26)$, Married $(N = 144)$ and Divorced $(N = 30)$. A Chi-square Test of Independence revealed that the marital status is independent on reporting an early or late onset of gambling, $X^2(2,N=200) = 2.6943, p > 0.05$. A post-hoc test of proportions concluded that singles reported an early onset of gambling
+than married or divorced.
+
+\newpage
+
+# Question 5
+
+## What are the correlations (reported to 3 decimals) for the following pairs of  variables: “age” and “LTW”; “age” and “gambled”; and “AG” and “LTW”. Report the p-values for each correlation. For each of the relevant correlations, what is the slope and intercept when “LTW” is the Y variable (i.e., dependent variable)? One of the key assumptions when interpreting a correlation is that the x and y variables are linearly related. Do you think this assumption is met for each of the 3 correlations? 
+
+Answer
+
+\newpage
+
+# Question 6
+
+## Using an appropriate inferential statistic, determine whether an individual’s income level differs across married, single, and divorced individuals (“MS”). Also, evaluate and comment on whether the basic assumptions of your chosen statistic were met.
+
+To test whether an individual’s income level differs across married, single, and divorced individuals $("MS")$, we will test using **Independent ANOVA Test**.
+
+### Step 1: Hypothesis and Assumptions
+
+Let's define **Null Hypothesis** $H_{o}$ and **Alternative Hypothesis** $H_{A}$ to use inferential statistic.
+
+$H_{o} :$ An individual’s income level doesn’t differs across married, single, and divorced individuals (“MS”).
+
+$H_{A} :$  An individual’s income level differs across married, single, and divorced individuals (“MS”).
+
+Let’s organize the data by group and get some descriptive statistics.
+```{r}
+# install.packages("datarium")
+# install.packages("rstatix")
+library(rstatix)
+library(datarium)
+ms_group <- group_by(AMOD5210, MS)
+get_summary_stats(ms_group, Income, type = "mean_sd")
+```
+Let's test some **assumptions**. 
+
+Firstly, we will also look for extreme outlier.
+```{r}
+identify_outliers(ms_group, Income)
+```
+
+Since, we have two outlier.But, We also need to test the normality assumption using Shapiro-Wilks Test.
+
+```{r}
+shapiro_test(ms_group, Income)
+```
+
+As $p < 0.05$, the data is not normally distributed for any of the Marital status, that is, divorced, married, single.
 
 
 
+### Step 2: Testing
+
+Finally, we need to test for homogeneity of variance. 
+
+```{r}
+levene_test(AMOD5210, Income ~ MS)
+
+```
+As $p < 0.05$, thus the distribution shows that homogeneity in variance across marital status is not followed.
+
+Now, lets test two-way independent ANOVA test and view the ANOVA summary table:
+```{r}
+Ind.ANOVA <- aov(Income ~ MS, ms_group)
+Anova(Ind.ANOVA, type = "III") 
+```
+As $p < 0.05$, there is enough evidence to reject **reject** _Null Hypothesis_$(H_{o})$. Thus, the income level differs across different categories of Marital Status (MS).
+
+Also, to determine the difference in income levels across categories of MS, we will use Post-hoc test.
+```{r}
+t_test(AMOD5210, Income ~ MS, var.equal = TRUE, p.adjust.method = "bonferroni")
+```
 
 
+### Step 3: Conclusion
 
-
-
-
-
+The current study determines whether or not the income level differs across married, single, and divorced individuals ("MS").A 200 random samples taken from the dataset and examined(39 Divorced, 141 Married ,20 Single). The sample contained 2 outliers. A Shapiro-wilks test demonstrated that the distribution across married, single, and divorced individuals ("MS") was not normal. The mean income for divorced was 35333.33(SD = 20633.64),the mean income for married was 68958.33 (SD = 35389.32), the mean income for single was 38461.54 (SD = 34256.95). The two-way Independent test showed that the Income level differs across married, single, and divorced individuals ("MS"), $F(2, 197) = 18.680$, $p < 0.05$. Bonferroni-corrected pairwise comparisons showed that the divorced cases of MS had more income level than other two, that is, single and  married, while married has significantly greater income level than single.
 
 
 
