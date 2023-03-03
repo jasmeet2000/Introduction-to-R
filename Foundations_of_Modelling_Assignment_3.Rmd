@@ -77,12 +77,12 @@ Let's test for “age”
 shapiro.test(AMOD5210$Age)
 ```
 This how a histogram looks like:
-```{r}
+```{r fig.height = 3, fig.width = 5, fig.align = "center"}
 hist(AMOD5210$Age, xlab = "Age"
      , ylab = "Number of People"
      , main = "Age Distribution of First-time Gamblers"
      , prob = FALSE
-     , col = "pink")
+     , col = "green")
 
 ```
 
@@ -96,12 +96,12 @@ shapiro.test(AMOD5210$AG)
 ```
 
 This how a histogram looks like:
-```{r}
+```{r fig.height = 3, fig.width = 5, fig.align = "center"}
 hist(AMOD5210$AG, xlab = "AG"
      , ylab = "Number of People"
      , main = "AG Distribution of First-time Gamblers"
      , prob = FALSE
-     , col = "pink")
+     , col = "green")
 
 ```
 
@@ -117,12 +117,12 @@ shapiro.test(AMOD5210$LTW)
 
 This how a histogram looks like:
 
-```{r}
+```{r fig.height = 3, fig.width = 5, fig.align = "center"}
 hist(AMOD5210$LTW, xlab = "Winners"
      , ylab = "Number of People"
      , main = "Lifetime winnings distribution from gambling"
      , prob = FALSE
-     , col = "pink")
+     , col = "green")
 ```
 
 
@@ -181,7 +181,7 @@ Now, let's run t-test for independent.
 t_test(AG ~ Gender, data = AMOD5210, var.equal = TRUE)
 ```
 
-As $p < 0.05$, therefore, we have enough evidence to **reject** the __Null Hypothesis__, that is, there is a significantly difference between the score of males and females on the variable "AG".
+As $p < 0.05$, therefore, we have enough evidence to **reject** the __Null Hypothesis__ $(H_{0})$, that is, there is a significantly difference between the score of males and females on the variable "AG".
 
 ### Step 3 : Conclusion
 The current study sought to determine whether or not there is a significantly difference between the score of males and females on the variable "AG". A 200 random samples were taken from a dataset of 3947 observation(81 males, 119 female).The sample contained few extreme outliers. A Shapiro-Wilks test didn't demonstrated normality. Moreover, Levene’s test demonstrated non-heterogeneity of variance. The mean of "AG" for male was 19.580(SD = 8.637) and for female it was 23.417(SD = 9.550). An independent sample T-test showed that, $t(194) = 2.880084$, $p < 0.05$, concluding that the mean difference in “AG” between male and female in the sample was statistically significant. 
@@ -237,22 +237,67 @@ Now, let's run t-test for independent.
 t_test(LTW ~ Gender, data = AMOD5210, var.equal = TRUE)
 ```
 
-As $p > 0.05$, therefore, we have enough evidence to **accept** the __Null Hypothesis__, that is, there is a no significantly difference between the score of males and females on the variable "LTW".
+As $p > 0.05$, therefore, we have enough evidence to **accept** the __Null Hypothesis__ $(H_{0})$, that is, there is a no significantly difference between the score of males and females on the variable "LTW".
 
 ### Step 3 : Conclusion
-
-abc
+The current study sought to determine whether or not there is a significantly difference between the score of males and females on the variable "Gambled". A 200 random samples were taken from a dataset of 3947 observation(81 males, 119 female).The sample contained few extreme outliers. A Shapiro-Wilks test didn't demonstrated normality. Moreover, Levene’s test demonstrated heterogeneity of variance. The mean of "Gambled" for male was -611.790(SD = 33558.163) and for female it was -975.278(SD = 3912.717). An independent sample T-test showed that, $t(194) = -0.1151715	$, $p > 0.05$, concluding that the mean difference in “Gambled” between male and female in the sample was not statistically significant. 
 
 $$
 - X -
 $$
-### Inferential statistic for "Gambled" variable.
 
-### Step 1 :
+### Inferential statistic for "Gambled" variable
 
-### Step 2 :
+### Step 1 : Hypothesis & assumptions
 
-### Step 3 :
+Let's define **Null Hypothesis** $H_{o}$ and **Alternative Hypothesis** $H_{A}$ to use inferential statistic.
+
+$H_{o} :$ There is no significantly difference between the score of males and females on the variable "Gambled" (that is, amount of money gambled in past 12 months).
+
+$H_{A} :$ There is significantly difference between the score of males and females on the variable "Gambled" (that is, amount of money gambled in past 12 months). 
+
+Let’s organize the data by group and get some descriptive statistics:
+```{r}
+library(rstatix)
+get_summary_stats(group_by_gender,Gambled,type="mean_sd")
+```
+Now, we need to test some **assumptions**. Firstly, let's check for extreme outliers.
+
+```{r}
+identify_outliers(group_by_gender, Gambled)
+```
+
+Here, we get extreme outliers in the Gambled variable. But, we will perform the t-test.
+
+### Step 2 : Testing
+
+Now, we will test for normality using **Shapiro-Wilks Test**.
+
+```{r}
+# To test using Shapiro-Wilks
+shapiro_test(group_by_gender, Gambled)
+```
+Here, $p < 0.05$ for male as well as female. It a not normal distribution and we will use t-test, that is, Levene Test.
+
+Now, to test for homogeneity of variance, we will use Levene Test.
+```{r}
+# Test for homogeneity of variance(Levene Test)
+levene_test(AMOD5210, Gambled ~ Gender)
+
+```
+Here, $p > 0.05$, Therefore, the variance of male and female is homogeneous.
+
+Since, the condition or assumptions is not met during testing. Now, we will test using t-test to get the conclusion between the score of males and females on the variable "Gambled".
+
+Now, let's run t-test for independent.
+```{r}
+t_test(Gambled ~ Gender, data = AMOD5210, var.equal = TRUE)
+```
+
+As $p > 0.05$, therefore, we have enough evidence to **accept** the __Null Hypothesis__ $(H_{0})$, that is, there is a no significantly difference between the score of males and females on the variable "Gambled".
+
+### Step 3 :  Conclusion
+The current study sought to determine whether or not there is a significantly difference between the score of males and females on the variable "Gambled". A 200 random samples were taken from a dataset of 3947 observation(81 males, 119 female).The sample contained few extreme outliers. A Shapiro-Wilks test didn't demonstrated normality. Moreover, Levene’s test demonstrated heterogeneity of variance. The mean of "Gambled" for male was 84.123(SD = 120.928) and for female it was 68.588(SD = 109.573). An independent sample T-test showed that, $t(198) = -0.9435949$, $p > 0.05$, concluding that the mean difference in “Gambled” between male and female in the sample was not statistically significant. 
 
 \newpage
 
@@ -263,12 +308,11 @@ $$
 ### Step 1: Hypothesis
 
 Let's define **Null Hypothesis** $H_{o}$ and **Alternative Hypothesis** $H_{A}$ to use inferential statistic.
-$$
-H_{o} : Marital \ Status \ is \ NOT \ significantly \ dependent \ on \ reporting \ an \ early \ or \ late \ onset \ of \ gambling.
-$$
-$$
-H_{A} :  Marital \ Status \ is \ significantly \ dependent \ on \ reporting \ an \ early \ or \ late \ onset \ of \ gambling.
-$$
+
+$H_{o}$ : Marital Status is NOT significantly dependent on reporting an early or late onset of gambling.
+
+$H_{A}$ : Marital Status is significantly dependent on reporting an early or late onset of gambling.
+
 
 ### Step 2: Testing
 
@@ -298,9 +342,7 @@ chisq.posthoc.test(frequency_table)
 
 ### Step 3: Conclusion
 
-The present research seeks to determine whether marital status is significantly dependent on reporting an early or late onset of gambling. A 200 sample of (81 Males, 119 Female) were taken and then divided based on marital
-status: Single $(N = 26)$, Married $(N = 144)$ and Divorced $(N = 30)$. A Chi-square Test of Independence revealed that the marital status is independent on reporting an early or late onset of gambling, $X^2(2,N=200) = 2.6943, p > 0.05$. A post-hoc test of proportions concluded that singles reported an early onset of gambling
-than married or divorced.
+The present research seeks to determine whether marital status is significantly dependent on reporting an early or late onset of gambling. A 200 sample of (81 Males, 119 Female) were taken and then divided based on marital status: Single $(N = 26)$, Married $(N = 144)$ and Divorced $(N = 30)$. A Chi-square Test of Independence revealed that the marital status is independent on reporting an early or late onset of gambling, $X^2(2,N=200) = 2.6943, p > 0.05$.
 
 \newpage
 
@@ -308,7 +350,103 @@ than married or divorced.
 
 ## What are the correlations (reported to 3 decimals) for the following pairs of  variables: “age” and “LTW”; “age” and “gambled”; and “AG” and “LTW”. Report the p-values for each correlation. For each of the relevant correlations, what is the slope and intercept when “LTW” is the Y variable (i.e., dependent variable)? One of the key assumptions when interpreting a correlation is that the x and y variables are linearly related. Do you think this assumption is met for each of the 3 correlations? 
 
-Answer
+ Let's check the statistics of the dataset:
+```{r}
+library(psych)
+describe(AMOD5210, fast = TRUE)
+```
+ 
+ 
+ We will now check **assumption** on all variables, before performing *correlation test*.
+ 
+ Let's check for the outliers for all four variables, that is, "LTW", "AG", "Age", "Gambled" :
+```{r}
+identify_outliers(AMOD5210, LTW)
+identify_outliers(AMOD5210, AG)
+identify_outliers(AMOD5210, Age)
+identify_outliers(AMOD5210, Gambled)
+```
+
+All four variables have few outliers. Now, we will follow the next steps, that is, Shapiro-Wilks Test.
+
+Now, we will test for normality using **Shapiro-Wilks Test**.
+
+```{r}
+# To test using Shapiro-Wilks
+shapiro_test(AMOD5210, vars = c("Age", "LTW","Gambled","AG"))
+```
+
+All the four variables in Shapiro-Wilks test has $p < 0.05$. It seem that all the four variables are not Normal Distribution. We will now use Spearman’s Rho Correlation method, that is, non-parametric correlation test.
+
+Now, let's check the linearity in all the four variables, that is, "LTW", "AG", "Age", "Gambled":
+```{r fig.height = 3, fig.width = 5, fig.align = "center"}
+# For "Age" and "LTW"
+plot(AMOD5210$Age, AMOD5210$LTW, col = "darkgreen",
+     xlab = "Age", ylab = "Lifetime Winnings (LTW)" , main = "Scatter plot of Age and LTW")
+abline(lm(AMOD5210$LTW ~ AMOD5210$Age, data = AMOD5210), col = "black", lw = 2)
+```
+
+The scatter plot for "Age" and "LTW" shows that, as the persons age *increases*, the Lifetime Winnings (LTW) *does not changes* too much. Therefore, the regression line, which was seen in the above plot is almost *constant* and does not show **linearity**.
+
+```{r fig.height = 3, fig.width = 5, fig.align = "center"}
+# For Age and Gambled
+plot(AMOD5210$Age, AMOD5210$Gambled, col = "darkgreen",
+     xlab = "Age", ylab = "Gambled" , main = "Scatter plot of Age and Gambled")
+abline(lm(AMOD5210$Gambled ~ AMOD5210$Age, data = AMOD5210), col = "black", lw = 2)
+```
+Here, the scatter plot for "Age" and "Gambled" shows that, as the persons age *increases*, the Gambled *changes* very little. Therefore, the regression line, which was seen in the above plot is almost *constant* and does not show **linearity**.
+
+```{r  fig.height = 3, fig.width = 5, fig.align = "center"}
+# For  AG and LTW
+plot(AMOD5210$AG, AMOD5210$LTW, col = "darkgreen",
+     xlab = "Age of first time Gambling(AG)", ylab = "Lifetime Winnings(LTW)" , main = "Scatter plot of AG and LTW")
+abline(lm(AMOD5210$LTW ~ AMOD5210$AG, data = AMOD5210), col = "black", lw = 2)
+```
+Here, the scatter plot for "AG" and "LTW" shows that, as Age of first time gambling(AG) *increases*, the Lifetime Winnings(LTW) *does not changes* too much. Therefore, the regression line, which was seen in the above plot is almost *constant* and does not show **linearity**.
+
+**Hence, none of them the correlation shows the condition of Linearity.**
+
+- **"Age" and "LTW"**
+Now lets perform correlation test
+```{r}
+correlation_age_ltw <- cor.test(AMOD5210$Age, AMOD5210$LTW, method = "spearman")
+correlation_age_ltw
+# Reporting to 3 decimals points
+round(correlation_age_ltw$estimate,3)
+```
+
+Therefore, the *Spearman's rank correlation rho between “Age” and “LTW”* is **-0.13**.
+```{r}
+lm(AMOD5210$Age ~ AMOD5210$LTW,data = AMOD5210)
+```
+**"LTW" is the dependent variable in the correlation test**, therefore, Slope is $-1.146e-05$ and Y-Intercept is $4.641e+01$.
+
+- **"Age" and "Gambled"**
+
+```{r}
+correlation_age_gambled <- cor.test(AMOD5210$Age, AMOD5210$Gambled, method = "spearman")
+correlation_age_gambled
+# Reporting to 3 decimals points
+round(correlation_age_gambled$estimate,3)
+```
+Therefore, the *Spearman's rank correlation rho between “Age” and “Gambled”* is **0.111**.
+
+- **"AG" and "LTW"**
+
+```{r}
+correlation_ag_ltw <- cor.test(AMOD5210$AG, AMOD5210$LTW, method = "spearman")
+correlation_ag_ltw
+# Reporting to 3 decimals points
+round(correlation_ag_ltw$estimate,3)
+```
+Therefore, the *Spearman's rank correlation rho between “AG” and “LTW”* is **-0.025**.
+
+```{r}
+lm(AMOD5210$AG ~ AMOD5210$LTW,data = AMOD5210)
+```
+
+**"LTW" is the dependent variable in the correlation test**, therefore, Slope is $1.725e-05$ and Y-Intercept is $2.185e+01$.
+
 
 \newpage
 
@@ -342,7 +480,7 @@ Firstly, we will also look for extreme outlier.
 identify_outliers(ms_group, Income)
 ```
 
-Since, we have two outlier.But, We also need to test the normality assumption using Shapiro-Wilks Test.
+Since, we have two outlier. But, we are going to proceed with the normality test, using Shapiro-Wilks Test.
 
 ```{r}
 shapiro_test(ms_group, Income)
@@ -360,24 +498,25 @@ Finally, we need to test for homogeneity of variance.
 levene_test(AMOD5210, Income ~ MS)
 
 ```
-As $p < 0.05$, thus the distribution shows that homogeneity in variance across marital status is not followed.
+As $p < 0.05$, the distribution shows that non-homogeneity in variance across marital status and thus it is not followed.
 
 Now, lets test two-way independent ANOVA test and view the ANOVA summary table:
 ```{r}
 Ind.ANOVA <- aov(Income ~ MS, ms_group)
 Anova(Ind.ANOVA, type = "III") 
 ```
-As $p < 0.05$, there is enough evidence to reject **reject** _Null Hypothesis_$(H_{o})$. Thus, the income level differs across different categories of Marital Status (MS).
+As $p < 0.05$, there is enough evidence to **reject** _Null Hypothesis_$(H_{o})$. Thus, the income level differs across different categories of Marital Status (MS).
 
 Also, to determine the difference in income levels across categories of MS, we will use Post-hoc test.
 ```{r}
-t_test(AMOD5210, Income ~ MS, var.equal = TRUE, p.adjust.method = "bonferroni")
+t_test(AMOD5210, Income ~ MS, var.equal = FALSE, p.adjust.method = "bonferroni")
 ```
+
 
 
 ### Step 3: Conclusion
 
-The current study determines whether or not the income level differs across married, single, and divorced individuals ("MS").A 200 random samples taken from the dataset and examined(39 Divorced, 141 Married ,20 Single). The sample contained 2 outliers. A Shapiro-wilks test demonstrated that the distribution across married, single, and divorced individuals ("MS") was not normal. The mean income for divorced was 35333.33(SD = 20633.64),the mean income for married was 68958.33 (SD = 35389.32), the mean income for single was 38461.54 (SD = 34256.95). The two-way Independent test showed that the Income level differs across married, single, and divorced individuals ("MS"), $F(2, 197) = 18.680$, $p < 0.05$. Bonferroni-corrected pairwise comparisons showed that the divorced cases of MS had more income level than other two, that is, single and  married, while married has significantly greater income level than single.
+The current study determines whether or not the income level differs across married, single, and divorced individuals ("MS").A 200 random samples taken from the dataset and examined(39 Divorced, 141 Married ,20 Single). The sample contained 2 outliers. A Shapiro-wilks test demonstrated that the distribution across married, single, and divorced individuals ("MS") was not normaly  distributed and Levene's test shows the non-homogeneity in variance. The mean income for divorced was 35333.33(SD = 20633.64),the mean income for married was 68958.33 (SD = 35389.32), the mean income for single was 38461.54 (SD = 34256.95). An Independent test showed that the Income level differs across married, single, and divorced individuals ("MS"), $F(2, 197) = 18.680$, $p < 0.05$. Bonferroni-corrected pairwise comparisons showed that the single category had significantly higher income level than both the divorced and married categories, while the married category had significantly higher income level than the divorced category.
 
 
 
