@@ -128,6 +128,8 @@ hist(AMOD5210$LTW, xlab = "Winners"
 
 By Shapiro-Wilk normality test the p-value < 0.05. Hence, it is not normally distributed. 
 
+We can observe that these graph are not normal. We can confirm this throught Shapiro-Wilk normality test where we observed that the p-value for these graph are less than 0.05. While the first graph appears to be not normal, the second and third graph are right-skewed. **We can increase the sample size to make them more.**
+
 \newpage
 
 # Question 3
@@ -186,9 +188,6 @@ As $p < 0.05$, therefore, we have enough evidence to **reject** the __Null Hypot
 ### Step 3 : Conclusion
 The current study sought to determine whether or not there is a significantly difference between the score of males and females on the variable "AG". A 200 random samples were taken from a dataset of 3947 observation(81 males, 119 female).The sample contained few extreme outliers. A Shapiro-Wilks test didn't demonstrated normality. Moreover, Levene’s test demonstrated non-heterogeneity of variance. The mean of "AG" for male was 19.580(SD = 8.637) and for female it was 23.417(SD = 9.550). An independent sample T-test showed that, $t(194) = 2.880084$, $p < 0.05$, concluding that the mean difference in “AG” between male and female in the sample was statistically significant. 
 
-$$ 
-- X -
-$$
 
 ### Inferential statistic for "LTW" variable.
 
@@ -241,10 +240,6 @@ As $p > 0.05$, therefore, we have enough evidence to **accept** the __Null Hypot
 
 ### Step 3 : Conclusion
 The current study sought to determine whether or not there is a significantly difference between the score of males and females on the variable "Gambled". A 200 random samples were taken from a dataset of 3947 observation(81 males, 119 female).The sample contained few extreme outliers. A Shapiro-Wilks test didn't demonstrated normality. Moreover, Levene’s test demonstrated heterogeneity of variance. The mean of "Gambled" for male was -611.790(SD = 33558.163) and for female it was -975.278(SD = 3912.717). An independent sample T-test showed that, $t(194) = -0.1151715	$, $p > 0.05$, concluding that the mean difference in “Gambled” between male and female in the sample was not statistically significant. 
-
-$$
-- X -
-$$
 
 ### Inferential statistic for "Gambled" variable
 
