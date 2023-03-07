@@ -5,6 +5,7 @@ library(tidyr)
 library(ggrepel)
 library(gggenes)
 
+
 # Read in the data
 train_data <- read.csv("train_titanic.csv")
 test_data <- read.csv("test_titanic.csv")
