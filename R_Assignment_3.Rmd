@@ -1,0 +1,268 @@
+---
+title: "**R Assignment - 3**"
+author: "Jasmeet Singh Saini - 0758054"
+date: "`r Sys.Date()`"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(ggplot2)
+library(tinytex)
+library(dplyr)
+library(knitr)
+library(psych)
+```
+
+# Question 1 - Pizza McPizza Face
+ 
+## A frozen pizza maker produces 5 types of pizza: cheese, pepperoni, vegetarian, deluxe, and meat lovers. A random sample of transactions containing frozen pizza was examined from a local grocery store and the numbers of each pizza type recorded.
+
+### a) The pizza maker wants to know if the proportions of pizza sold matched the preferences found in a large national poll. Using the information in Table 1, answer this question using a significance level of $\alpha= 0.05$. What test should you use?
+
+**Table 1: Pizza sales (sold column) along with preferences from a national poll (poll column).**
+
+Pizza Type   Sold           Poll
+---------    -----------   -----------
+Cheese        24             0.15
+Pepperoni     65             0.40
+Vegetarian    12             0.06
+Deluxe        30             0.15
+Meat          39             0.24     
+
+**Solution:**
+
+Firstly, let's construct the table:
+
+```{r}
+table_one = data.frame( pizza_type = c('Cheese', 'Pepperoni', 'Vegetarian', 'Deluxe', 'Meat'),
+                    sold = c(24,65,12,30,39), poll = c(0.15,0.40,0.06,0.15,0.24))
+table_one
+```
+
+The objective of this question is to determine whether the distribution of pizza sales in a store matches with the claimed distribution of pizza sales reported in a large nation poll. To achieve this, we will use the $\chi^2$ **goodness-of-fit test**, which tells, whether or not the observed frequency distribution fits a particular claimed one.
+
+**Step 1 : Hypothesis & Assumptions**
+
+The $H_{0}$ is Null hypothesis and $H_{A}$ is Alternative hypothesis.
+
+$$
+\begin{aligned}
+H_{0}:\ &\text{The Proportion of pizzas sold matches with the national poll.} \\
+&\qquad \qquad \qquad \qquad \qquad \qquad \text{vs.} \\
+H_{A}:\ &\text{The Proportion of pizzas sold does not matches with the national poll.}
+\end{aligned}
+$$
+**Assumptions**
+
+To apply CLT, the below conditions must be met:
+
+a. **Independence** : Each observation is randomly sampled independent of the others. Therefore Independence condition is met.
+
+b. **Success / Failure Conditions** : In order to check this condition, we need to each category must have at least 5 expected cases.
+
+Let's check the conditions:
+```{r}
+testing_a = chisq.test(table_one$sold, p = table_one$poll, correct = TRUE)
+testing_a$expected
+all(testing_a$expected >= 5)
+```
+Since, all values are greater than or equal to 5. Thus, the condition is satisfied. Now, let's analyze the result of chi-squared test to make our decision.
+
+**Step 2 : Test Statistic and p-value**
+
+```{r}
+str(testing_a)
+```
+
+**Step 3 : Statistical Decision**
+
+Hence, the test statistic($\chi^2$) is **1.41** and **$p-value(0.84) > 0.05$**, we will fail to reject the null hypothesis.
+
+**Step 4 : Conclusion**
+
+From our sample, there is enough evidence to support the null hypothesis and therefore, we would conclude that the claim, "the proportion of pizzas sold **matches** with the national poll (poll column)", is accurate.
+
+### b) The pizza maker let the internet choose their next three types of pizza. They should have known better1 and the internet decided on: cotton candy, BBQ chicken, and taco. Randomly sampled transactions were selected from a local grocery store and sales of these new flavours were compared with internal marketing data for the expected sales at the same store during a one week period. 
+
+**Use the information in Table 2 along with a goodness-of-fit test to decide if the internal marketing data was correct ($\alpha$ = 0.1).**
+
+**Table 2: Pizza sales (sold column) and expected sales (expected column) for the three new types.**
+
+Pizza Type      Sold            Expected
+---------      -----------    -----------
+Cotton Candy    0              2
+BBQ Chicken     12             10
+Taco            5              3   
+
+**Solution:**
+
+Firstly, let's construct the table:
+
+```{r}
+table_two = data.frame(pizza = c('Cotton Candy', 'BBQ Chicken', 'Taco'),
+                    sold = c(0,10,5),
+                    expected_sales = c(2,10,3))
+table_two
+```
+
+We will use the $\chi^2$ **goodness-of-fit test**.
+
+**Step 1 : Hypothesis & Assumptions**
+
+The $H_{0}$ is Null hypothesis and $H_{A}$ is Alternative hypothesis.
+
+$$
+\begin{aligned}
+H_{0}:\ &\text{The Proportion of pizzas sold matches with their expected sales.} \\
+&\qquad \qquad \qquad \qquad \qquad \qquad \text{vs.} \\
+H_{A}:\ &\text{The Proportion of pizzas sold does not matches with their expected sales.}
+\end{aligned}
+$$
+
+**Assumptions**
+
+To apply CLT, the below conditions must be met:
+
+a. **Independence** : Each observation is randomly sampled independent of the others. Therefore Independence condition is met.
+
+b. **Success / Failure Conditions** : In order to check this condition, we need to each category must have at least 5 expected cases.
+
+Let's check the condition:
+```{r}
+testing_b = chisq.test(table_two$sold,
+                    p = prop.table(table_two$expected_sales),
+                    correct = TRUE)
+testing_b$expected
+all(testing_b$expected >=5)
+```
+
+Since, all the values are **not** greater than or equal to 5. Thus, the condition is not satisfied. 
+
+Now, we will use simulations non-parametric approach for the test now.
+
+**Step 2 : Test Statistic and p-value**
+
+Now, we need to perform p-value simulations for chi-squared test to make our decision.
+```{r}
+testing_b = chisq.test(table_two$sold,
+                    p = prop.table(table_two$expected_sales),
+                    correct = TRUE, simulate.p.value = TRUE)
+str(testing_b)
+```
+
+
+**Step 3 : Statistical Decision**
+
+Hence, the test statistic($\chi^2$) is **3.33** and **$p-value(0.17) > 0.05$**, we would **accept** the null hypothesis.
+
+**Step 4 : Conclusion**
+
+From our sample, there is enough evidence to support the null hypothesis and therefore, we would conclude that the claim, "The Proportion of pizzas sold matches with their expected sales", is accurate.
+
+\newpage
+
+# Question 2 - Cats and Dogs and Fish (oh my!)
+ 
+## You want, nay need, to answer the question that plagues every generation: does a voter’s party affiliation affect their pet preference? You conduct a simple random sample of the Canadian electorate and ask participants, “What is your favourite animal?” and “What is your party affiliation?”. The information you collect is summarized as:
+
+  * **Dog preferred and Liberal: 20**
+  * **Dog preferred and Conservative: 10**
+  * **Dog preferred and NDP: 25**
+  * **Cat preferred and Liberal: 15**
+  * **Cat preferred and Conservative: 23**
+  * **Cat preferred and NDP: 20**
+  * **Fish preferred and Liberal: 10**
+  * **Fish preferred and Conservative: 30**
+  * **Fish preferred and NDP: 10**
+
+### a) Present this information in a nice table. A table of contingencies perhaps; one might say a contingency table.
+
+**Solution:**
+
+Firstly, we should construct the contingency table for our data.
+```{r}
+animal  =  c('Dog', 'Cat', 'Fish')
+party   = c('Liberal', 'NDP', 'Conservative')
+# Creating the contingency table
+contingency_table = table(animal, party) 
+
+# Inserting the values into the table 
+contingency_table['Dog', 'Liberal'] = 20
+contingency_table['Dog', 'Conservative'] = 10
+contingency_table['Dog', 'NDP'] = 25
+contingency_table['Cat', 'Liberal'] = 15
+contingency_table['Cat', 'Conservative'] = 23
+contingency_table['Cat', 'NDP'] = 20
+contingency_table['Fish', 'Liberal'] = 10
+contingency_table['Fish', 'Conservative'] = 30
+contingency_table['Fish', 'NDP'] = 10
+# view the contingency table 
+contingency_table
+```
+### b) What type of test should be used t answer this question?
+
+**Solution:**
+
+In current question, sample is created out of one population, that is, Canadian electorate. We need to check for dependence between two variables(favourite animal & party affiliation),as whether the party affiliation affects the probability of type of pet.
+
+Thus, we will use chi-square **test of Independence** to test our hypothesis.
+
+
+### c) Test the question of whether party affiliation affect the probability of type of pet. Since this is such an important question, use the significance level $\alpha = 0.01$.
+
+**Solution:**
+
+**Step 1 : Hypothesis & Assumptions**
+
+The $H_{0}$ is Null hypothesis and $H_{A}$ is Alternative hypothesis.
+
+$$
+\begin{aligned}
+H_{0}:\ &\text{The Party affiliation does not affect the probability of type of pet.} \\
+&\qquad \qquad \qquad \qquad \qquad \qquad \text{vs.} \\
+H_{A}:\ &\text{The Party affiliation affect the probability of type of pet.}
+\end{aligned}
+$$
+
+**Assumptions**
+
+To apply CLT, the below conditions must be met:
+
+a. **Independence** : Each observation is randomly sampled independent of the others. Therefore Independence condition is met.
+
+b. **Success / Failure Conditions** : In order to check this condition, we need to each category must have at least 5 expected cases.
+
+Let's check the condition:
+
+```{r}
+testing_two_c = chisq.test(contingency_table, correct = TRUE)
+testing_two_c$expected
+all(testing_two_c$expected >=5)
+```
+As, all values are greater than or equal to 5, the condition is satisfied.
+
+**Step 2 : Test Statistic and p-value**
+
+Now, we need to analyze the result of chi-squared test to make our decision.
+```{r}
+str(testing_two_c)
+```
+
+**Step 3 : Statistical Decision**
+
+Hence, the test statistic($\chi^2$) is **19.6** and **$p-value(0.0006) < 0.01$**, we would **reject** the null hypothesis.
+
+**Step 4 : Conclusion**
+
+From our sample, there is not enough evidence to support the null hypothesis and therefore, we would conclude that the claim, "The Party affiliation affect the probability of type of pet", is accurate.
+
+\newpage
+
+# Question 3 - Memories
+ 
+## An experiment was conducted to test whether ginkgo biloba would improve memory. 203 participants were randomly assigned to take ginkgo biloba supplements or a placebo. Memory was tested using standard methods and the changes in scores were recorded as continuous numeric quantities. These are available in memory.csv.
+
+### a)  Load the dataset contained in memory.csv into R using read.csv().
+
+**Solution:**
