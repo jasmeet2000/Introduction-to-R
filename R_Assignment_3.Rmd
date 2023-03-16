@@ -266,3 +266,49 @@ From our sample, there is not enough evidence to support the null hypothesis and
 ### a)  Load the dataset contained in memory.csv into R using read.csv().
 
 **Solution:**
+
+Let's load the dataset using read.csv() into environment variable.
+
+```{r}
+# Importing the dataset
+memory_data <- read.csv("memory.csv")
+```
+### b) State the means and standard deviations for both groups.
+
+**Solution:**
+
+The means and standard deviations for both groups, that is, **Gingko Biloba** and **Placebo** are given below:
+
+```{r}
+# Mean of Gingko Biloba
+round(mean(memory_data$Gingko, na.rm = TRUE),4)
+
+# Standard Deviation of Gingko Biloba
+round(sd(memory_data$Gingko, na.rm = TRUE),4)
+```
+The *mean* and *standard deviation* for **Gingko Biloba** is **4.2308** and **5.0324** respectively.
+
+```{r}
+# Mean of Placebo
+round(mean(memory_data$Placebo, na.rm = TRUE),4)
+
+# Standard Deviation of Placebo
+round(sd(memory_data$Placebo, na.rm = TRUE),4)
+```
+
+The *mean* and *standard deviation* for **Placebo** is **5.2222** and **4.1171** respectively.
+
+\newpage
+### c) Which version of two sample test for means is appropriate to determine whether ginkgo biloba improves memory scores? (We know of three versions: paired; independent equal variance; independent unequal variance)
+
+**Solution:**
+
+For Two Sample, **Independent Equal Variance t-test** for means is appropriate to determine whether ginkgo biloba improves memory scores. Here, we will comparing means of two independent groups, gingko and placebo.
+
+### d) Conduct a hypothesis test to see if the mean memory score in the Gingko group is higher than the mean memory score in the Placebo group. Use $\alpha = 0.01$. (This means hypotheses, assumptions, test statistic and *p*-value, statistical decision, conclusion.)
+
+**Solution:**
+
+### e) Examine your test statistic value. Based on this and the alternative hypothesis, did you need to run a full statistical analysis to arrive at your conclusion? Describe your rationale briefly.
+
+**Solution:**
