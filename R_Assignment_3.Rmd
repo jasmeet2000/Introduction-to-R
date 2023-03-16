@@ -309,6 +309,18 @@ For Two Sample, **Independent Equal Variance t-test** for means is appropriate t
 
 **Solution:**
 
+**Step 1 : Hypothesis & Assumptions**
+
+**Assumptions**
+
+**Step 2 : Test Statistic and p-value**
+
+**Step 3 : Statistical Decision**
+
+**Step 4 : Conclusion**
+
 ### e) Examine your test statistic value. Based on this and the alternative hypothesis, did you need to run a full statistical analysis to arrive at your conclusion? Describe your rationale briefly.
 
 **Solution:**
+
+
