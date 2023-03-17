@@ -200,13 +200,13 @@ contingency_table['Fish', 'NDP'] = 10
 # view the contingency table 
 contingency_table
 ```
+\newpage
+
 ### b) What type of test should be used t answer this question?
 
 **Solution:**
 
-In current question, sample is created out of one population, that is, Canadian electorate. We need to check for dependence between two variables(favourite animal & party affiliation),as whether the party affiliation affects the probability of type of pet.
-
-Thus, we will use chi-square **test of Independence** to test our hypothesis.
+We need to determine whether a party's affiliation affects the pet preference. Thus, a **chi-square test of Independence** would be an appropriate strategy.
 
 
 ### c) Test the question of whether party affiliation affect the probability of type of pet. Since this is such an important question, use the significance level $\alpha = 0.01$.
@@ -305,22 +305,108 @@ The *mean* and *standard deviation* for **Placebo** is **5.2222** and **4.1171**
 
 For Two Sample, **Independent Equal Variance t-test** for means is appropriate to determine whether ginkgo biloba improves memory scores. Here, we will comparing means of two independent groups, gingko and placebo.
 
-### d) Conduct a hypothesis test to see if the mean memory score in the Gingko group is higher than the mean memory score in the Placebo group. Use $\alpha = 0.01$. (This means hypotheses, assumptions, test statistic and *p*-value, statistical decision, conclusion.)
+### d) Conduct a hypothesis test to see if the mean memory score in the Gingko group is higher than the mean memory score in the Placebo group. Use $\alpha = 0.1$. (This means hypotheses, assumptions, test statistic and *p*-value, statistical decision, conclusion.)
 
 **Solution:**
 
+Firstly, let's analyze the data:
+```{r}
+tail(memory_data)
+```
+
+The memory data has *NA* values in Placebo. Now, let's remove *NA* values:
+```{r}
+# Checking Gingko
+which(is.na(memory_data$Gingko))
+
+gingko_memory_data <- memory_data$Gingko
+```
+Here, there are no *NA* values in Gingko group of memory data.
+
+```{r}
+# Checking Placebo
+placebo_na <- which(is.na(memory_data$Placebo))
+placebo_memory_data <- memory_data$Placebo[-placebo_na]
+```
+Here, we have removed the *NA* values in placebo group.
+
+```{r}
+# Checking the length of each group
+length(gingko_memory_data)
+length(placebo_memory_data)
+```
+
 **Step 1 : Hypothesis & Assumptions**
+
+The $H_{0}$ is Null hypothesis and $H_{A}$ is Alternative hypothesis.
+$$
+\begin{aligned}
+H_{0}:\ &\text{The mean memory score in Ginkgo is not significantly different from the mean memory score in Placebo.} \\
+&\qquad \qquad \qquad \qquad \qquad \qquad \text{vs.} \\
+H_{A}:\ &\text{The mean memory score in Ginkgo is significantly higher than the mean memory score in Placebo.}
+\end{aligned}
+$$
+Also, we can say that,
+
+$H_{0}: \mu_{ginkgo} \le \mu_{placebo}$
+
+$\qquad \qquad vs$
+
+$H_{A}: \mu_{ginkgo} > \mu_{placebo}$
+
+we will use a significance level ($\alpha$) of 0.1.
 
 **Assumptions**
 
+a. **Independence** : The data is randomly sampled and is less than 10% of the population size. Therefore, Independence condition is met.
+
+b. **Normality** : To check whether the data is normally distributed, few visualizations.     
+
+```{r }
+par(mfrow=c(2,3))
+# To visualization and check normality of Gingko group
+qqnorm(gingko_memory_data)
+qqline(gingko_memory_data, col='red')
+hist(gingko_memory_data, main = "Histogram of Gingko")
+boxplot(gingko_memory_data, main = "Boxplot of Gingko")
+
+# par(mfrow=c(1,3))
+# To visualization and check normality of Placebo group
+qqnorm(placebo_memory_data)
+qqline(placebo_memory_data, col='red')
+hist(placebo_memory_data, main = "Histogram of Placebo")
+boxplot(placebo_memory_data, main = "Boxplot of Placebo")
+```
+
+Hence, the qqnorm, histogram and boxplot depicts that both the groups, that is, Gingko and Placebo are approximately normal. Thus, the condition is assumptions to be met.
+
 **Step 2 : Test Statistic and p-value**
+
+```{r}
+t_test <- t.test(gingko_memory_data, placebo_memory_data
+                , alternative = "greater"
+                , var.equal = TRUE
+                , conf.level = 0.9)
+t_test
+```
+
+Hence, the test statistic is **-1.532** and *p*-value is **0.9365**.
 
 **Step 3 : Statistical Decision**
 
+As, we know if the p-value is less than or equal to the significance level $(\alpha)$, we reject the null hypothesis. Otherwise, we fail to reject the null hypothesis.
+
+Here, the $p-value > 0.1$ (level of significance), therefore, we **Accept** the *Null Hypothesis*, $H_{0}$.
+
 **Step 4 : Conclusion**
+
+The t-test results depicts that, the test statistic is t = -1.53 and the p-value is 0.94. Since, the p-value is less than the significance level of 0.1. From our sample, there is enough evidence to support the null hypothesis and therefore, we would conclude that the claim, "The mean memory score in Ginkgo is not significantly different from the mean memory score in Placebo", is accurate.
 
 ### e) Examine your test statistic value. Based on this and the alternative hypothesis, did you need to run a full statistical analysis to arrive at your conclusion? Describe your rationale briefly.
 
 **Solution:**
 
+Yes, it is necessary to run a full statistical analysis to determine whether the observed difference in mean memory score between the Ginkgo and Placebo groups is statistically significant.
+
+To arrive at a conclusion about whether this difference is statistically significant, we do need to run a full statistical analysis using the independent samples t-test assuming equal variances and calculate the p-value. The p-value tells us the probability of observing a difference as large as the one we observed or larger, assuming the null hypothesis is true. 
 
