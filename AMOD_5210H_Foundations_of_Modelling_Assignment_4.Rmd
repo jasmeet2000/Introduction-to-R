@@ -12,6 +12,8 @@ library(dplyr)
 library(rstatix)
 library(effectsize)
 library(chisq.posthoc.test)
+library(psych)
+library(rstatix)
 ```
 
 # PART 1: EFFECT SIZES
@@ -165,6 +167,7 @@ Based on Cohen's (1988) conventions we have a small effect.
 
 The current study sought to determine whether or not there is a significant difference between students and non-students on variable “Depress”. 200 study participants were randomly sampled from the general public (39 students, 161 non-students). The sample contained no extreme outliers. A Shapiro-Wilks test demonstrated normality by group, and Levene’s test demonstrated homogeneity of variance. The mean "Depress" variable of non-students in the sample was 4.826 (SD = 4.445) whereas the mean "Depress" variable of the students in the sample was 6.974	(SD = 5.055). A Welch’s independent t-test showed that the mean difference in "Depress" variable between student and non-students in the sample was statistically significant, $t(198) = -2.634914$, $p < 0.05$, $d = -0.47$, with students tending to be more "Depress" than non-students. According to Cohen’s (1988) conventions, this is a small effect.
 
+\newpage
 ## Part 1: Question 2 
 
 ### Using an appropriate inferential statistic and effect size, determine whether there is a significant difference in the proportion of men and women diagnosed with or without depression.
@@ -201,7 +204,15 @@ chisq.posthoc.test(frequency_table)
 
 Since $p > 0.05$ we fail to reject the null hypothesis, $H_{O}$.
 
-Now, need to calculate the odds ratio as our effect size.
+Let's perform **Post-hoc Analysis** test:
+
+```{r}
+chisq.posthoc.test(frequency_table)
+```
+
+**Calculating Cohen's d**
+
+Now, need to calculate the odds ratio as our **effect size**.
 
 ```{r}
 oddsratio(frequency_table)
@@ -213,11 +224,186 @@ Based on Cohens (1988) conventions, we have less than the small category.
 
 The present research seeks to determine whether there is a significant difference in the proportion of men and women diagnosed with or without depression. 200 people (49 Male, 151 Female) reported if they diagnosed with (16) or without depression (184). A Chi-square Test of Independence revealed that there is no difference in the proportion of men and women diagnosed with or without depression, Chi Squared(1, N = 200) = 1.3539, $p > 0.001$, OR = 0.42. According to Cohen’s (1988) conventions, this effect was small.
 
+\newpage
+
 ## Part 1: Question 3
 
 **Researchers are interested to determine whether character strengths are significant predictors of depression symptoms.**
 
-### a) Using the Pearson’s r correlation and $r^2$, determine whether there are significant correlations between depression symptoms and the four character strengths variables ("Honesty", "Leader", "Persevere", "Regulation"). Report the r and pvalues for each correlation. Also, report $r^2$ for each correlation.
+### a) Using the Pearson’s r correlation and $r^2$, determine whether there are significant correlations between depression symptoms and the four character strengths variables ("Honesty", "Leader", "Persevere", "Regulation"). Report the r and p-values for each correlation. Also, report $r^2$ for each correlation.
+
+Fristly, let's see the summary statistics:
+
+```{r}
+describe(AMOD5210_Part1, fast = TRUE)
+```
+
+Now, we need to test some assumptions about our data. Let's, check weather a sample contain any extreme outliers or not?
+
+Let's first check  the assumptions **"Honesty" variable**.
+
+```{r}
+identify_outliers(AMOD5210_Part1, Honesty)
+```
+
+Hence, there is no extreme outliers in *"Honesty" variable*.
+
+Checking  the **"Leader" variable**.
+
+```{r}
+identify_outliers(AMOD5210_Part1, Leader)
+```
+
+Hence, there is no extreme outliers in *"Leader" variable*.
+
+Checking  the **"Persevere" variable**.
+
+```{r}
+identify_outliers(AMOD5210_Part1, Persevere)
+```
+Hence, there is no extreme outliers in *"Persevere" variable*.
+
+Checking  the **"Regulation" variable**.
+
+```{r}
+identify_outliers(AMOD5210_Part1, Regulation)
+```
+
+Hence, there is no extreme outliers in *"Regulation" variable*.
+
+Now, we will check if the data is **normaly distributed** or not. For that, we will use the *Shapiro-Wilks Test* for this. If $p > 0.05$, the data is normal.
+
+```{r}
+shapiro_test(AMOD5210_Part1, vars = c("Honesty", "Leader", "Persevere", "Regulation"))
+```
+
+Here, we can see that the $p < 0.05$ for all the four variables, that is, "Honesty", "Leader", "Persevere", "Regulation". And we can say that, the data is not Normal Distribution.
+
+
+Finally, we need to check the *Linearity* for all the four variables, that is, "Honesty", "Leader", "Persevere", "Regulation".
+
+```{r}
+# Checking Linearity for all of the four with respect to depress variable
+par(mfrow=c(1,2))
+plot(AMOD5210_Part1$Depress, AMOD5210_Part1$Honesty
+     , col = "green", xlab = "Depress", ylab = "Honesty"
+     , main = "Depress vs Honesty")
+plot(AMOD5210_Part1$Depress, AMOD5210_Part1$Leader
+     , col = "blue", xlab = "Depress", ylab = "Leader"
+     , main = "Depress vs Leader")
+
+par(mfrow=c(1,2))
+plot(AMOD5210_Part1$Depress, AMOD5210_Part1$Persevere
+     , col = "red", xlab = "Depress", ylab = "Persevere"
+       , main = "Depress vs Persevere")
+
+plot(AMOD5210_Part1$Depress, AMOD5210_Part1$Regulation
+     , col = "orange", xlab = "Depress", ylab = "Regulation"
+     , main = "Depress vs Regulation")
+```
+
+None of the four variables shows the Linearity. Hence, we can say that the Linearity condition is not satisfied.  
+
+**Pearson's r Correlation test**
+
+Now, we will run **Pearson's r Correlation test** for all the four variables, that is, "Honesty", "Leader", "Persevere", "Regulation".
+
+The proportion of variability in Depress variable explained by the other Honesty is given below:
+
+```{r}
+corr_honesty <- corr.test(AMOD5210_Part1$Depress, AMOD5210_Part1$Honesty, method = "pearson")
+corr_honesty
+```
+
+The values are given below:
+
+```{r}
+# p-Value is
+corr_honesty$p 
+
+# R Value is
+corr_honesty$r
+
+# R Square Value, coefficient of determination is
+corr_honesty$r^2
+```
+
+The *p-value* is **0.00069**.Here, $p-value < 0.05$, this Correlation for Depress vs Honesty is not significant. 
+
+The **Pearson’s**, $r$ is **-0.23** and **coefficient of determination**, $r^2$ is **0.056**. Hence, both shows **small** effect sizes.
+
+
+The proportion of variability in Depress variable explained by the other Leader is given below:
+
+```{r}
+corr_leader <- corr.test(AMOD5210_Part1$Depress, AMOD5210_Part1$Leader, method = "pearson")
+corr_leader
+```
+
+The values are given below:
+
+```{r}
+# p-Value is
+corr_leader$p 
+
+# R Value is
+corr_leader$r
+
+# R Square Value, coefficient of determination is
+corr_leader$r^2
+```
+
+The *p-value* is **0.027**.Here, $p-value < 0.05$, this Correlation for Depress vs Honesty is not significant. 
+
+The **Pearson’s**, $r$ is **-0.15** and **coefficient of determination**, $r^2$ is **0.024**. Hence, both shows **small** effect sizes.
+
+The proportion of variability in Depress variable explained by the other Persevere is given below:
+
+```{r}
+corr_persevere <- corr.test(AMOD5210_Part1$Depress, AMOD5210_Part1$Persevere, method = "pearson")
+corr_persevere
+```
+
+The values are given below:
+
+```{r}
+# p-Value is
+corr_persevere$p
+
+# R Value is
+corr_persevere$r
+
+# R Square Value, coefficient of determination is
+corr_persevere$r^2
+```
+
+The *p-value* is **5.462712e-08**.Here, $p-value < 0.05$, this Correlation for Depress vs Honesty is not significant. 
+
+The **Pearson’s**, $r$ is **-0.37** and **coefficient of determination**, $r^2$ is **0.14**. Hence, both shows **moderate** effect sizes.
+
+The proportion of variability in Depress variable explained by the other Regulation is given below:
+
+```{r}
+corr_regulation <- corr.test(AMOD5210_Part1$Depress, AMOD5210_Part1$Regulation, method = "pearson")
+corr_regulation
+```
+
+The values are given below:
+
+```{r}
+# p-Value is
+corr_regulation$p
+
+# R Value is
+corr_regulation$r
+
+# R Square Value, coefficient of determination is
+corr_regulation$r^2
+```
+
+The *p-value* is **1.544422e-05**.Here, $p-value < 0.05$, this Correlation for Depress vs Honesty is not significant. 
+
+The **Pearson’s**, $r$ is **--0.3004** and **coefficient of determination**, $r^2$ is **0.0902**. Hence, both shows **moderate** effect sizes.
 
 
 ### b) Using multiple linear regression, determine whether the four character strengths variables are significant predictors of depression symptoms. Report the slopes and p-values for each character strength and identify which character strengths were significant predictors. Also report and interpret the multiple $R^2$ for the overall model.
