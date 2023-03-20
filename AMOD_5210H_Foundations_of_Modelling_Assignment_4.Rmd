@@ -409,6 +409,38 @@ The **Pearson’s**, $r$ is **--0.3004** and **coefficient of determination**, $
 ### b) Using multiple linear regression, determine whether the four character strengths variables are significant predictors of depression symptoms. Report the slopes and p-values for each character strength and identify which character strengths were significant predictors. Also report and interpret the multiple $R^2$ for the overall model.
 
 
+
+We can create our model using the lm() function and store the model as an object, to test **multiple regression test**. Then, we will check the summary.
+
+```{r}
+regress.model <- lm(Depress ~ Honesty + Leader + Persevere + Regulation 
+         , data = AMOD5210_Part1)
+summary(regress.model)
+```
+
+The slopes and $p-value$ for each charter strength variables are as followers:
+
+1. Slopes are:
+
+      Honesty      -0.099070,      
+      Leader       -0.005705,    
+      Persevere    -0.377685,  
+      Regulation   -0.226089  
+
+2. $p-value$ are:
+
+      Honesty      0.477496,    
+      Leader       0.956038,    
+      Persevere    0.000722, 
+      Regulation   0.014862 
+
+We can observed from the values above that "Honesty" and "Leader" have $p-value$ greater than 0.05 making them a significant predictor.
+
+The values of Multiple $r^2$ is **0.1695**.
+
+According to Cohen’s d (Cohen, 1988) conventions, the overall model explained a **moderate** proportion of variability in "Depress" variable.
+
+
 ## Part 1: Question 4
 
 ### Using an appropriate inferential statistic and effect size(s), determine whether participants had significantly different scores across the four character strengths ("honesty", "Leader", "Persevere", "Regulation"). 
