@@ -1,0 +1,88 @@
+---
+title: "**AMOD-5210H: Foundations of Modelling**"
+author: "Jasmeet Singh Saini - 0758054"
+date: "`r Sys.Date()`"
+output: ''
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+# PART 1: EFFECT SIZES
+
+The following questions requires the use of **"healthdata.xlsx"**. 
+
+Firstly, loading the required packages and then reading the excel file.
+
+```{r}
+library(readxl)
+health_dataset <- read_excel("health-data.xlsx")
+```
+
+Now, let's performing data extraction.
+
+```{r}
+set.seed(0758054)
+index <- sample(1:nrow(health_dataset),200)
+AMOD5210 <- health_dataset[index, ]
+AMOD5210
+```
+
+## PART 1: Question 1
+
+### Using an appropriate inferential statistic and effect size, determine whether there is a significant difference between students and non-students on "Health" and "Depress".
+
+
+## PART 1: Question 2 
+
+### Using an appropriate inferential statistic and effect size, determine whether there is a significant difference in the proportion of men and women diagnosed with or without depression.
+
+## PART 1: Question 3
+
+**Researchers are interested to determine whether character strengths are significant predictors of depression symptoms.**
+
+### a) Using the Pearson’s r correlation and r2, determine whether there are significant correlations between depression symptoms and the four character strengths variables ("Honesty", "Leader", "Persevere", "Regulation"). Report the r and pvalues for each correlation. Also, report r2 for each correlation.
+
+
+### b) Using multiple linear regression, determine whether the four character strengths variables are significant predictors of depression symptoms. Report the slopes and p-values for each character strength and identify which character strengths were significant predictors. Also report and interpret the multiple R2 for the overall model.
+
+
+## PART 1: Question 4
+
+### Using an appropriate inferential statistic and effect size(s), determine whether participants had significantly different scores across the four character strengths ("honesty", "Leader", "Persevere", "Regulation"). 
+
+\newpage
+
+# PART 2: DIAGNOSTIC EFFICIENCY STATISTICS
+
+
+The following questions requires the use of **"diagnostic-data.xlsx"**. 
+
+Firstly, loading the required packages and then reading the excel file.
+
+```{r}
+library(readxl)
+diagnostic_dataset <- read_excel("diagnostic-data.xlsx")
+```
+
+Now, let's performing data extraction.
+
+```{r}
+set.seed(0758054)
+index <- sample(1:nrow(diagnostic_dataset),200)
+AMOD5210 <- diagnostic_dataset[index, ]
+AMOD5210
+```
+
+## PART 2: Question 1
+
+### Create a 2 x 2 contingency table for the variables Diagnosis and Test. The contingency table you create should include frequencies within each cell, and each row and column of the table should be meaningfully labelled.
+
+## PART 2: Question 2
+
+### Report the following diagnostic efficiency statistics: a) sensitivity, b) specificity, c) positive prediction value, d) negative prediction value, e) overall correct classification, and f) Kappa 
+
+
+## PART 2: Question 3
+
+### Based on the diagnostic efficiency statistics reported in Question 2, does the new test accurately diagnose individuals with breast cancer? Explain your answer.

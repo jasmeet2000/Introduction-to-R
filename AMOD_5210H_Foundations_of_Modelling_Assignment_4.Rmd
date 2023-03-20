@@ -1,0 +1,266 @@
+---
+title: "**AMOD-5210H: Foundations of Modelling**"
+author: "Jasmeet Singh Saini - 0758054"
+date: "`r Sys.Date()`"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(readxl)
+library(dplyr)
+library(rstatix)
+library(effectsize)
+library(chisq.posthoc.test)
+```
+
+# PART 1: EFFECT SIZES
+
+The following questions requires the use of **"healthdata.xlsx"**. 
+
+Firstly, loading the required packages and then reading the excel file.
+
+```{r}
+health_dataset <- read_excel("health-data.xlsx")
+```
+
+Now, let's performing data extraction.
+
+
+```{r}
+set.seed(0758054)
+index <- sample(1:nrow(health_dataset),200)
+AMOD5210_Part1 <- health_dataset[index, ]
+```
+
+## Part 1: Question 1
+
+### Using an appropriate inferential statistic and effect size, determine whether there is a significant difference between students and non-students on "Health" and "Depress".
+
+**For the variable "Health":**
+
+### Step 1 : Hypothesis & Assumptions
+
+The $H_{0}$ is Null hypothesis and $H_{A}$ is Alternative hypothesis.
+
+$$
+\begin{aligned}
+H_{0}:\ &\text{There is no difference in "health" variable for students and non-students.} \\
+&\qquad \qquad \qquad \qquad \qquad \qquad \text{vs.} \\
+H_{A}:\ &\text{There is a difference in "health" variable for students and non-students.}
+\end{aligned}
+$$
+
+Let's check the head of Health dataset
+```{r}
+head(AMOD5210_Part1, 3)
+```
+
+Now, let's grouping with students and checking the summary.
+
+```{r}
+grouping_student <- group_by(AMOD5210_Part1, Student)
+get_summary_stats(grouping_student, Health, type="mean_sd")
+```
+
+Now, we need to test some **assumptions** about our data.
+
+```{r}
+identify_outliers(grouping_student, Health)
+```
+
+Here, We get no outliers. We will now test for **normality** from the health-data. For that, we will use the **Shapiro-Wilks Test**. If $p > 0.05$, the data is normal.
+
+```{r}
+shapiro_test(grouping_student, Health)
+```
+
+Now, we need to test for **homogeneity of variance**. We can use the **Levene's Test** for this. If $p > 0.05$, variances are homogeneous.
+
+```{r}
+levene_test(AMOD5210_Part1, Health ~ Student)
+```
+
+### Step 2 : Testing
+
+Now, we will run **Independent t-test**. Since, the homogeneity of variance assumption was not violated, we will set var.equal to TRUE.
+
+```{r}
+t_test(AMOD5210_Part1, Health ~ Student, var.equal=TRUE)
+```
+
+Since, $p < 0.05$, the test shows a significant difference. We have enough evidence to reject the null hypothesis, $H_{O}$.
+
+**Calculating Cohen's d**
+
+Also, the t-Test is significant, we need to calculate **Cohen's d** for our effect size. We need to specify "paired = FALSE" to indicate the groups are independent, and specify "pooled_sd = TRUE" to indicate the variances are equal.
+
+```{r}
+cohens_d(Health ~ Student, data = AMOD5210_Part1, paired = FALSE, pooled_sd = TRUE)
+```
+
+Based on Cohen's (1988) conventions we have a small effect. 
+
+### Step 3 : Conclusion
+
+The current study sought to determine whether or not there is a significant difference between students and non-students on “Health”. 200 study participants were randomly sampled from the general public (39 students, 161 non-students). The sample contained no extreme outliers. A Shapiro-Wilks test demonstrated normality by group, and Levene’s test demonstrated homogeneity of variance. The mean "Health" variable of non-students in the sample was 16.112 (SD = 5.020) whereas the mean "Health" variable of the students in the sample was 18.462 (SD = 5.088). A Welch’s independent t-test showed that the mean difference in "Health" variable between student and non-students in the sample was statistically significant, $t(198) = -2.615876$, $p < 0.05$, $d = -0.47$, with students tending to be more "Healthy" than non-students. According to Cohen’s (1988) conventions, this is a small effect.
+
+**For the variable "Depress":**
+
+### Step 1 : Hypothesis & Assumptions
+
+The $H_{0}$ is Null hypothesis and $H_{A}$ is Alternative hypothesis.
+
+$$
+\begin{aligned}
+H_{0}:\ &\text{There is no difference in "depress" variable for students and non-students.} \\
+&\qquad \qquad \qquad \qquad \qquad \qquad \text{vs.} \\
+H_{A}:\ &\text{There is a difference in "depress" variable for students and non-students.}
+\end{aligned}
+$$
+
+```{r}
+get_summary_stats(grouping_student, Depress, type="mean_sd")
+```
+
+Now, we need to test some **assumptions** about our data.
+
+```{r}
+identify_outliers(grouping_student, Depress)
+```
+
+Here, We get no outliers. We will now test for **normality** from the health-data. For that, we will use the **Shapiro-Wilks Test**. If $p > 0.05$, the data is normal.
+
+```{r}
+shapiro_test(grouping_student, Depress)
+```
+It can be seen that our data is not normal. We are still going to proceed with the test.
+
+Now, we need to test for **homogeneity of variance**. We can use the **Levene's Test** for this. If $p > 0.05$, variances are homogeneous.
+
+```{r}
+levene_test(AMOD5210_Part1, Depress ~ Student)
+```
+
+### Step 2 : Testing
+
+Now, we will run **Independent t-test**. Since, the homogeneity of variance assumption was not violated, we will set var.equal to TRUE.
+
+```{r}
+t_test(AMOD5210_Part1, Depress ~ Student, var.equal=TRUE)
+```
+
+Since, $p < 0.05$, the test shows a significant difference. We have enough evidence to reject the null hypothesis, $H_{O}$.
+
+**Calculating Cohen's d**
+
+Also, the t-Test is significant, we need to calculate **Cohen's d** for our effect size. We need to specify "paired = FALSE" to indicate the groups are independent, and specify "pooled_sd = TRUE" to indicate the variances are equal.
+
+```{r}
+cohens_d(Depress ~ Student, data = AMOD5210_Part1, paired = FALSE, pooled_sd = TRUE)
+```
+Based on Cohen's (1988) conventions we have a small effect.
+
+### Step 3 : Conclusion
+
+The current study sought to determine whether or not there is a significant difference between students and non-students on variable “Depress”. 200 study participants were randomly sampled from the general public (39 students, 161 non-students). The sample contained no extreme outliers. A Shapiro-Wilks test demonstrated normality by group, and Levene’s test demonstrated homogeneity of variance. The mean "Depress" variable of non-students in the sample was 4.826 (SD = 4.445) whereas the mean "Depress" variable of the students in the sample was 6.974	(SD = 5.055). A Welch’s independent t-test showed that the mean difference in "Depress" variable between student and non-students in the sample was statistically significant, $t(198) = -2.634914$, $p < 0.05$, $d = -0.47$, with students tending to be more "Depress" than non-students. According to Cohen’s (1988) conventions, this is a small effect.
+
+## Part 1: Question 2 
+
+### Using an appropriate inferential statistic and effect size, determine whether there is a significant difference in the proportion of men and women diagnosed with or without depression.
+
+We are going to use a $\chi 2$ Test of Independence for this question.
+
+### Step 1 : Hypothesis & Assumptions
+
+The $H_{0}$ is Null hypothesis and $H_{A}$ is Alternative hypothesis.
+
+$$
+\begin{aligned}
+H_{0}:\ &\text{There is no difference in the proportion of men and women diagnosed with or without depression.} \\
+&\qquad \qquad \qquad \qquad \qquad \qquad \text{vs.} \\
+H_{A}:\ &\text{There is a significant difference in the proportion of men and women diagnosed with or without depression.}
+\end{aligned}
+$$
+
+Below is the frequency table based on the continuous variable Gender and Dstatus:
+
+```{r}
+frequency_table <- table(AMOD5210_Part1$Gender, AMOD5210_Part1$Dstatus)
+frequency_table
+```
+
+### Step 2 : Testing
+
+Let us now perform the test, **$\chi 2$ Test of Independence**.
+
+```{r}
+chisq.test(x = frequency_table, correct = FALSE)
+chisq.posthoc.test(frequency_table)
+```
+
+Since $p > 0.05$ we fail to reject the null hypothesis, $H_{O}$.
+
+Now, need to calculate the odds ratio as our effect size.
+
+```{r}
+oddsratio(frequency_table)
+```
+
+Based on Cohens (1988) conventions, we have less than the small category.
+
+### Step 3 : Conclusion
+
+The present research seeks to determine whether there is a significant difference in the proportion of men and women diagnosed with or without depression. 200 people (49 Male, 151 Female) reported if they diagnosed with (16) or without depression (184). A Chi-square Test of Independence revealed that there is no difference in the proportion of men and women diagnosed with or without depression, Chi Squared(1, N = 200) = 1.3539, $p > 0.001$, OR = 0.42. According to Cohen’s (1988) conventions, this effect was small.
+
+## Part 1: Question 3
+
+**Researchers are interested to determine whether character strengths are significant predictors of depression symptoms.**
+
+### a) Using the Pearson’s r correlation and $r^2$, determine whether there are significant correlations between depression symptoms and the four character strengths variables ("Honesty", "Leader", "Persevere", "Regulation"). Report the r and pvalues for each correlation. Also, report $r^2$ for each correlation.
+
+
+### b) Using multiple linear regression, determine whether the four character strengths variables are significant predictors of depression symptoms. Report the slopes and p-values for each character strength and identify which character strengths were significant predictors. Also report and interpret the multiple $R^2$ for the overall model.
+
+
+## Part 1: Question 4
+
+### Using an appropriate inferential statistic and effect size(s), determine whether participants had significantly different scores across the four character strengths ("honesty", "Leader", "Persevere", "Regulation"). 
+
+\newpage
+
+
+# PART 2: DIAGNOSTIC EFFICIENCY STATISTICS
+
+
+The following questions requires the use of **"diagnostic-data.xlsx"**. 
+
+Firstly, loading the required packages and then reading the excel file.
+
+```{r}
+library(readxl)
+diagnostic_dataset <- read_excel("diagnostic-data.xlsx")
+```
+
+Now, let's performing data extraction.
+
+```{r}
+set.seed(0758054)
+index <- sample(1:nrow(diagnostic_dataset),200)
+AMOD5210 <- diagnostic_dataset[index, ]
+AMOD5210
+```
+
+## Part 2: Question 1
+
+### Create a 2 x 2 contingency table for the variables Diagnosis and Test. The contingency table you create should include frequencies within each cell, and each row and column of the table should be meaningfully labelled.
+
+## Part 2: Question 2
+
+### Report the following diagnostic efficiency statistics: a) sensitivity, b) specificity, c) positive prediction value, d) negative prediction value, e) overall correct classification, and f) Kappa 
+
+
+## Part 2: Question 3
+
+### Based on the diagnostic efficiency statistics reported in Question 2, does the new test accurately diagnose individuals with breast cancer? Explain your answer.
+
