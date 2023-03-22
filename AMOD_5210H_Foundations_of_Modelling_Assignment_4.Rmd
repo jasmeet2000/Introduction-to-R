@@ -14,6 +14,9 @@ library(effectsize)
 library(chisq.posthoc.test)
 library(psych)
 library(rstatix)
+library(ggplot2)
+library(caret)
+library(ez)
 ```
 
 # PART 1: EFFECT SIZES
@@ -443,10 +446,107 @@ According to Cohen’s d (Cohen, 1988) conventions, the overall model explained 
 
 ## Part 1: Question 4
 
-### Using an appropriate inferential statistic and effect size(s), determine whether participants had significantly different scores across the four character strengths ("honesty", "Leader", "Persevere", "Regulation"). 
+### Using an appropriate inferential statistic and effect size(s), determine whether participants had significantly different scores across the four character strengths ("honesty", "Leader", "Persevere", "Regulation").
+
+We will use **One Way Repeated Measures ANOVA Test** Inferential Statistic, to check whether participants had significantly different scores across the four character strengths ("honesty", "Leader", "Persevere", "Regulation"). And to measure the effect size, we will use **$\eta^2_{p}$, partial eta squared**.
+
+### Step 1 : Hypothesis & Assumptions
+
+The $H_{0}$ is Null hypothesis and $H_{A}$ is Alternative hypothesis.
+
+$$
+\begin{aligned}
+H_{0}:\ &\text{The participants does not had significantly different scores across the four character strengths} \\
+&\qquad \qquad \qquad \qquad \qquad \qquad \text{vs.} \\
+H_{A}:\ &\text{The participants had significantly different scores across the four character strengths}
+\end{aligned}
+$$
+
+
+```{r}
+library(ez)
+# Gathering data of different character strengths into one column
+strength <- gather(data = AMOD5210_Part1
+                    , key = "Character_Strength"
+                    , value = "Score", Honesty, Leader, Persevere, Regulation)
+
+# Storing the required data in a new dataframe
+data_frame <- strength[ ,c("ID","Character_Strength","Score")]
+tail(data_frame,5)
+```
+
+Now let's group the data and print the descriptive statistics:
+
+```{r}
+char_group <- group_by(data_frame, Character_Strength)
+get_summary_stats(char_group, Score, type = "mean_sd")
+```
+
+Now, we need to test some **assumptions** about our data.
+
+```{r}
+identify_outliers(char_group, Score)
+```
+
+Here, We get no outliers. We will now test for **normality** from the Score-data. For that, we will use the **Shapiro-Wilks Test**. If $p > 0.05$, the data is normal.
+
+```{r}
+shapiro_test(char_group, Score)
+```
+
+Here, $p-value < 0.05$ and it can be seen that our data is not normally distributed for all groups. We are still going to proceed with the test.
+
+### Step 2 : Testing
+ 
+Now we will performing **One Way Repeated Measures ANOVA Test**.
+
+```{r}
+rep_ANOVA <- ezANOVA(data_frame, dv = Score, wid = ID
+                      , within = Character_Strength, type=3
+                      , return_aov = TRUE)
+# Printing rep_ANOVA
+rep_ANOVA
+```
+
+In the ANOVA section, since p-value is less than 0.05, we will **reject** the null hypothesis, $H_{O}$. Thus, we can conclude that participants had significantly different scores across the four character strengths. 
+
+Calculating **Partial Eta Squared Effect Size Calculation**
+
+Now, need to calculate the **effect size**.
+
+```{r}
+eta_squared(rep_ANOVA$aov, partial = TRUE)
+```
+
+Hence, $\eta^2_{p}$ is 0.33 and based on Cohen’s (1998) conventions, we have a Large Effect.
+
+Now let's run our **post-hoc test**
+
+```{r}
+t_test(data_frame, Score ~ Character_Strength, paired = TRUE, p.adjust.method = "bonferroni")
+```
+
+Since adjusted $p < 0.05$ for all of the comparisons, we can say that Scores were Significantly Different
+across each Character Strength.
+
+calculating effect size for each Pairwise Comparison:
+
+Next, we need to calculate our effect size for each pairwise comparison, cohen's d. Again, we need to use the cohens_d() function from the "rstatix" package, so we first have to detach the "effectsize" package.
+
+```{r}
+detach("package:effectsize", unload = TRUE)
+```
+
+We also need to specify “paired = TRUE” to indicate the data is paired.
+
+```{r}
+cohens_d(data_frame, Score ~ Character_Strength, paired = TRUE)
+```
+
+### Step 3 : Conclusion
+
 
 \newpage
-
 
 # PART 2: DIAGNOSTIC EFFICIENCY STATISTICS
 
@@ -465,20 +565,57 @@ Now, let's performing data extraction.
 ```{r}
 set.seed(0758054)
 index <- sample(1:nrow(diagnostic_dataset),200)
-AMOD5210 <- diagnostic_dataset[index, ]
-AMOD5210
+AMOD5210_Part2 <- diagnostic_dataset[index, ]
 ```
 
 ## Part 2: Question 1
 
 ### Create a 2 x 2 contingency table for the variables Diagnosis and Test. The contingency table you create should include frequencies within each cell, and each row and column of the table should be meaningfully labelled.
 
+To create a 2 x 2 contingency table for the variables Diagnosis and Test, we will first specify our variables are factors and add some labels.
+
+```{r}
+AMOD5210_Part2$Test <- factor(AMOD5210_Part2$Test, labels = c("Yes", "No"))
+AMOD5210_Part2$Diagnosis <- factor(AMOD5210_Part2$Diagnosis, labels = c("Yes", "No"))
+```
+
+Next we will now create a contingency table.
+
+```{r}
+table(AMOD5210_Part2$Test, AMOD5210_Part2$Diagnosis, dnn = c("Test", "Diagnosis"))
+```
+
 ## Part 2: Question 2
 
 ### Report the following diagnostic efficiency statistics: a) sensitivity, b) specificity, c) positive prediction value, d) negative prediction value, e) overall correct classification, and f) Kappa 
 
+Now, we will use the confusionMatrix function to calculate our the given diagnostic efficiency statistics:
+
+```{r}
+confusionMatrix(data = AMOD5210_Part2$Test
+                , reference = AMOD5210_Part2$Diagnosis
+                , positive = "Yes"
+                , dnn = c("Test","Diagnosis"))
+```
+
+**Conclusion:**
+
+Following are diagnostic efficiency statistics:
+
+a) Sensitivity = 0.8095,
+
+b) Specificity = 0.6216, 
+
+c) Positive Prediction Value = 0.7846,
+
+d) Negative Prediction Value = 0.6571,
+
+e) Overall Correct Classification (Accuracy) = 0.74, 
+
+f) Kappa = 0.436
 
 ## Part 2: Question 3
 
 ### Based on the diagnostic efficiency statistics reported in Question 2, does the new test accurately diagnose individuals with breast cancer? Explain your answer.
 
+We can observe, through the sensitivity value, that is, **0.8095**, that the test was better at identifying the true positive cases. Also, it was worse in identifying true negative cases. The new test was not accurate in diagnosing breast cancer in individuals due to its low kappa value, that is, **0.436** (As per the conventions for interpreting Kappa).
