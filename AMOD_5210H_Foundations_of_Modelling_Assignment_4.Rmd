@@ -425,17 +425,17 @@ The slopes and $p-value$ for each charter strength variables are as followers:
 
 1. Slopes are:
 
-      Honesty      -0.099070,      
-      Leader       -0.005705,    
-      Persevere    -0.377685,  
-      Regulation   -0.226089  
+      Honesty is -0.099070,      
+      Leader is -0.005705,    
+      Persevere is -0.377685, and 
+      Regulation is -0.226089  
 
 2. $p-value$ are:
 
-      Honesty      0.477496,    
-      Leader       0.956038,    
-      Persevere    0.000722, 
-      Regulation   0.014862 
+      Honesty is 0.477496,    
+      Leader is 0.956038,    
+      Persevere is 0.000722, and
+      Regulation is 0.014862 
 
 We can observed from the values above that "Honesty" and "Leader" have $p-value$ greater than 0.05 making them a significant predictor.
 
@@ -545,6 +545,11 @@ cohens_d(data_frame, Score ~ Character_Strength, paired = TRUE)
 
 ### Step 3 : Conclusion
 
+The current study sought to test whether the participants had significantly different scores across the four character strengths. 200 people were randomly sampled and their scores were measured across 4 different character strengths. Shapiro-Wilks tests on the distribution of scores across each character strength
+did not demonstrate normality and Mauchly’s test showed the sphericity assumption was met. The mean
+score for the sample across “Honesty” was 21.055 (SD = 2.525), across “Leader” was 18.175 (SD = 3.218), across
+“Persevere” was 19.055 (SD = 3.401) and across “Regulation” was 16.595 (SD = 3.605). A One-Way Repeated Measures ANOVA was performed and showed a significant change across the scores of different character
+strengths,  F(3,597) = 99.29, p < 0.05, $\eta^2_{p} = 0.33$. Bonferroni-corrected pairwise comparisons revealed that the score across “Leader”  and “Regulation” were significantly higher than score across “Honesty” (d = 0.84 and d = 1.19 respectively). Both the score of "Persevere" against "Honesty" and the score of "Regulation" against "Persevere" was moderate (d = 0.637 and d = 0.635 respectively). The score across “Persevere”  and “Regulation” were significantly lower than score across “Leader” (d = 0.24 and d = 0.35 respectively). According to Cohen’s (1988) conventions, the “Leader” and “Regulation” against "Honesty" is a large effect and the “Persevere” & “Regulation” against "Leader" is a moderate effect and “Persevere” & “Regulation” against "Leader" is a small effect.
 
 \newpage
 
