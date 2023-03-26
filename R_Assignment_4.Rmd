@@ -1,0 +1,462 @@
+---
+title: "**R Assignment - 4**"
+author: "Jasmeet Singh Saini - 0758054"
+date: "`r Sys.Date()`"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Question 1 - Red “Die” No. 40?
+
+**Required Data**: *red_dye40.csv*
+
+## The safety of Red No. 40 (a dye) was tested using a mouse study. Groups of mice were provided with none of the dye (control group), a low, medium, or high amount and the time to death was recorded. This data is contained in the red_dye40.csv file.
+
+Firstly, let's loading the data set and check the summary of *red_dye40.csv*.
+
+```{r}
+# Importing the dataset
+red_dye_dataset <- read.csv("red_dye40.csv")
+# View the summary  
+summary(red_dye_dataset)
+```
+
+The data is seem to be inconsistent, as three of the variable has NA values, that is, low, medium and high. The "control" variable does not have any NA values. To make it look good, we will remove **NA** values from the dataset.
+
+Now, let's remove the NA values:
+
+```{r}
+low_na  <- which(is.na(red_dye_dataset$low))
+med_na  <- which(is.na(red_dye_dataset$medium))
+high_na <- which(is.na(red_dye_dataset))
+
+control <- red_dye_dataset$control
+low     <- red_dye_dataset$low[-low_na]
+medium  <- red_dye_dataset$medium[-med_na]
+high    <- red_dye_dataset$high[-high_na]
+```
+
+### a) Is there any difference between the time to death? Conduct a hypothesis test.
+
+### Step 1 : Hypothesis & Assumptions
+
+**Step 1a: Hypothesis**
+
+The $H_{0}$ is Null hypothesis and $H_{A}$ is Alternative hypothesis.
+
+$$
+\begin{aligned}
+H_{0}:\ &\text{There is no significant difference between the time to death} \\
+&\qquad \qquad \qquad \qquad \qquad \text{vs.} \\
+H_{A}:\ &\text{There is a significant difference between the time to death}
+\end{aligned}
+$$
+
+**Step 1b: Assumptions**
+
+We need to check the assumptions of:
+
++ **Independence** : The data was randomly sampled and the sample size is less than 10% of the population size. Thus, the condition is satisfied.
+
++ **Normality** : We need to check if the distribution is normal across all groups.
+
++ **Variance** : The variability across the groups should be about equal. 
+
+We will check for each of the variable:
+
+Now, we will check for Normality of "control" variable:
+ 
+```{r fig.height = 4, fig.width = 6, fig.align = "center"}
+par(mfrow=c(1,2))
+hist(red_dye_dataset$control, main = "Distribution of Control"
+     , xlab = "Control", col = "lightblue")
+qqnorm(red_dye_dataset$control, pch = 1, frame = FALSE)
+qqline(red_dye_dataset$control, col = "blue", lwd = 2)
+
+# Shapiro-Wilk's test,
+# To check whether or not a sample fits a normal distribution
+shapiro.test(red_dye_dataset$control)
+```
+Secondly, we will check for Normality of "low" variable:
+
+```{r}
+par(mfrow=c(1,2))
+hist(red_dye_dataset$low, main = "Distribution of Low"
+     , xlab = "Low", col = "lightblue")
+qqnorm(red_dye_dataset$low, pch = 1, frame = FALSE)
+qqline(red_dye_dataset$low, col = "blue", lwd = 2)
+
+# Shapiro-Wilk's test,
+# We will check p-value
+shapiro.test(red_dye_dataset$low)
+```
+
+Now, we will check for Normality of "medium" variable:
+
+```{r}
+par(mfrow=c(1,2))
+hist(red_dye_dataset$medium, main = "Distribution of Medium"
+     , xlab = "Medium", col = "lightblue")
+qqnorm(red_dye_dataset$medium, pch = 1, frame = FALSE)
+qqline(red_dye_dataset$medium, col = "blue", lwd = 2)
+
+# Shapiro-Wilk's test
+shapiro.test(red_dye_dataset$medium)
+```
+
+Lastly, we will check for Normality of "high" variable:
+
+```{r}
+par(mfrow=c(1,2))
+hist(red_dye_dataset$high, main = "Distribution of High"
+     , xlab = "High", col = "lightblue")
+qqnorm(red_dye_dataset$high, pch = 1, frame = FALSE);
+qqline(red_dye_dataset$high, col = "blue", lwd = 2);
+
+shapiro.test(red_dye_dataset$high)
+```
+
+Here, the $p-value > 0.05$ for all the groups in Shapiro-Wilk's test and QQ-plot shoes nearly normal distribution. Hence, the condition for normality is met and we can assume the normality in all the groups.
+
+
+```{r}
+par(mar = c(3, 3, 1, 1))
+boxplot(red_dye_dataset, cex.axis = 1.0
+        , main = "Variability across the Groups", col = "lightblue")
+
+```
+
+It can be seen that, the variances across each group is nearly normal. Hence, all the assumptions are met and now, we can use parametric approach.
+
+### Step 2 : Test Statistic and p-value
+
+Now, we need to analyze the result of **One-way ANOVA Test** to make our decision.
+
+```{r}
+dataframe <- data.frame(Group = c(rep("control", length(control))
+                                       ,rep("low", length(low))
+                                       , rep("medium", length(medium))
+                                       , rep("high", length(high)))
+                             , Time = c(control, low, medium, high))
+```
+
+Now, let's test the ANOVA and get the summary:
+
+```{r}
+aov_eq <- aov(Time ~ Group, data = dataframe)
+summary(aov_eq)
+```
+
+Hence, the test statistic is **3.55** and p-value is **0.0245**.
+
+### Step 3 : Statistical Decision
+
+Therefore, we **reject** Null Hypothesis,  $H_{0}$ because $p$-value is less than $\alpha$, level of significance (that is, p-value < 0.05).
+
+### Step 4 : Conclusion
+
+There is enough evidence to support the alternative hypothesis, and therefore we conclude that there is a significant difference between time to death, is accurate.
+
+
+### b) If there is a difference, which groups are different?
+
+To check whether there is a difference of mean in all groups, we will preform Post-hoc test (Tukey HSD - Statistical Test for Differences).
+
+```{r}
+posthoc <- TukeyHSD(aov_eq)
+posthoc
+```
+
+Here, the "*p adj*" values of "low-control", "medium-control", "low-high", "medium-high" and "medium-low" groups is **0.0868094**, **0.1109953**, **0.9609302**, **0.9056532** and **0.9978960** respectively, which is more than $\alpha = 0.05$. Hence, these groups have a difference in means.
+
+The "*p adj*" value of "high-control" group is **0.0328848**, which is significantly less than $\alpha = 0.05$. Hence, we can say that there is **no difference of means in "high-control" group**.
+
+\newpage
+
+# Question 2 - Ground Water
+
+**Required Data**: *groundwater.csv*
+
+## Water treatment plants add bicarbonate to water in order to keep microorganisms in the system happy and healthy. The data in *groundwater.csv* is a sample of pH is measured on a logarithmic scale from 0 to 14 and bicarbonate levels are measured in parts per million (ppm)
+
+First, let's import the data set:
+
+```{r}
+groundwater_dataset <- read.csv("groundwater.csv")
+# View the summary  
+summary(groundwater_dataset)
+```
+
+**Parametric**
+
+### a) Use a linear model and parametric method to determine if there is a relationship between bicarbonate levels and pH in the water. (Still check and comment on assumptions, but use a parametric method regardless!)
+
+### Step 1 : Hypothesis & Assumptions
+
+**Step 1a: Hypothesis**
+
+The $H_{0}$ is Null hypothesis and $H_{A}$ is Alternative hypothesis.
+
+$$
+\begin{aligned}
+H_{0}:\ &\text{There is no significant relationship between bicarbonate levels and pH in the water} \\
+&\qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \text{vs.} \\
+H_{A}:\ &\text{There is a significant relationship between bicarbonate levels and pH in the water}
+\end{aligned}
+$$
+
+To determine if there is a relationship between bicarbonate levels and pH in the water, we need to fit in a linear model first:
+
+To check the relationship between bicarbonate levels and pH in the water, we need to fit a linear model. This is given by:
+
+$$
+pH = \beta_{o} + \beta_{1}*bicarbonate
+$$
+
+```{r}
+linear_model <- lm(pH ~ Bicarbonate, data = groundwater_dataset)
+linear_model
+```
+
+Hence, the intercept, $\beta_{0}$ is **8.097595** and the slope $\beta_{1}$ is **-0.003052**. The model is:
+
+$$
+pH = 8.097595 + (-0.003052) * Bicarbonate
+$$
+
+**Step 1b: Assumptions**
+
+We need to check the assumptions of:
+
++ **Independence** : The data was randomly sampled and the sample size is less than 10% of the population size. Thus, the condition is satisfied.
+
++ **Linearity** : There should be a linear relationship between the two variables, that is, pH and Bicarbonate.
+
++ **Normality** : The residuals should be nearly normal distributed and show normality.
+
++ **Variance** : The variability across the groups should be about equal (equal variance of residuals). 
+ 
+Now, we will check the assumptions. Firstly, let's check for independence:
+
+```{r fig.height = 4, fig.width = 6, fig.align = "center"}
+par(mar = c(4,4,1, 1), mgp = c(2.5, 1, 0))
+plot(x = 1:length(linear_model$residuals), y = linear_model$residuals
+     , xlab = "Index (Stored)",ylab = "Residuals, Organized by Index", main = "Resiuals vs Index")
+abline(h = 0)
+```
+
+It is independent, as no serial correlation can be observed.
+
+Now, we will check the assumptions of linearity among pH and Bicarbonate:
+
+```{r}
+par(mar = c(4,4,1, 1), mgp = c(2.5, 1, 0))
+plot(x = groundwater_dataset$Bicarbonate, y = linear_model$residuals
+     , xlab = "x", ylab = "Residuals", col = "blue" 
+     , main = "Residuals vs x-value")
+abline(h = 0)
+```
+
+Here, it can be seen that the residuals vs x are nearly linear. Hence, the assumption is met.
+
+Now, we will check the assumptions of normality:
+
+```{r}
+par(mfrow=c(1,3))
+hist(linear_model$residuals, main = "Distribution of Residuals"
+     , col = "lightblue", xlab = "Residuals")
+qqnorm(linear_model$residuals, pch = 1, frame = FALSE);
+qqline(linear_model$residuals, col = "lightblue"
+         , lwd = 2);
+boxplot(linear_model$residuals,col = "lightblue"
+          , main = "Boxplot of Residuals")
+
+shapiro.test(linear_model$residuals)
+```
+
+Here, it can be seen that the distribution is nearly normal and is confirm by Shapiro-Wilk's test, as $p$-value > 0.05. Hence, the assumption of normality is met.
+
+Finally, we will check the assumptions of variability:
+
+```{r}
+par(mar = c(4,4,1, 1), mgp = c(2.5, 1, 0))
+plot(x = linear_model$fitted.values, y = linear_model$residuals
+     , col = "blue" 
+     , xlab = "Fitted Values", ylab = "Residuals"
+     , main = "Residuals vs Fitted values")
+abline(h = 0)
+```
+
+
+The data across the line are nearly constant, as the fitted values increase the residuals are constant. Hence, the condition of variability is met.
+
+### Step 2 : Test Statistic and p-value
+
+Now, we can proceed with the parametric approach to test the hypothesis.
+
+```{r}
+summary(linear_model)
+```
+
+Here, we get the test statistic as **4.169** and p-value as **0.04948**.
+
+### Step 3 : Statistical Decision
+
+Therefore, we **reject** Null Hypothesis,  $H_{0}$ because $p$-value is less than $\alpha$, level of significance (that is, p-value < 0.05).
+
+### Step 4 : Conclusion
+
+There is enough evidence to support the alternative hypothesis, and therefore we conclude that there exists a significant relationship between bicarbonate levels and pH of the water, is accurate.
+
+
+### b) Plot the data and regression line. Include appropriate labels and title. Bonus for including confidence and prediction intervals on this plot1 [2 marks]
+
+The regression plot is given below:
+
+```{r}
+par(mar = c(4,4,1,1), mgp = c(2.5, 1, 0))
+plot(groundwater_dataset$Bicarbonate, groundwater_dataset$pH
+     , main = "Regression Plot", xlab = "Bicarbonate", ylab = "pH")
+abline(linear_model, col="red", lw=2)
+```
+
+### c) Provide a 95% parametric confidence interval for the true slope parameter in the linear model.
+
+A 95% parametric confidence interval for the true slope parameter in the linear model is
+
+```{r}
+confint(linear_model, level = 0.95, parm = "Bicarbonate")
+```
+
+Here, we get the true slope confidence intervals as **-0.006096981** and **-7.33803e-06**.
+
+Intervals  [-0.006096981, -7.33803e-06].
+
+
+**Non-Parametric**
+
+### d) Use a linear model and non-parametric method to determine if there is a relationship between bicarbonate levels and pH in the water.
+
+### Step 1 : Hypothesis & Assumptions
+
+**Step 1a: Hypothesis**
+
+The $H_{0}$ is Null hypothesis and $H_{A}$ is Alternative hypothesis.
+
+$$
+\begin{aligned}
+H_{0}:\ &\text{There is no significant relationship between bicarbonate levels and pH in the water} \\
+&\qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \text{vs.} \\
+H_{A}:\ &\text{There is a significant relationship between bicarbonate levels and pH in the water}
+\end{aligned}
+$$
+
+**Step 1b: Assumptions**
+
+We need to check the assumptions of:
+
++ **Independence** : The data was randomly sampled and the sample size is less than 10% of the population size. Thus, the condition is satisfied.
+
++ **Linearity** : There should be a linear relationship between the two variables, that is, pH and Bicarbonate.
+
++ **Normality** : The residuals should be nearly normal distributed and show normality.
+
++ **Variance** : The variability across the groups should be about equal (equal variance of residuals). 
+
+### Step 2 : Test Statistic and p-value
+
+Now, we can proceed with the non-parametric approach and calculate the test statistic and p-value.
+
+```{r}
+# simulation
+set.seed(0758054)
+nsim <- 5000
+coef_sim <- numeric(nsim)
+sim_df <- groundwater_dataset
+
+for (i in 1:nsim){
+  sim_df$pH <- sample(groundwater_dataset$pH, size = nrow(groundwater_dataset), replace = FALSE)
+  sim_lm <- lm(pH ~  Bicarbonate, data = sim_df)
+  coef_sim[i] <- sim_lm$coefficients[2]
+}
+
+```
+
+Now, calculating the p-value:
+
+```{r}
+distance <- abs(linear_model$coefficients[2] - 0)
+pval <- (length(which(abs(coef_sim - 0) >= distance)) + 1) / (nsim + 1)
+pval
+```
+
+Hence, the p-value we get using the non-parametric approach is **0.04939**.
+
+### Step 3 : Statistical Decision
+
+Therefore, we **reject** Null Hypothesis,  $H_{0}$ because $p$-value is less than $\alpha$, level of significance (that is, p-value < 0.05).
+
+### Step 4 : Conclusion
+
+There is enough evidence to support the alternative hypothesis, and therefore we conclude that there exists a significant relationship between bicarbonate levels and pH of the water, is accurate.
+
+### e) Provide a 95% non-parametric confidence interval for the true slope parameter in the linear model.
+
+
+A 95% non-parametric confidence interval for the true slope parameter in the linear model, we will use bootstrapping.
+
+
+```{r}
+library(boot)
+coefficient_wrapper <- function(df2, index){
+  lin_model <- lm(Bicarbonate ~ pH, data = df2[index, ])
+  return(lin_model$coefficients[2])
+}
+
+# Slope Parameter
+coefficient_bs <- boot(groundwater_dataset, statistic = coefficient_wrapper, R = 5000)
+boot.ci(coefficient_bs, conf = 0.95, type = "bca")
+```
+
+Hence, the confidence intervals for the true slope parameter for 95% is **-78.93** and **-0.15**.
+
+Intervals [-78.93, -0.15]
+
+\newpage
+
+# Quesiton 3 - Fawning Over Models
+
+**Required Data**: *antelope.csv*
+
+## The data provided in the *antelope.csv* file contains:
+
+ - **the spring fawn count (divided by 100)**
+ 
+ - **the size of the adult antelope population (divided by 100)**
+ 
+ - **annual precipitation (in inches)**
+ 
+ - **winter severity index (1=mild, 5=severe)**
+ 
+Firstly, let's importing the dataset
+
+```{r}
+antelope_dataset <- read.csv("antelope.csv")
+# View the summary  
+summary(antelope_dataset)
+```
+ 
+### a) Fit the full model (i.e., fawn ~ adult + precip + severity);
+
+ - **Provide diagnostic plots, the summary, model formula, and brief discussion of the model fit.**
+ 
+### b) Fit the quadratic polynomial model: fawn ~ adult + adult2 
+
+  - **Provide diagnostic plots, the summary, model formula, and brief discussion of the model fit.**
+  - **Also include the model plotted on top of the original data used in this model.**
+  
+### c) Which model is better? Why?
+
