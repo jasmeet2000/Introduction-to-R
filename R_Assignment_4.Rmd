@@ -227,9 +227,7 @@ $$
 pH = 8.097595 + (-0.003052) * Bicarbonate
 $$
 
-**Step 1b: Assumptions**
-
-We need to check the assumptions of:
+**Step 1b: Assumptions** We need to check the assumptions of:
 
 + **Independence** : The data was randomly sampled and the sample size is less than 10% of the population size. Thus, the condition is satisfied.
 
@@ -242,7 +240,7 @@ We need to check the assumptions of:
 Now, we will check the assumptions. Firstly, let's check for independence:
 
 ```{r fig.height = 4, fig.width = 6, fig.align = "center"}
-par(mar = c(4,4,1, 1), mgp = c(2.5, 1, 0))
+par(mar = c(3,3,1, 1), mgp = c(2, 1, 0))
 plot(x = 1:length(linear_model$residuals), y = linear_model$residuals
      , xlab = "Index (Stored)",ylab = "Residuals, Organized by Index", main = "Resiuals vs Index")
 abline(h = 0)
@@ -356,7 +354,7 @@ $$
 
 **Step 1b: Assumptions**
 
-We need to check the assumptions of:
+We need to check the assumptions of (assumptions is done in Part a) uisng diagnostic plots):
 
 + **Independence** : The data was randomly sampled and the sample size is less than 10% of the population size. Thus, the condition is satisfied.
 
@@ -452,11 +450,98 @@ summary(antelope_dataset)
 ### a) Fit the full model (i.e., fawn ~ adult + precip + severity);
 
  - **Provide diagnostic plots, the summary, model formula, and brief discussion of the model fit.**
- 
+
+Let's fit the multiple regression model, $fawn = \beta_{o} + \beta_{1}adult + \beta_{2}precip + \beta_{3}severity$
+
+where,
+
+$\beta_{0}$ = Intercept,
+
+$\beta_{1}$ = Slope of $adult$,
+
+$\beta_{2}$ = Slope of $precip$, and
+
+$\beta_{3}$ = Slope of $severity$
+
+```{r}
+multi_reg_model <- lm(fawn ~ adult + precip + severity, data = antelope_dataset)
+summary(multi_reg_model)
+```
+
+**Model Formula**
+
+$$
+fawn = -5.92201 + (0.33822)adult + (0.40150)precip + (0.26295)severity
+$$
+
+**Diagnostic Plots**
+
+The Plot of Residual vs Fitted and Normal Q-Q is given below:
+
+```{r}
+par(mfrow = c(1, 2), mar = c(4,4,1.5, 0.5))
+plot(multi_reg_model, which = 1:2)
+```
+
+**Summary and Model Fit**
+
+The intercept of the model ($\beta_{0}$) is **-5.92201** and the slope of *adult* ($\beta_{1}$), *precip* ($\beta_{2}$) and *severity* ($\beta_{3}$) is **0.33822**, **0.40150** and **0.26295** respectively. The diagnostic plots show nearly normal distribution across the residuals and there is nearly constant variance across the residuals. The Residual Standard error is **0.1209** and Adjusted R-squared is **0.955**, indicating that the model explains a large proportion of the variability in the data.
+
+
 ### b) Fit the quadratic polynomial model: fawn ~ adult + adult2 
 
   - **Provide diagnostic plots, the summary, model formula, and brief discussion of the model fit.**
   - **Also include the model plotted on top of the original data used in this model.**
   
+
+Let's fit the polynomial regression model, $fawn = \beta_{o} + \beta_{1}adult + \beta_{2}adult^2$
+
+where,
+
+$\beta_{0}$ = intercept,
+
+$\beta_{1}$ = Slope of $adult$, and
+
+$\beta_{2}$ = Slope of $adult^2$
+
+Let's fit the model,
+
+```{r}
+ploy_reg_model <- lm(fawn ~ adult + I(adult^2), data = antelope_dataset)
+summary(ploy_reg_model)
+```
+
+**Model Formula**
+
+$$
+fawn = 12.90135 + (-3.07710)adult + (0.21577)adult^2
+$$
+
+**Diagnostic Plots**
+
+The Plot of Residual vs Fitted and Normal Q-Q is given below:
+
+```{r}
+par(mfrow = c(1, 2), mar = c(4,4,1.5, 0.5))
+plot(ploy_reg_model, which = 1:2)
+```
+
+### Plotting the model on top of data
+
+```{r}
+plot(fawn ~ adult, data = antelope_dataset
+     , xlab = "Adult Antelope Population", ylab = "Fawn count", col= "red"
+     , main = "Polynomial Regression Model")
+curve(predict(ploy_reg_model, newdata = data.frame(adult = x, adult2 = x^2))
+      , add = TRUE, col = "Blue")
+```
+
+**Summary and Model Fit**
+
+The intercept of the model ($\beta_{0}$) is **12.90135** and the slope of *adult* ($\beta_{1}$) and $adult^2$ ($\beta_{1}$) is **-3.07710** and **0.21577** respectively. The diagnostic plots show nearly normal distribution across the residuals and there is nearly constant variance across the residuals. The Residual Standard error is **0.06428** and Adjusted R-squared is **0.9873**, indicating that the model explains a large proportion of the variability in the data.
+
+
+
 ### c) Which model is better? Why?
 
+The **Polynomial Model** is a better model than the Multiple Regression model  because it has a **higher adjusted R-squared** value, indicating that it explains more of the variability in the data. Large Adjusted R-squared implies more explanatory power. Also, the polynomial model has **less predictor variables** (only "adult") as compared to Multiple regression model ("adult", "precip" and "severity") which makes it easier to interpret and use. Besides, the polynomial model has **lower Residual standard error** indicating a better model fit than multiple regression model. Lastly, the **small p-value** of Polynomial model indicate a better significance of the model as compared to the Multiple regression model.
