@@ -121,6 +121,7 @@ shapiro.test(red_dye_dataset$high)
 
 Here, the $p-value > 0.05$ for all the groups in Shapiro-Wilk's test and QQ-plot shoes nearly normal distribution. Hence, the condition for normality is met and we can assume the normality in all the groups.
 
+To check **variance** across all groups, we will use boxplot (or we can use Levene's test):
 
 ```{r}
 par(mar = c(3, 3, 1, 1))
@@ -167,12 +168,13 @@ To check whether there is a difference of mean in all groups, we will preform Po
 
 ```{r}
 posthoc <- TukeyHSD(aov_eq)
+# There is a difference in control, among high, medium and low.
 posthoc
 ```
 
-Here, the "*p adj*" values of "low-control", "medium-control", "low-high", "medium-high" and "medium-low" groups is **0.0868094**, **0.1109953**, **0.9609302**, **0.9056532** and **0.9978960** respectively, which is more than $\alpha = 0.05$. Hence, these groups have a difference in means.
+Here, the "p adj" values of "low-control", "medium-control", "low-high", "medium-high" and "medium-low" groups is 0.0868094, 0.1109953, 0.9609302, 0.9056532 and 0.9978960 respectively, which is more than $\alpha = 0.05$. Hence, these groups have no difference in means.
 
-The "*p adj*" value of "high-control" group is **0.0328848**, which is significantly less than $\alpha = 0.05$. Hence, we can say that there is **no difference of means in "high-control" group**.
+The "p adj" value of "high-control" group is 0.0328848, which is significantly less than $\alpha = 0.05$. Hence, we can say that there is difference of means in "high-control" group.
 
 \newpage
 
@@ -317,7 +319,7 @@ The regression plot is given below:
 ```{r}
 par(mar = c(4,4,1,1), mgp = c(2.5, 1, 0))
 plot(groundwater_dataset$Bicarbonate, groundwater_dataset$pH
-     , main = "Regression Plot", xlab = "Bicarbonate", ylab = "pH")
+     , main = "Regression Plot", pch = 16, xlab = "Bicarbonate (ppm)", ylab = "pH")
 abline(linear_model, col="red", lw=2)
 ```
 
@@ -425,7 +427,7 @@ Intervals [-78.93, -0.15]
 
 \newpage
 
-# Quesiton 3 - Fawning Over Models
+# Question 3 - Fawning Over Models
 
 **Required Data**: *antelope.csv*
 
@@ -485,7 +487,8 @@ plot(multi_reg_model, which = 1:2)
 
 **Summary and Model Fit**
 
-The intercept of the model ($\beta_{0}$) is **-5.92201** and the slope of *adult* ($\beta_{1}$), *precip* ($\beta_{2}$) and *severity* ($\beta_{3}$) is **0.33822**, **0.40150** and **0.26295** respectively. The diagnostic plots show nearly normal distribution across the residuals and there is nearly constant variance across the residuals. The Residual Standard error is **0.1209** and Adjusted R-squared is **0.955**, indicating that the model explains a large proportion of the variability in the data.
+The value of intercept ($\beta_{0}$) and the slope of *adult* ($\beta_{1}$), *precip* ($\beta_{2}$) and *severity* ($\beta_{3}$) are **-5.92201**, **0.33822**, **0.40150** and **0.26295** respectively. As observed, the diagnostic plot demonstrate a nearly normal distribution. Additionally, across the residuals, we see a constant variance. Finally, the standard error and the adjusted R-squared values are **0.1209** and **0.955** respectively. These values indicate that a large proportion of variability in our data is explained by the model.
+
 
 
 ### b) Fit the quadratic polynomial model: fawn ~ adult + adult2 
@@ -494,7 +497,9 @@ The intercept of the model ($\beta_{0}$) is **-5.92201** and the slope of *adult
   - **Also include the model plotted on top of the original data used in this model.**
   
 
-Let's fit the polynomial regression model, $fawn = \beta_{o} + \beta_{1}adult + \beta_{2}adult^2$
+Let's fit the polynomial regression model, 
+
+$fawn = \beta_{o} + \beta_{1}adult + \beta_{2}adult^2$
 
 where,
 
@@ -538,10 +543,12 @@ curve(predict(ploy_reg_model, newdata = data.frame(adult = x, adult2 = x^2))
 
 **Summary and Model Fit**
 
-The intercept of the model ($\beta_{0}$) is **12.90135** and the slope of *adult* ($\beta_{1}$) and $adult^2$ ($\beta_{1}$) is **-3.07710** and **0.21577** respectively. The diagnostic plots show nearly normal distribution across the residuals and there is nearly constant variance across the residuals. The Residual Standard error is **0.06428** and Adjusted R-squared is **0.9873**, indicating that the model explains a large proportion of the variability in the data.
-
+The *intercept* of the model ($\beta_{0}$), the slope of *adult* ($\beta_{1}$), $adult^2$ ($\beta_{1}$) are **12.90135**, **-3.07710** and **0.21577** respectively.  As observed, the diagnostic plot demonstrate a nearly normal distribution. Additionally, across the residuals, we see a constant variance. Finally, the standard error and the adjusted R-squared values are **0.06428** and **0.9873** respectively. These values indicate that a large proportion of variability in our data is explained by the model.
 
 
 ### c) Which model is better? Why?
 
-The **Polynomial Model** is a better model than the Multiple Regression model  because it has a **higher adjusted R-squared** value, indicating that it explains more of the variability in the data. Large Adjusted R-squared implies more explanatory power. Also, the polynomial model has **less predictor variables** (only "adult") as compared to Multiple regression model ("adult", "precip" and "severity") which makes it easier to interpret and use. Besides, the polynomial model has **lower Residual standard error** indicating a better model fit than multiple regression model. Lastly, the **small p-value** of Polynomial model indicate a better significance of the model as compared to the Multiple regression model.
+The **polynomial model** is better due to its higher adjusted R-squared value. The higher adjusted R-squared value depicts that it has the power to explain more variability in our data. The polynomial model, on the other hand, has less number of predictor variables when compared to the other model making it even more easier to interpret. While the polynomial model has predictor variable "adult", the other model has variables like "adult", "precip" and "severity". A lower residual standard error value indicates a better model fit. In this case clearly, polynomial model has smaller residual standard error compared with the multiple regression model, the polynomial model has smaller p-value indicating even better significance of the model.    
+
+
+
