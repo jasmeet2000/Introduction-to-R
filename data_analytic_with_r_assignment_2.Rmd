@@ -11,7 +11,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # Background
 
-The sinking of the **Titanic** in *1912* remains one of the most infamous maritime disasters in history. Despite the tremendous progress made in marine technology, the Titanic disaster has served as a warning to all seafarers of the potential dangers of the sea. The sinking of the Titanic resulted in the loss of over 1500 lives, and its story continues to fascinate people to this day. In this report, we will analyze the Titanic dataset, which contains information about the passengers on-board the ship, and see if we can identify any patterns or trends that may help us understand why some people survived the disaster while others did not.
+The sinking of the [**Titanic**](https://titanicfacts.net/) in *1912* remains one of the most infamous maritime disasters in history. Despite the tremendous progress made in marine technology, the Titanic disaster has served as a warning to all seafarers of the potential dangers of the sea. The sinking of the Titanic resulted in the loss of over 1500 lives, and its story continues to fascinate people to this day. In this report, we will analyze the Titanic dataset, which contains information about the passengers on-board the ship, and see if we can identify any patterns or trends that may help us understand why some people survived the disaster while others did not.
 
 Various studies have been conducted on the Titanic dataset over the years, with a focus on determining the factors that influenced a passenger's chances of survival. For instance, one study (Frey, Bruno & Savage, David & Torgler, Benno, 2011) found that women and children were more likely to survive than men. Another study (Pan 2018) found that, "a passenger's socioeconomic status played a significant role in their chances of survival". These findings are consistent with the historical accounts of the disaster, which suggest that the first-class passengers were given priority in the lifeboats over the second and third-class passengers.
 
@@ -29,7 +29,7 @@ The data used in this analysis were obtained from the [**Kaggle's Titanic datase
   
 ## Training Set
 
-The _train.csv_ file contains data on 891 passengers (891 rows), which includes 12 columns. The dataset provide the information of survival status of passengers, age of passengers (in years), gender of passengers (65% of male, 35% of female), passenger fare, socio-economic status and some other demographic information.
+The _train.csv_ file contains data on 891 passengers (rows), which includes 12 columns. The dataset provide the information of survival status of passengers, age of passengers (in years), gender of passengers (65% of male, 35% of female), passenger fare, socio-economic status and some other demographic information.
 
 Below is a table summarizing the data:
 
@@ -50,19 +50,19 @@ Below is a table summarizing the data:
 
 The Survived variable is the response variable, while the remaining variables are potential predictors of survival. When analyzing this dataset, it is important to consider the historical context of the Titanic disaster, as well as the limitations and biases of the data. Based on prior knowledge of the Titanic disaster, we might expect that the following variables could be related to survival: 
 
-+ **Pclass**: We might expect that passengers in higher ticket classes (i.e., with more expensive tickets) had a better chance of                       survival, as they may have been given priority in the evacuation process.
++ **Pclass**: We might expect that passengers in higher ticket classes (i.e., with more expensive tickets) had a better chance of survival, as they may have been given priority in the evacuation process.
 
 + **Sex**: We might expect that females had a better chance of survival than males, as they were given priority in the evacuation process.
 
-+ **Age**: We might expect that children had a better chance of survival than adults, as they may have been given priority in the                    evacuation process.
++ **Age**: We might expect that children had a better chance of survival than adults, as they may have been given priority in the evacuation process.
 
-+ **SibSp and Parch**: We might expect that passengers with more family members aboard had a lower chance of survival, as they may have                          had more difficulty evacuating together. In _parch_ variable, some children travelled only with a nanny, therefore                        we will consider $parch = 0$. Moreover, in the _sibsp_ variable, the spouse's mistresses and fiances were ignored.
++ **SibSp and Parch**: We might expect that passengers with more family members aboard had a lower chance of survival, as they may have had more difficulty evacuating together. In _parch_ variable, some children travelled only with a nanny, therefore we will consider $parch = 0$. Moreover, in the _sibsp_ variable, the spouse's mistresses and fiances were ignored.
 
-+ **Fare**: We might expect that passengers who paid higher fares had a better chance of survival, as they may have been given priority in             the evacuation process.
++ **Fare**: We might expect that passengers who paid higher fares had a better chance of survival, as they may have been given priority in the evacuation process.
 
-+ **Cabin**: We might expect that passengers with cabins located closer to the lifeboats had a better chance of survival, as they may have              had easier access to the lifeboats.
++ **Cabin**: We might expect that passengers with cabins located closer to the lifeboats had a better chance of survival, as they may have had easier access to the lifeboats.
 
-+ **Embarked**: We might expect that passengers who embarked from certain ports had a better chance of survival, as they may have been                     given priority in the evacuation process.
++ **Embarked**: We might expect that passengers who embarked from certain ports had a better chance of survival, as they may have been given priority in the evacuation process.
 
 To test these hypotheses, we can use inferential statistics. We can also visualize the relationships between the variables and survival using plots such as bar charts, histograms, and scatterplots. In R, we can use packages such as *ggplot2* and *glm* to conduct these analyses.
 
@@ -74,7 +74,7 @@ In summary, the Titanic dataset contains information on the passengers aboard th
 \newpage
 # Method
 
-To test the hypothesis, we will perform a **logistic regression analysis** using the _Titanic dataset_. 
+To test the hypothesis, we will perform a [**Logistic Regression Analysis**](https://en.wikipedia.org/wiki/Logistic_regression) using the _Titanic dataset_. 
 
 According to [Wikipedia](https://en.wikipedia.org/wiki/Logistic_regression), "The logistic model (or logit model) is a statistical model that models the probability of an event taking place by having the log-odds for the event be a linear combination of one or more independent variables."
 
@@ -126,32 +126,33 @@ We need to check the assumptions of:
 
 + **Normality** : We need to check if the distribution is normal across all groups, if the variable is numerical. Hence, we need not check the normality on this analysis.
 
-+ **Variability** : The variability across the groups should be about equal across the numerical variables. In this analysis, the variable used are "Survived", "Sex" and "Pclass" which are all categorical variables. Hence, we need not check the normality on this analysis. 
++ **Variability** : The variability across the groups should be about equal across the numerical variables. In this analysis, the variable used are "Survived", "Sex" and "Pclass" which are all categorical variables. Hence, we need not check the Variability on this analysis. 
 
-Hence, we assume all our conditions are met and thus we can proceed with hypothetical logistical regression testing.
+Hence, we assume all our conditions are met and we can proceed with hypothetical logistical regression testing.
  
  
 ### Logistic Regression Analysis
 
-Performing logistic regression analysis using glm(), where a *dependent* variable, is "**Survival**", and one or more *independent* variables is "**gender**" and "**social class**".
+Performing [Logistic Regression Analysis](https://en.wikipedia.org/wiki/Logistic_regression) using glm() function:
 
 ```{r}
 # Perform logistic regression analysis
 logistic_model <- glm(Survived ~ Sex + Pclass, data = titanic, family = "binomial")
 ```
 
+Here, a *dependent* variable, is "**Survival**", and one or more *independent* variables is "**gender**" and "**social class**".
 
 \newpage
 # Results
 
-After performing logistic regression analysis to predict survival based on gender and social class, the summary of the logistic regression model results is given below:
+After performing [Logistic Regression Analysis](https://en.wikipedia.org/wiki/Logistic_regression) to predict survival based on gender and social class, the summary of the logistic regression model results is given below:
 
 ```{r echo = FALSE, message = FALSE, warning = FALSE}
 # Summarize the results
 summary(logistic_model)
 ```
 
-Here, the test statistic is **10.356** and p-value is **< 2e-16**.
+Here, the test statistic is **10.356** and p-value(**2e-16**) is $< 0.05$.
 
 Therefore, we **reject** Null Hypothesis,  $H_{0}$ because $p$-value is less than $\alpha$, level of significance (that is, p-value < 0.05).
 
@@ -159,13 +160,13 @@ There is enough evidence to support the alternative hypothesis, and therefore we
 
 From the summary output, we can draw the following conclusions:
 
-+ The coefficients for the independent variables are significant at the $\alpha = 0.005$ level. This means that gender and social class     have a statistically significant effect on survival.
++ The coefficients for the independent variables are significant at the $\alpha = 0.005$ level. This means that gender and social class have a statistically significant effect on survival.
 
-+ The odds ratio for females compared to males is 0.080. This means that females had a significantly higher chance of survival than males,   holding all other variables constant.
++ The odds ratio for females compared to males is 0.080. This means that females had a significantly higher chance of survival than males, holding all other variables constant.
 
-+ The odds ratios for passengers in second and third class compared to first class are 0.371 and 0.097, respectively. This means that       passengers in higher social classes had a significantly higher chance of survival than those in lower social classes, holding all other   variables constant.
++ Passengers in higher social classes had a significantly higher chance of survival than those in lower social classes, holding all other variables constant.
 
-+ A lower residual deviance indicates a better model fit. In this case, the residual deviance is **672.51**, indicating a relatively good   fit.
++ A lower residual deviance indicates a better model fit. In this case, the residual deviance is **672.51**, indicating a relatively good fit.
 
 ```{r echo = FALSE, message = FALSE, warning = FALSE}
 # Create a prediction for the model
@@ -177,6 +178,7 @@ predicted_df <- data.frame(Predicted = prediction)
 # Add the predicted values to the original dataset
 titanic <- cbind(titanic, predicted_df)
 
+# including "ggplot2" package
 library(ggplot2)
 # Create a dodge bar chart to visualize the predicted survival rates by gender and class
 ggplot(titanic, aes(x = Sex, fill = factor(Pclass), y = Predicted)) +
@@ -187,7 +189,7 @@ ggplot(titanic, aes(x = Sex, fill = factor(Pclass), y = Predicted)) +
   scale_fill_discrete(name = "Social Class")
 ```
 
-Overall, the logistic regression analysis confirms our hypothesis that gender and social class had a significant impact on survival rates on the Titanic. Females and passengers in higher social classes had a significantly higher chance of survival than males and passengers in lower social classes.
+Overall, the logistic regression analysis confirms our hypothesis that gender and social class had a significant impact on survival rates on the Titanic (also it can seen in the plot between Predicted Survival Rates by Gender and Class). Females and passengers in higher social classes had a significantly higher chance of survival than males and passengers in lower social classes.
 
 \newpage
 # Conclusion
@@ -198,8 +200,7 @@ After conducting our analysis on the Titanic dataset, we found that our hypothes
 
 These findings are consistent with prior research on the Titanic disaster. Many historical accounts and analyses have suggested that women and children were prioritized in the evacuation process, leading to higher survival rates among females. Additionally, social class was a known factor in determining access to lifeboats and other means of escape, with higher-class passengers having more resources and opportunities to survive.
 
-Our results provide further evidence for the impact of gender and social class on the likelihood of survival in disaster situations. 
-As we got *p-value* < **2e-16**, which shows that our Null Hypothesis($H_{0}$) is rejected and we had enough evidence to support the alternative hypothesis($H_{A}$), and therefore we conclude that "the survival of passengers is significantly dependent on gender and social class", is accurate. By combining inferential statistics and visualization techniques, we gain a better understanding of the factors that influenced survival rates in this historic event. We also calculated the odds ratio (OR), which represents the change in odds of the outcome for a one-unit increase in the predictor variable, while holding all other variables constant. In our analysis, females had over four times higher odds of survival compared to males. And the odds ratio in social class indicates that passengers in higher social classes had about one-third of the odds of survival compared to those in lower social classes.
+Our results provide further evidence for the impact of gender and social class on the likelihood of survival in disaster situations. As we got *p-value* < **0.05**, which shows that our Null Hypothesis($H_{0}$) is rejected and we had enough evidence to support the alternative hypothesis($H_{A}$), and therefore we conclude that "the survival of passengers is significantly dependent on gender and social class", is accurate. By combining inferential statistics and visualization techniques, we gain a better understanding of the factors that influenced survival rates in this historic event. We also calculated the odds ratio (OR), which represents the change in odds of the outcome for a one-unit increase in the predictor variable, while holding all other variables constant. In our analysis, females had over four times higher odds of survival compared to males. And the odds ratio in social class indicates that passengers in higher social classes had about one-third of the odds of survival compared to those in lower social classes.
 
 However, it is important to note that our analysis has some limitations. Firstly, our model only includes two predictor variables, and there may be other factors that also influence survival rates. Secondly, our analysis is based on a single dataset, and the findings may not necessarily generalize to other contexts or populations.
 
@@ -212,16 +213,16 @@ Overall, our analysis provides important insights into the impact of gender and 
 
 + Kaggle. (n.d.). [**Titanic: Machine learning from disaster**](https://www.kaggle.com/competitions/titanic/overview).
 
-+ Frey, Bruno & Savage, David & Torgler, Benno. (2011). Behavior under Extreme Conditions: The Titanic Disaster. Journal of Economic        Perspectives. 25. 209-222. 10.1257/jep.25.1.209. 
++ Frey, Bruno & Savage, David & Torgler, Benno. (2011). Behavior under Extreme Conditions: The Titanic Disaster. Journal of Economic Perspectives. 25. 209-222. 10.1257/jep.25.1.209. 
 
-+ Pan, A. (2012). Passengers' socioeconomic status and chances of survival in the sinking of the Titanic. Social Science Quarterly, 93(5),   1187-1205.
++ Pan, A. (2012). Passengers' socioeconomic status and chances of survival in the sinking of the Titanic. Social Science Quarterly, 93(5), 1187-1205.
 
-+ [Goffman, E.]( https://onlinelibrary.wiley.com/doi/full/10.1111/1468-4446.12069) (2014). Gender display, power, and the sinking of the    Titanic. Symbolic Interaction, 37(4), 466-487.
++ [Goffman, E.]( https://onlinelibrary.wiley.com/doi/full/10.1111/1468-4446.12069) (2014). Gender display, power, and the sinking of the Titanic. Symbolic Interaction, 37(4), 466-487.
 
-+ [Hall, C.](https://scholarworks.wm.edu/cgi/viewcontent.cgi?article=1299&context=honorstheses) (2014). Social class and survival on the    SS Titanic.
++ [Hall, C.](https://scholarworks.wm.edu/cgi/viewcontent.cgi?article=1299&context=honorstheses) (2014). Social class and survival on the Titanic.
 
 + [Fleischer, A., & Christensen, T.](https://www.historyextra.com/period/edwardian/women-and-children-first-reflections-on-the-titanic-disaster/) (2009). The Titanic: A test of social integration versus survival. Demography, 46(1), 1-16. doi: 10.1353/dem.0.0038
 
-+ "A Study on the Factors Affecting the Survival Probability of Titanic Passengers", published in the _International Journal of Emerging      Trends & Technology_ in 2017.
++ "A Study on the Factors Affecting the Survival Probability of Titanic Passengers", published in the _International Journal of Emerging Trends & Technology_ in 2017.
 
 + ["Meeting a Titanic Challenge for             Oceans"](https://www.esri.com/about/newsroom/insider/meeting-a-titanic-challenge-for-oceans/), April 09, 2012
