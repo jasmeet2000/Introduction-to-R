@@ -1,0 +1,373 @@
+---
+title: "R Assignment 5"
+author: "Jasmeet Singh Saini - 0758054"
+date: "`r Sys.Date()`"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Question 1 - Local Advertising
+
+**Required Data:** _advertising.csv_
+
+## Upon request, the local newspaper will provide data to help potential advertisers target their ads. The paper provides a random sample of 12 advertisements per day, 4 from each of the three sections of the paper, for the previous week and the number of inquiries the ad generated for the business. Use _advertising.csv_ to answer the following questions.
+
+Firstly, let's loading the data set and check the structure of *structure.csv*.
+
+```{r}
+# Importing the dataset
+advertising_data <- read.csv("advertising.csv")
+# Let's view the str()  
+str(advertising_data)
+```
+
+Here, we can see that "advertising_data" is in long format and the categorical data variables are of "character" data type. Only Inquiries is numeric variable and its data type is integer.
+
+In this part of question, we will assume $\alpha$, level of significance as **0.01**.
+
+
+### a) Ignoring any potential interaction between Day and Section, are there any differences in the average number of inquiries by day? (Note: this is a hypothesis test and should be structured as such.)
+
+We will use **One-Way ANOVA Test** to check whether there are any differences in the average number of inquiries by day.
+
+### Step 1 : Hypothesis & Assumptions
+
+**Step 1a: Hypothesis**
+The $H_{0}$ is Null hypothesis and $H_{A}$ is Alternative hypothesis.
+
+$$
+\begin{aligned}
+H_{0}:\ &\text{ There is no significant difference in the average number of inquiries by day.} \\
+&\qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \text{vs.} \\
+H_{A}:\ &\text{ There is significant difference in the average number of inquiries by day}
+\end{aligned}
+$$
+
+**Step 1b: Assumptions** 
+
+We need to check the assumptions of:
+
++ **Independence** : The data was randomly sampled and the sample size is less than 10% of the population size. Thus, the condition is satisfied.
+
++ **Normality** : The residuals should be nearly normal distributed and show normality. It will checked by fitting the linear model and using Q-Q Plot and Shapiro-Wilk's Test of model residuals.
+
++ **Variance** : The variability across the groups should be about equal (equal variance of residuals). It will be checked by using Residual vs Fitted plot of model residuals and Levene’s Test
+
+Before we fitting the lm() model and check the the assumptions of Independence, Normality and Variance, we need to convert the categorical variables to factor data type. Here, we will make "Day" variable a ordered factor and "Section" variable a normal factor.
+
+```{r}
+advertising_data$Day <- factor(advertising_data$Day
+                        , levels = c("Monday","Tuesday","Wednesday","Thursday","Friday")
+                        , ordered = TRUE)
+
+advertising_data$Section <- factor(advertising_data$Section)
+```
+
+Now let's again check the str() of advertising_data
+
+```{r}
+str(advertising_data)
+```
+
+Now, let's fit the linear model:
+
+```{r}
+linear_model <- lm(Inquiries ~ Day, data = advertising_data)
+```
+
+Checking the **assumptions**:
+
+Plot of Residual vs Fitted Plot & QQ Plot:
+```{r}
+par(mfrow=c(1,2)) 
+plot(linear_model, which = 1:2, col = "blue", lwd = 2, pch = 1)
+```
+Histogram of residuals:
+
+```{r fig.height = 3.5, fig.width = 6, fig.align = "center"}
+hist(linear_model$residuals, main = "Distribution of residuals"
+     , xlab = "residuals", col = "lightblue") 
+```
+
+Checking normality using Shapiro-Wilk's Test:
+
+```{r}
+shapiro.test(linear_model$residuals)
+```
+ 
+As it can be observed in the Q-Q Plot that the data points are closely attached to the model fitted line and histogram has a frequency peaks in the center. Also, p-value in Shapiro-Wilk normality test is **0.9876**. Hence, p-value > 0.01 and we can say that the data is normal.
+
+```{r}
+ # Levene’s Test for Homogeneity of Variance
+car::leveneTest(linear_model) 
+```
+
+In the Residual vs Fitted plot, all the data points are in the constant distance to the line and p-value in Levene's test is **0.02503**. Hence, $p-value > 0.01$ and we can say that constant variance is reached.
+
+Hence, all of the conditions are met and now we can proceed with the testing using the parametric approach.
+
+### Step 2 : Test Statistic and p-value
+
+We need to analyze the result of **One-way ANOVA Test** to make our decision.
+
+Now, let's test the ANOVA and get the summary:
+
+```{r}
+aov_advertising <- aov(linear_model)
+summary(aov_advertising)
+```
+Hence, the test statistic is **7.519** and p-value is **6.61e-05**.
+
+### Step 3 : Statistical Decision
+
+Therefore, we **reject** Null Hypothesis,  $H_{0}$ because $p$-value is less than $\alpha$, level of significance (that is, p-value < 0.01).
+
+### Step 4 : Conclusion
+
+There is enough evidence to support the alternative hypothesis, and therefore we conclude that there is significant difference in the average number of inquiries by day, is accurate.
+
+
+### b) If “yes” to a), which day would you prefer to advertise on if maximizing inquiries was your objective?
+
+To check which day would you prefer to advertise on if maximizing inquiries was your objective, we will use Tukey HSD - Statistical Test for Differences.  
+
+```{r}
+# Tukey for multiple comparisons of means
+TukeyHSD(aov_advertising)
+```
+
+Here, we can observe that there is a significance difference in the mean inquiries of Friday-Thursday group. As the $p-value < 0.01$, the mean inquiries on Friday is greater than mean inquiries on Thursday.
+
+Hence, we can conclude that Friday has a significantly higher mean number of inquiries compared to all other days and we could choosing **Friday** to advertise our ad on. 
+
+
+### c) Create an interaction plot for Day and Section on Inquiries. Based on this plot, does there appear to be an interaction; why or why not? (see the examples in the help file for interaction.plot on how to create these plots)
+
+Below is an interaction plot for "Day" and "Section" on "Inquiries".
+
+```{r fig.height = 5, fig.width = 7, fig.align = "center"}
+# Interaction Plot
+with(advertising_data,
+    interaction.plot(x.factor = Day, trace.factor = Section
+      , response = Inquiries, type = 'b', ylab = "Inquiries"
+      , col = c("red","green","blue")
+      , main = "Interaction plot for Day and Section on Inquiries")
+    )
+```
+
+Yes, Definitely! An interaction between "Day" and "Section" on "Inquiries" can be seen as the lines converge and cross each other and there will be significant increase in inquiries of all sections, particularly “News” section on Fridays.
+
+
+### d) Test for an interaction between Day and Section. Does your result have an effect on your answer in part a) of this question? Bonus for determining which section and day combination sees the most inquiries using emmeans.
+
+We will use **Two-Way ANOVA Test** to check whether there is an interaction between the Day and Section.
+
+### Step 1 : Hypothesis & Assumptions
+
+**Step 1a: Hypothesis**
+The $H_{0}$ is Null hypothesis and $H_{A}$ is Alternative hypothesis.
+
+$$
+\begin{aligned}
+H_{0}:\ &\text{ There is no significant interaction between Day and Section} \\
+&\qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \text{vs.} \\
+H_{A}:\ &\text{ There is significant interaction between Day and Section}
+\end{aligned}
+$$
+
+**Step 1b: Assumptions** 
+
+We need to check the assumptions of:
+
++ **Independence** : The data was randomly sampled and the sample size is less than 10% of the population size. Thus, the condition is satisfied.
+
++ **Normality** : The residuals should be nearly normal distributed and show normality. It will checked by fitting the linear model and using Q-Q Plot and Shapiro-Wilk's Test of model residuals.
+
++ **Variance** : The variability across the groups should be about equal (equal variance of residuals). It will be checked by using Residual vs Fitted plot of model residuals and Levene’s Test
+
+In Part (a), we have checked all the assumptions and  are satisfied. Hence, we can proceed with the testing using the parametric approach.
+
+### Step 2 : Test Statistic and p-value
+
+We need to analyze the result of **Two-Way ANOVA Test** to make our decision.
+
+Now, let's test the ANOVA and get the summary:
+
+```{r}
+# Creating the linear model
+linear_model_one <- lm(Inquiries ~ Day * Section, data = advertising_data)
+# Performing ANOVA
+summary(aov(linear_model_one))
+```
+
+Hence, the test statistic is **9.667** and p-value is **1.12e-07**.
+
+### Step 3 : Statistical Decision
+
+Therefore, we **reject** Null Hypothesis,  $H_{0}$ because $p$-value is less than $\alpha$, level of significance (that is, p-value < 0.01).
+
+### Step 4 : Conclusion
+
+There is enough evidence to support the alternative hypothesis, and therefore we conclude that there is a significant interaction between Day and Section, is accurate.
+
+### Reason:
+
+Yes, Definitely! Our result have an effect on our answer in part (a) of this question. Any chances of interaction between "Day" and "Section" has been ignored in part (a). Also, there is an interaction between "Day" and "Section" which affects the result.
+
+### EMMEANS
+
+To check which section and day combination sees the most inquiries, we will use *emmeans()* function:
+
+```{r}
+library(emmeans)
+ans <- emmeans(linear_model_one, pairwise ~ Day:Section)
+ans$emmeans
+```
+
+Here, we can see that the pair, that is, Friday and News ("Day" and "Section" respectively) has maximum emmean value of **12.5**. Hence, Friday : News (Day : Section) sees the maximum number of inquiries.
+
+### e) The newspaper currently charges the same amount per ad for any day and any section in the newspaper. Assuming you work for the paper, do you have any recommendations for the paper in terms of pricing?
+
+Need to check this 
+
+Seeing the Interaction Plot in part-c of this question, it can be seen that maximum inquiries appear on Fridays which suggests that the company shall start charging a premium for posting advertisements on Fridays as advertisers tend to post maximum ads on Fridays. Besides, the inquiries for Sports throughout the week is lower as compared to News and Business sections, thus, the company can lower down the prices for Sports Section so as to attract more advertisers and make profits.
+
+
+\newpage
+# Question 2: A Life of Leisure1 Part I - Model Fitting
+
+## It has long been argued that workers with more leisure time are more productive during their work hours. Jay has been trying to convince his employer that he should be allowed to work a four day week for the same annual salary, but so far they have been resistant and require cold hard statistical proof that reduced working hours will help the company’s bottom line. After all, Jay is suggesting that he work less while still making the same amount of money. Jay finds data on OECD countries’ GDP produced per hour worked which was collected by researchers at a prestigious university (contained in _leisure.csv_) and hires you to analyze the data. This dataset has two columns of interest for us: GDP per hour worked and hours worked.
+
+Firstly, let's loading the data set and check the structure of *leisure.csv*.
+
+```{r}
+# Importing the dataset
+leisure_data <- read.csv("leisure.csv")
+# Let's view the str()  
+str(leisure_data)
+```
+
+### a) Estimate the linear relationship between GDP per hour and hours worked using a linear model. (This includes checking model assumptions using diagnostic plots.) Comment on how well the model fits the data.
+
+To estimate the linear relationship between GDP per hour and hours worked using a linear model, we will conduct *Linear Regression Model* using the two parameters ($\beta_{0}$ is intercept of the model and $\beta_{1}$ is slope of the model):
+
+$$
+GDP = \beta_{0} + \beta_{1} * Hours
+$$
+
+### Fitting the Model
+
+Now let's fit the model:
+
+```{r}
+lm <- lm(gdp ~ hours, data = leisure_data)
+lm
+```
+Here, the intercept, $\beta_{0}$ = -5.779 and slope, $\beta_{1}$ is **0.025**.
+
+$$
+GDP = (-5.779) + (0.025 * Hours)
+$$
+
+### Assumptions
+
+We need to check the assumptions for linear model and tell how well the model fits the data:
+
+- **Independence** : The data was randomly sampled and the sample size is less than 10% of the population size. Thus, the condition is satisfied.
+
+- **Linearity** : There should be a linear relationship between the two variables, that is, "gdp" and "hours"
+
+- **Normality** : The residuals should be nearly normal distributed and show normality.
+                  
+- **Variance** : The variability across the groups should be about equal (equal variance of residuals). 
+
+Now, we will check the assumptions. 
+
+Firstly, let's check for *independence*:
+
+```{r fig.height = 4, fig.width = 6, fig.align = "center"}
+par(mar = c(4,4,1.5, 1.5), mgp = c(3, 1, 0))
+plot(x = 1:length(lm$residuals), y = lm$residuals
+, xlab = "Index (Stored)",ylab = "Residuals, Organized by Index", main = "Resiuals vs Index")
+abline(h = 0)
+```
+
+**It is independent**, as no serial correlation can be observed.
+
+Now, we will check the assumptions of *Linearity* among "gdp" and "hours".
+
+```{r}
+par(mar = c(4,4,1.5, 1.5), mgp = c(3, 1, 0))
+plot(x = leisure_data$hours, y = lm$residuals
+    , xlab = "X-values", ylab = "Residuals", col = "blue" 
+    , main = "Residuals vs x-values")
+abline(h = 0)
+```
+
+Here, it can be seen that the residuals vs x are nearly linear. Hence, the assumption is met.
+
+Now, we will check the assumptions of *Normality*:
+
+```{r}
+par(mfrow=c(1,3))
+# Histogram of Residuals
+hist(lm$residuals, main = "Distribution of Residuals"
+     , col = "lightblue", xlab = "Residuals")
+
+qqnorm(lm$residuals, pch = 1, frame = FALSE)
+qqline(lm$residuals, col = "lightblue", lwd = 2)
+
+# Boxplot of Residuals 
+boxplot(lm$residuals, col = "lightblue"
+        , main = "Boxplot of Residuals")
+# Shapiro-Wilk's normality test
+shapiro.test(lm$residuals)
+```
+
+Here, it can be seen that the distribution's the frequency peaks at the center and is evenly distributed at the
+ends, and is confirm by Shapiro-Wilk's test, as $p$-value > 0.05. Hence, the assumption of *normality* is met.
+
+Finally, we will check the assumptions of *variability*:
+
+```{r}
+par(mar = c(4,4,1.5, 1.5), mgp = c(3, 1, 0))
+plot(x = lm$fitted.values, y = lm$residuals, col = "blue" 
+     , xlab = "Fitted Values", ylab = "Residuals"
+     , main = "Residuals vs Fitted Values")
+abline(h = 0)
+```
+
+
+The data across the line are nearly constant, as the fitted values increase the residuals are constant in "Residuals vs Fitted Values". Hence, the condition of *variability* is met.
+
+Hence, **all of the conditions are met** and we can assume **the model to be a good fit** for the data.
+
+### b) Conduct a hypothesis test on the slope parameter of the model in a) to determine if there is a linear relationship between GDP per hour and hours worked.
+
+### c) You will have hopefully determined that the relationship here is likely not only linear and therefore the model in a) is not the best model for this data. Use a linear model to fit the quadratic relationship between GDP per hour and hours worked. (Again, use diagnostic plots and comment on how well the model fits the data).
+
+### d) Plot the data and your model from a) and c) all on the same plot. Include a legend.
+  
+
+\newpage
+# Question 3: A Life of Leisure Part II - Interpretation
+
+
+## For this question “The Model” is your model from Question 2c).
+
+
+### a) Explain why The Model in Q2c) is better than your model in Q2a). There are MANY comparisons to make; to get full marks you must make at least 4.
+
+
+### b) Give The Model equation.
+
+
+### c) Based on The Model equation in b), what is the average number of work hours per person that would maximize GDP per hour?
+
+
+### d) Jay currently works 1992 hours a year. As mentioned, he wants to ask his employer for a four-day work week. Would your analysis convince an employer to move their employees to a four-day work week? Explain your process. If not, is there still a way for Jay to work less than he currently is and still make the same amount of money? What type of compromise could be offerred?
+
+

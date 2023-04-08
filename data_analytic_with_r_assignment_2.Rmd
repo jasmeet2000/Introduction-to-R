@@ -209,9 +209,9 @@ Overall, our analysis provides important insights into the impact of gender and 
 \newpage
 # Reference
 
-+ Titanic Facts: [**Titanic history**](https://titanicfacts.net/).
++ Titanic Facts: [Titanic history](https://titanicfacts.net/).
 
-+ Kaggle. (n.d.). [**Titanic: Machine learning from disaster**](https://www.kaggle.com/competitions/titanic/overview).
++ Kaggle. (n.d.). [Titanic: Machine learning from disaster](https://www.kaggle.com/competitions/titanic/overview).
 
 + Frey, Bruno & Savage, David & Torgler, Benno. (2011). Behavior under Extreme Conditions: The Titanic Disaster. Journal of Economic Perspectives. 25. 209-222. 10.1257/jep.25.1.209. 
 
