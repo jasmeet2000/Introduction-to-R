@@ -297,7 +297,7 @@ abline(h = 0)
 
 **It is independent**, as no serial correlation can be observed.
 
-Now, we will check the assumptions of *Linearity* among "gdp" and "hours".
+Now, we will check the assumptions of *Linearity* among "residuals" and "hours".
 
 ```{r}
 par(mar = c(4,4,1.5, 1.5), mgp = c(3, 1, 0))
@@ -347,9 +347,185 @@ Hence, **all of the conditions are met** and we can assume **the model to be a g
 
 ### b) Conduct a hypothesis test on the slope parameter of the model in a) to determine if there is a linear relationship between GDP per hour and hours worked.
 
+### Step 1 : Hypothesis & Assumptions
+
+**Step 1a: Hypothesis**
+The $H_{0}$ is Null hypothesis and $H_{A}$ is Alternative hypothesis.
+
+$$
+\begin{aligned}
+H_{0}:\ &\text{ There is no significant linear relationship between GDP per hour and hours worked.} \\
+&\qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \text{vs.} \\
+H_{A}:\ &\text{ There is significant linear relationship between GDP per hour and hours worked.}
+\end{aligned}
+$$
+
+Here, we will consider slope Parameter equal to zero for $H_{0}$, Null hypothesis and for $H_{A}$, Alternative hypothesis slope Parameter  is not zero.
+
+**Step 1b: Assumptions** 
+
+We need to check the assumptions of:
+
++ **Independence** : The data was randomly sampled and the sample size is less than 10% of the population size. Thus, the condition is satisfied.
+
++ **Linearity** : There should be a linear relationship between the two variables, that is, "gdp" and "hours"
+
++ **Normality** : The residuals should be nearly normal distributed and show normality.
+                  
++ **Variance** : The variability across the groups should be about equal (equal variance of residuals). 
+
+All the assumptions are depicted using diagnostic plots in part-a of this question and all assumptions are
+satisfied. Thus, we will proceed with the further testing to check linearity using the slope parameter of the
+model:
+
+In Part (a) of the question, we have check all of the assumptions using diagnostic plots (and statistical testing). There we got satisfied result. Hence, we can conduct a hypothesis test on the slope parameter of the model
+
+
+### Step 2 : Test Statistic and p-value
+
+```{r}
+summary(lm)
+```
+
+Here, The p-value of slope parameter is **0.0028**. Hence, the test statistic is **3.190** and p-value is **0.025**.
+
+### Step 3 : Statistical Decision
+
+Here, the slope parameter is not equal to zero.
+
+Therefore, we **reject** Null Hypothesis,  $H_{0}$ because $p$-value is less than $\alpha$, level of significance (that is, p-value < 0.05).
+
+### Step 4 : Conclusion
+
+There is enough evidence to support the alternative hypothesis, and therefore we conclude that there exists a significant Linear Relationship between GPD per hour and Hours worked, is accurate.
+
+
 ### c) You will have hopefully determined that the relationship here is likely not only linear and therefore the model in a) is not the best model for this data. Use a linear model to fit the quadratic relationship between GDP per hour and hours worked. (Again, use diagnostic plots and comment on how well the model fits the data).
 
+## Fitting the model
+
+**Quadratic Linear Model** is used to fit the quadratic relationship between GDP per hour and hours worked. 
+
+```{r}
+# Quadratic Linear Model
+quad_model <- lm(gdp ~ hours + I(hours^2), data = leisure_data)
+quad_model
+```
+
+Here, after looking the intercept and coefficients variable, the quadratic model will be:
+
+$$
+GDP = (-434.90) + 0.538*Hours + (-0.00015)*Hours^2
+$$
+
+## Assumptions
+
+We need to check the assumptions for quadratic linear model and tell how well the model fits the data:
+
+- **Independence** : The data was randomly sampled and the sample size is less than 10% of the population size. Thus, the condition is satisfied.
+
+- **Linearity** : There should be a linear relationship between the two variables, that is, "gdp" and "hours"
+
+- **Normality** : The residuals should be nearly normal distributed and show normality.
+                  
+- **Variance** : The variability across the groups should be about equal (equal variance of residuals). 
+
+Now, we will check the assumptions. 
+
+Firstly, let's check for *independence*:
+
+```{r fig.height = 3.5, fig.width = 6, fig.align = "center"}
+par(mar = c(4,4,1.5, 1.5), mgp = c(3, 1, 0))
+plot(x = 1:length(quad_model$residuals), y = quad_model$residuals
+    , xlab = "Index (Stored)"
+    , ylab = "Residuals, Organized by Index"
+    , main = "Resiuals vs Index")
+abline(h = 0)
+```
+It is **independent**, as no serial correlation can be observed.
+
+Now, we will check the assumptions of *Linearity* among "hours" and "residuals".
+
+```{r fig.height = 3.5, fig.width = 6, fig.align = "center"}
+par(mar = c(4,4,1.5, 1.5), mgp = c(3, 1, 0))
+plot(x = leisure_data$hours, y = quad_model$residuals
+     , xlab = "X-values", ylab = "Residuals", col = "blue" 
+     , main = "Residuals vs x-values"); abline(h = 0)
+```
+
+Here, it can be seen that the residuals vs x-value are nearly linear, as no significant pattern for residuals can be
+observed. Hence, the assumption is met.
+
+Now, we will check the assumptions of *Normality*:
+
+```{r}
+par(mfrow=c(1,3))
+# Histogram of Residuals
+hist(quad_model$residuals, main = "Distribution of Residuals"
+     , col = "lightblue", xlab = "Residuals")
+
+qqnorm(quad_model$residuals, pch = 1, frame = FALSE)
+qqline(quad_model$residuals, col = "lightblue", lwd = 2)
+
+# Boxplot of Residuals 
+boxplot(quad_model$residuals, col = "lightblue"
+        , main = "Boxplot of Residuals")
+# Shapiro-Wilk's normality test
+shapiro.test(quad_model$residuals)
+```
+
+Here, it can be seen that the distribution's the frequency peaks at the center and is evenly distributed at the
+ends, and is confirm by Shapiro-Wilk's test, as $p$-value > 0.05. Hence, the assumption of *normality* is met.
+
+Finally, we will check the assumptions of *variability*:
+
+```{r}
+par(mar = c(4,4,1.5, 1.5), mgp = c(3, 1, 0))
+plot(x = quad_model$fitted.values, y = quad_model$residuals, col = "blue" 
+     , xlab = "Fitted Values", ylab = "Residuals"
+     , main = "Residuals vs Fitted Values")
+abline(h = 0)
+```
+
+
+The data across the line are nearly constant, as the fitted values increase the residuals are constant in "Residuals vs Fitted Values". Hence, the condition of *variability* is met.
+
+Hence, **all of the conditions are met** and we can assume **the model to be a good fit** for the data.
+
+Now, let's summary the quadratic regression model
+
+```{r}
+summary(quad_model)
+```
+
+After looking the assumptions (using diagnostic plots) and the summary statistics of the quadratic regression model, we can say that the model is linear as well as quadratic (linear is done in above part of this question). The intercept, hours and quadratic term (hours^2) is **-4.349e+02**, **5.385e-01** and **-1.517e-04** respectively. Hence, the negative value of quadratic term (hours^2) explain about the effect of hours worked on GDP per hour diminishes as hours worked increase.
+
 ### d) Plot the data and your model from a) and c) all on the same plot. Include a legend.
+
+Given is the plot of Linear and Quadratic Model:
+
+```{r}
+
+# Plottng the data points 
+# from leisure.csv
+plot(gdp ~ hours, data = leisure_data
+     , main = "Model Comparison between GDP (per hours) and Hours Worked"
+     , xlab = "Hours worked"
+     , ylab = "GDP (per hour)", pch=16)
+
+# Linear Model's Regression Line
+abline(lm, col = "blue",lw=2)
+
+# Quadratic Model curve
+curve(predict( quad_model
+               , newdata = data.frame(hours = x, hours2 = x^2))
+               , add = TRUE, col = "red",lw=2)
+# Legend
+legend(x = "bottomright"
+       , legend=c("Linear Regression Model", "Quadratic Regression Model")
+       , col=c("blue", "red"), cex=0.7
+       , lty=1:1, bg='lightblue')
+```
   
 
 \newpage
@@ -364,8 +540,33 @@ Hence, **all of the conditions are met** and we can assume **the model to be a g
 
 ### b) Give The Model equation.
 
+The quadratic model equation is given by:
+
+$$
+GDP = (-434.90) + 0.538*Hours + (-0.00015)*Hours^2
+$$
 
 ### c) Based on The Model equation in b), what is the average number of work hours per person that would maximize GDP per hour?
+
+To get the average number of work hours per person that would maximize GDP per hour, we would use the *vertex of parabola* equation, which is given by:
+
+$$
+vertex = -b/2a
+$$
+Here,
+
+a = coefficient of quadratic term (hours^2) in quadratic model(i.e, **-0.00015**), and
+
+b = coefficient of linear term (hours) in quadratic model (i.e, **0.538**)
+
+Let's insert the value in the formula and we get:
+
+```{r}
+vertex_of_parabola <- (-0.538) / (2*(-0.00015))
+print(vertex_of_parabola)
+```
+
+Hence, the average number of work hours per person is **1793.33** that would maximize GDP per hour.
 
 
 ### d) Jay currently works 1992 hours a year. As mentioned, he wants to ask his employer for a four-day work week. Would your analysis convince an employer to move their employees to a four-day work week? Explain your process. If not, is there still a way for Jay to work less than he currently is and still make the same amount of money? What type of compromise could be offerred?
