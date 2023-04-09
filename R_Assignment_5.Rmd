@@ -233,7 +233,7 @@ Here, we can see that the pair, that is, Friday and News ("Day" and "Section" re
 
 Need to check this answer
 
-Seeing the Interaction Plot in part-c of this question, it can be seen that maximum inquiries appear on Fridays which suggests that the company shall start charging a premium for posting advertisements on Fridays as advertisers tend to post maximum ads on Fridays. Besides, the inquiries for Sports throughout the week is lower as compared to News and Business sections, thus, the company can lower down the prices for Sports Section so as to attract more advertisers and make profits.
+Based on the Interaction Plot shown in part-c of this question, it is evident that the highest number of inquiries are observed on Fridays. This finding suggests that the company should consider charging a premium for posting advertisements on Fridays as advertisers tend to post the maximum number of ads on this day. Additionally, the inquiries for the Sports section are comparatively lower than those for the News and Business sections throughout the week. Therefore, the company can lower the prices for the Sports section to attract more advertisers and increase profits.
 
 
 \newpage
