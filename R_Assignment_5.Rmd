@@ -231,7 +231,7 @@ Here, we can see that the pair, that is, Friday and News ("Day" and "Section" re
 
 ### e) The newspaper currently charges the same amount per ad for any day and any section in the newspaper. Assuming you work for the paper, do you have any recommendations for the paper in terms of pricing?
 
-Need to check this 
+Need to check this answer
 
 Seeing the Interaction Plot in part-c of this question, it can be seen that maximum inquiries appear on Fridays which suggests that the company shall start charging a premium for posting advertisements on Fridays as advertisers tend to post maximum ads on Fridays. Besides, the inquiries for Sports throughout the week is lower as compared to News and Business sections, thus, the company can lower down the prices for Sports Section so as to attract more advertisers and make profits.
 
@@ -537,6 +537,15 @@ legend(x = "bottomright"
 
 ### a) Explain why The Model in Q2c) is better than your model in Q2a). There are MANY comparisons to make; to get full marks you must make at least 4.
 
+The model in question-2 (c), that is, *Quadratic Regression Model* is better than our model in question-2 (a), that is, *Linear Regression Model*. Below are the comparisons:
+
+1. **Smaller _p_-value**: As we know, low p-value (typically less than 0.05) indicates that the coefficient is statistically significant and contributes significantly to the model's predictive power. In the case of quadratic regression, the p-value for the quadratic term should be low, indicating that it adds significant value to the model compared to a linear model. In our case, the _p_-value of quadratic regression model is **1.526e-08** and the _p_-value of linear regression model  is **0.002803**. Hence, quadratic regression model has smaller p-value than the linear regression model which depicts a significant model fit.
+
+2. **Higher Adjusted $R^2$**: In general, a quadratic model should have a higher adjusted $R^2$  compared to a linear model, as it can capture more complex relationships between the independent and dependent variables. In question 2, we got adjusted R-squared as **0.5918** in quadratic regression model and **0.1866** in linear regression model. Hence, quadratic regression model has higher Adjusted $R^2$ value than the linear regression model which depicts a better model fit and higher predictive power.
+
+3. **Lower Residual Standard Error _(RSE)_**: In general, a quadratic model should have a lower RSE compared to a linear model, as it can capture more of the variation in the data. As in the above question, we got residual standard error(RSE) as 6.658 and 9.398 in quadratic regression model and linear regression model respectively. Thus, a quadratic model has lower RSE compared to a linear model which depicts that quadratic model has more precise prediction intervals and has more variation in the data.  
+
+4. **Parsimonious Model**: The quadratic regression model is parsimonious, because it includes only the necessary predictor variables. Moreover, it has all the coefficient terms, high adjusted $R^2$ value, smaller _p_-value, and lower Residual Standard Error _(RSE)_. On the other hand, linear regression model has more _p_-value, high Residual Standard Error _(RSE)_, and low adjusted $R^2$ value than quadratic regression model. Hence, quadratic regression model is a better fit model.
 
 ### b) Give The Model equation.
 
@@ -571,4 +580,6 @@ Hence, the average number of work hours per person is **1793.33** that would max
 
 ### d) Jay currently works 1992 hours a year. As mentioned, he wants to ask his employer for a four-day work week. Would your analysis convince an employer to move their employees to a four-day work week? Explain your process. If not, is there still a way for Jay to work less than he currently is and still make the same amount of money? What type of compromise could be offerred?
 
+Need to check this answer
 
+According to The Quadratic Model, as the number of hours worked increases, the GDP per hour also increases, but only up to a certain point. After that point, further increase in the number of hours worked leads to a decrease in GDP per hour due to the saturation of employees and a decline in productivity. The optimal number of hours that an employee should work to maximize GDP per hour is 1793.33, as suggested by the model. However, Jay works 1992 hours annually, which would lead to a negative effect on productivity according to the quadratic model. Therefore, to maximize GDP per hour, an employer should limit an employee's work hours to approximately 34 hours a week or implement a 4-day work week with 8.5 hours of work each day. Alternatively, the employer could offer a more flexible schedule to Jay that allows him to work longer hours on some days and shorter hours on others to align with the optimal number of work hours suggested by the model.
