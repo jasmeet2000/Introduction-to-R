@@ -231,10 +231,7 @@ Here, we can see that the pair, that is, Friday and News ("Day" and "Section" re
 
 ### e) The newspaper currently charges the same amount per ad for any day and any section in the newspaper. Assuming you work for the paper, do you have any recommendations for the paper in terms of pricing?
 
-Need to check this answer
-
-Based on the Interaction Plot shown in part-c of this question, it is evident that the highest number of inquiries are observed on Fridays. This finding suggests that the company should consider charging a premium for posting advertisements on Fridays as advertisers tend to post the maximum number of ads on this day. Additionally, the inquiries for the Sports section are comparatively lower than those for the News and Business sections throughout the week. Therefore, the company can lower the prices for the Sports section to attract more advertisers and increase profits.
-
+A recommendation for the paper in terms of pricing would include increasing the profitability. To gain more profits we can first observe that on Fridays we see more inquiries than any other day. Therefore to gain profits one might consider increasing the prices of advertisements for Fridays. In addition to this, we can also decrease the prices for news section as we observed less inquiries for this section. Decreasing the prices would definitely attract more people toward this section.
 
 \newpage
 # Question 2: A Life of Leisure1 Part I - Model Fitting
@@ -580,6 +577,4 @@ Hence, the average number of work hours per person is **1793.33** that would max
 
 ### d) Jay currently works 1992 hours a year. As mentioned, he wants to ask his employer for a four-day work week. Would your analysis convince an employer to move their employees to a four-day work week? Explain your process. If not, is there still a way for Jay to work less than he currently is and still make the same amount of money? What type of compromise could be offerred?
 
-Need to check this answer
-
-According to The Quadratic Model, as the number of hours worked increases, the GDP per hour also increases, but only up to a certain point. After that point, further increase in the number of hours worked leads to a decrease in GDP per hour due to the saturation of employees and a decline in productivity. The optimal number of hours that an employee should work to maximize GDP per hour is 1793.33, as suggested by the model. However, Jay works 1992 hours annually, which would lead to a negative effect on productivity according to the quadratic model. Therefore, to maximize GDP per hour, an employer should limit an employee's work hours to approximately 34 hours a week or implement a 4-day work week with 8.5 hours of work each day. Alternatively, the employer could offer a more flexible schedule to Jay that allows him to work longer hours on some days and shorter hours on others to align with the optimal number of work hours suggested by the model.
+Through our analysis, we concluded that a person would need to work for an average of 1793.33 hours to maximize the GDP per hour. We have been given that Jay is working currently for 1992 hours which is clearly more than the average number of hours mentioned above. But according to our analysis this would result in decreasing the productivity only. In other words we can say that in order to maximize the GDP per hour, an employee would require to work for 1793.33 hours annually or 34.4 hours weekly. This would mean that in a four day week he would have to work 8.59 hours each day to maintain the optimum level of GDP per hour.
