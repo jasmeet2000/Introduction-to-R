@@ -495,7 +495,7 @@ Now, let's summary the quadratic regression model
 summary(quad_model)
 ```
 
-After looking the assumptions (using diagnostic plots) and the summary statistics of the quadratic regression model, we can say that the model is linear as well as quadratic (linear is done in above part of this question). The intercept, hours and quadratic term (hours^2) is **-4.349e+02**, **5.385e-01** and **-1.517e-04** respectively. Hence, the negative value of quadratic term (hours^2) explain about the effect of hours worked on GDP per hour diminishes as hours worked increase.
+After looking the assumptions (using diagnostic plots) and the summary statistics of the quadratic regression model, we can say that the model is linear as well as quadratic (linear is done in above part of this question). The intercept, hours and quadratic term ($hours^2$) is **-4.349e+02**, **5.385e-01** and **-1.517e-04** respectively. Hence, the negative value of quadratic term ($hours^2$) explain about the effect of hours worked on GDP per hour diminishes as hours worked increase.
 
 ### d) Plot the data and your model from a) and c) all on the same plot. Include a legend.
 
@@ -561,9 +561,9 @@ vertex = -b/2a
 $$
 Here,
 
-a = coefficient of quadratic term (hours^2) in quadratic model(i.e, **-0.00015**), and
+a = coefficient of quadratic term ($hours^2$) in quadratic model(i.e, **-0.00015**), and
 
-b = coefficient of linear term (hours) in quadratic model (i.e, **0.538**)
+b = coefficient of linear term ($hours$) in quadratic model (i.e, **0.538**)
 
 Let's insert the value in the formula and we get:
 
