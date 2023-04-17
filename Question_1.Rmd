@@ -1,0 +1,24 @@
+---
+title: "**Final Exam -- Part 2**"
+author: "Jasmeet Singh Saini - 0758054"
+date: "`r Sys.Date()`"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Murderous Poverty
+
+## The table below shows the output of a linear model annual murders per million (annual_murders_per_mil) from percentage living in poverty (perc_pov) in a random sample of 20 metropolitan areas.
+
+### a. Write the equation of the regression line. Interpret the slope and intercept in context.
+
+### b. What are the hypotheses for evaluating whether the slope of the model predicting annual murder rate from poverty percentage is different than 0?
+
+### c. What are the degrees of freedom of the test statistic?
+
+### d. State the conclusion of the hypothesis test from part (b) in context of the data. What does this say about whether poverty percentage is a useful predictor of annual murder rate?
+
+### e. Calculate a 95% confidence interval for the slope of poverty percentage, and interpret it in context of the data.

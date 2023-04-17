@@ -1,0 +1,66 @@
+---
+title: "**Final Exam -- Part 2**"
+author: "Jasmeet Singh Saini - 0758054"
+date: "`r Sys.Date()`"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Serious Slow-Cook Savant vs. the Purist in Pressure Preparedness
+
+## Instant Pot came on the scene quite a few years ago now with their electronic pressure cooker. Your grandmother, the old fashioned lady that she is, insists that slow cooking is the only way to make stew, curry, and her famous soup. You politely disagree, but she won't acquiesce until you throw down some statistical analysis. At the next family reunion, you and gran both cook the same three recipes; hers in crockpot, yours in this new-fangled electronic gizmo. Each member of your family tries each of the six dishes and decides what their favourite dish of the six is. The results are:
+
+### a. What test should you use if you want to know if recipe and cooking method are dependent?
+
+A **$\chi^2$ test for independence** will be used to know if recipe and cooking method are dependent.
+
+### b. What are the degrees of freedom for the statistic in (a)?
+
+The degrees of freedom of the test statistic associated with $\chi^2$ test for independence is **2**. The $\chi^2$ test for independence is performed in part c of this question.
+
+### c. Now, back to the original question: test if the instant pot is preferred over the slow cooker.
+
+Firstly, create the contingency table:
+
+```{r}
+recipe         <- c("Stew", "Curry", "Soup")
+cooking_method <- c("crockpot", "instantpot")
+count         <- matrix( c(13, 15, 19, 34, 22, 19)
+                          , nrow     = 3
+                          , ncol     = 2
+                          , dimnames = list(recipe, cooking_method))
+count
+```
+
+## Hypothesis
+
+The $H_{0}$ is Null hypothesis and $H_{A}$ is Alternative hypothesis.
+
+$$
+\begin{aligned}
+H_{0}:\ &\text{ Instant pot is not preferred over the slow cooker} \\
+&\qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \text{vs.} \\
+H_{A}:\ &\text{ Instant pot is preferred over the slow cooker}
+\end{aligned}
+$$
+### Test Statistic and _p_-value
+
+Preforming the **$\chi^2$ test*:
+
+```{r}
+chisq.test(count)
+```
+
+Here, we get the test statistic as **4.5191** and *p*-value as **0.1044**. Also, the degrees of freedom of the test statistic associated with $\chi^2$ test for independence is **2**.
+
+
+### Statistical Decision
+
+We **accept** the Null Hypothesis $H_{0}$ as $p$-value is greater than $\alpha$ level of significance.(i.e., *p*-value > 0.05)
+
+### Conclusion
+
+There is enough evidence to support the null hypothesis. Therefore, we conclude that the statement, "Instant pot is not preferred over the slow cooker", is accurate.

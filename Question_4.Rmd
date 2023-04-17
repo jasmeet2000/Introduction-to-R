@@ -1,0 +1,74 @@
+---
+title: "**Final Exam -- Part 2**"
+author: "Jasmeet Singh Saini - 0758054"
+date: "`r Sys.Date()`"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Concerned Coffee Connaisseur
+
+## A pretentious coffee snob that you know loves to extol the virtues of blooming coffee grounds when making a cup of coffee. Your friend says that anyone can tell the difference between a bloomed cup of coffee and an unbloomed cup of coffee. To test this, you enlist 20 of your closest coffee drinking friends. For each friend, you make 2 cups of coffee: 1 bloomed and 1 unbloomed, but keep the brewing process identical otherwise. You randomize the order in which the drinker tries the coffee, and ask them for an "enjoyment" score between 1 and 10, including decimals. The data you collect is in the below table, which can be loaded using the code below the table:
+
+```{r}
+bloomed <- c(9.2, 8, 9.1, 7.7, 8.1, 7.8, 7, 9.2
+             , 8.3, 7, 8.8, 7, 7.4, 8.5, 7.8, 7.1
+             , 6.4, 8, 8.4, 7.4)
+unbloomed <- c(7.9, 7.9, 7.7, 7.9, 7.7, 7.6, 7.8
+               , 7.8, 7.8, 7.9, 7.7, 7.9, 7.8, 7.8
+               , 7.8, 7.8, 7.9, 7.8, 7.8, 7.9)
+
+coffee <- data.frame(participantID = 1:20
+                     , bloomed = bloomed
+                     , unbloomed = unbloomed)
+```
+
+### a. What test should you use to determine if bloomed coffee is more enjoyable? (Be as specific as possible.)
+  
+A **Paired t-test** will be use to determine if bloomed coffee is more enjoyable
+
+### b. What are the degrees of freedom of the test statistic associated with (a)?
+
+The degrees of freedom of the test statistic associated with paired t-test is **19**. The Paired t-test is performed in part c of this question.
+
+### c. Test whether bloomed coffee enjoyment is higher than unbloomed coffee.
+
+## Hypothesis
+
+The $H_{0}$ is Null hypothesis and $H_{A}$ is Alternative hypothesis.
+
+$$
+\begin{aligned}
+H_{0}:\ &\text{ Bloomed coffee is equally enjoyable as unbloomed coffee} \\
+&\qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \text{vs.} \\
+H_{A}:\ &\text{ Bloomed coffee enjoyment is higher than unbloomed coffee}
+\end{aligned}
+$$
+
+### Test Statistic and _p_-value
+
+Preforming the **Paired t-test*:
+
+```{r}
+coffee_t_test <- t.test(coffee$bloomed, coffee$unbloomed, paired = TRUE, alternative = "greater")
+coffee_t_test
+```
+
+Here, we get the test statistic as **0.53213** and *p*-value as **0.3004**. Also, the degrees of freedom of the test statistic associated with paired t-test is **19**.
+
+
+### Statistical Decision
+
+We **accept** the Null Hypothesis $H_{0}$ as $p$-value is greater than $\alpha$ level of significance.(i.e., *p*-value > 0.05)
+
+### Conclusion
+
+There is enough evidence to support the null hypothesis. Therefore, we conclude that the statement, "Bloomed coffee is equally enjoyable as unbloomed coffee", is accurate.
+
+
+### d. Is your friend a pretentious snob, or might there be something to this whole "blooming" thing?
+
+My friend may be a pretentious snob as the result of the paired t-test suggest that "Bloomed coffee is equally enjoyable as unbloomed coffee".
