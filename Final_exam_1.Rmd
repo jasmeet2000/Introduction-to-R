@@ -1,0 +1,158 @@
+---
+title: "**Final Exam-1**"
+author: "Jasmeet Singh Saini - 0758054"
+date: "2023-04-16"
+output: pdf_document
+---
+
+# Question 1
+
+```{r}
+p0 = 0.68
+n = 53
+phat = 50/53 ; phat
+se_ht = sqrt((phat*(1-phat))/n) ; se_ht
+nsim <- 4500
+phat_sim <- numeric(nsim)
+set.seed(123)
+for (i in 1:nsim){
+  cur_samp <- sample(c(0, 1), size = n, replace = TRUE
+                     , prob = c(1-p0, p0))
+  phat_sim[i] <- mean(cur_samp)
+}
+pval_sim <- (length(which(phat_sim > phat)) + 1) / (nsim + 1)
+pval_sim
+me <- qnorm(0.09, lower.tail = FALSE)*se_ht
+me
+```
+
+
+# Question 2
+
+sum(all probability) - 1
+
+
+# Question 3
+
+```{r}
+q3 <- data.frame(name_brand <- c(28, 49, 39, 46, 44, 37, 33, 42),
+                 store_brand <- c(29, 32, 36, 30, 19, 29, 45, 28))
+alpha1 <- 0.96
+ttest1 <- t.test(q3$name_brand, q3$store_brand,
+                 paired = TRUE, conf.level = alpha1)
+ttest1
+```
+
+
+# Question 4
+
+## Part1
+a) 
+= 45 / 69
+
+```{r}
+round(45/69,4)
+```
+
+
+
+b) 30 / 34
+
+```{r}
+round(30/34,4)
+```
+
+
+## Part2
+(1) :
+SOlve : 24+ 4 = 28
+
+(2) 
+30+45=75
+
+(3)  69 
+
+```{r}
+outcomes <- c(rep("alive", 4), rep("dead", 30), rep("alive", 24), rep("dead", 45))
+# outcomes$Total[2]
+```
+
+
+(4) 34
+```{r}
+# outcomes$Total[1]
+```
+
+```{r}
+outcomes <- c(rep("alive", 4), rep("dead", 30), rep("alive", 24), rep("dead", 45))
+# outcome$Total[2]
+
+set.seed(123)
+for(x in 1:10000)
+{
+outcomes_shuffled <- sample(outcomes)
+
+treatment_group <- outcomes_shuffled[1:69]
+control_group <- outcomes_shuffled[70:103]
+
+prop_dead_treatment <- sum(treatment_group == "dead") / length(treatment_group)
+prop_dead_control <- sum(control_group == "dead") / length(control_group)
+
+diff_props <- prop_dead_treatment - prop_dead_control
+}
+
+p_value <- mean(abs(diff_props) >= 0.23)
+```
+
+
+# Question 7
+
+```{r}
+library(boot)
+set.seed(108)
+dat <- c(19.21, 22.01, 19.83, 18.88, 18, 20.5, 22.51, 23.77, 25.91, 20.21, 18.81, 24.14, 17.73, 28.56, 16.24, 26.63, 18.03, 21.61, 19.31, 22.52)
+mean_wrapper <- function(x, index){
+  mean(x[index])
+}
+library(boot)
+bs1 <- boot(dat, statistic = mean_wrapper, R = 1e4)
+se <- sd(bs1$t)
+cl <- 0.96
+t_quantile <- qt(cl, df = 19)
+conf_int <- mean(dat) + c(-1, 1) * t_quantile * se
+se
+conf_int
+```
+
+
+# Question 8
+
+```{r}
+# p_artifacts_in_12_castles <- 1 - p_no_artifacts
+# p_artifacts_outside_12_castles <- 1 - p_artifacts_in_12_castles
+# p_artifacts_outside_12_castles
+# Define parameters
+n <- 9
+p <- 0.25
+p_no_artifacts <-   pbinom(0, size = n, prob = p, lower.tail = FALSE)
+1-p_no_artifacts
+## [1] 0.005688009
+# Probability of Success
+
+pbinom(5-1, n, p, lower.tail = FALSE)
+```
+
+
+
+
+# Question 11
+
+```{r}
+qnorm(0.05/2, lower.tail = FALSE)
+z <- 1.96
+E <- 0.18
+s <- 1
+n <- (z*(s/E))^2
+print(n)
+```
+

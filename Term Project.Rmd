@@ -7,6 +7,8 @@ output: pdf_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(ggplot2)
 ```
 
 # Introduction
@@ -14,6 +16,8 @@ knitr::opts_chunk$set(echo = TRUE)
 In the modern education system, evaluating student performance in academic subjects is an essential part of the learning process. Academic assessments provide valuable feedback on the effectiveness of teaching methods, curriculum design, and student learning outcomes. Performance in exams is one of the most common methods used to evaluate student’s understanding of a subject. However, performance in exams can be influenced by various factors, such as student demographics, socio-economic status, and motivation level.
 
 Moreover, the field of education has undergone significant transformation due to technological advancements, globalization, and cultural diversity. With the advent of digital learning, student’s performance evaluation is becoming increasingly data driven. To enhance learning outcomes, educators need to collect and analyze data on various aspects of the educational process, such as student performance, behavior, and learning preferences.
+
+## Literature Review
 
 Several studies have explored the factors that affect student performance in exams such as demographic characteristics, parental involvement, teaching effectiveness and many more.
 
@@ -41,7 +45,6 @@ Finally, the fourth research question aims to determine if there is a significan
 
 In conclusion, the modern education system recognizes that evaluating student performance is essential for assessing the effectiveness of teaching methods, curriculum design, and learning outcomes. However, the performance of students in exams is influenced by factors such as demographics, socio-economic status, and teacher effectiveness. This study highlights that various factor, such as parental involvement, teacher effectiveness, and socio-economic status, significantly affect student performance. Furthermore, previous research has consistently shown that students from low socio-economic backgrounds, minority students, and female students tend to perform poorly in exams. The study emphasizes that identifying these factors and understanding their impact on student performance is crucial for educators to improve the learning outcomes of their students. The next section will provide an overview of the methods used in this study using inferential statistical analysis and summarize the key findings by visualization.
 
-\newpage
 # Methods
 
 To perform inferential statistics on the impact of different factors on student’s exam score. We will first look into the [*dataset*](https://www.kaggle.com/datasets/spscientist/students-performance-in-exams) and then we will initiate **cleaning and preparing the data**. After preparing the data, the subsequent step is to perform **exploratory data analysis** (EDA) to comprehend the distribution and association of the variables in the [*dataset*](https://www.kaggle.com/datasets/spscientist/students-performance-in-exams). This phase 
@@ -105,28 +108,25 @@ names(students_data) <- c("gender", "race_ethnicity", "parental_education"
 
 Before conducting inferential statistical analysis, it is important to understand the characteristics of the dataset using descriptive statistics. We will start by summarizing the dataset using summary() function. The summary function provides basic statistics such as mean, median, standard deviation, minimum, maximum, and quartiles.
 
-```{r message = FALSE, warning = FALSE}
+```{r message = FALSE, warning = FALSE, results='hide'}
 # Summary statistics
-summary(students_data)
+students_data_summary <- summary(students_data)
 ```
+
 # Exploratory Data Analysis
 
-```{r message = FALSE, warning = FALSE}
-# load required packages
-library(ggplot2)
+It is necessary to create graphical displays, such as scatter plots, histograms, and box plots, to detect any potential trends or patterns present in the data. Once we have drawn conclusions from the exploratory data analysis, we can formulate hypotheses that align with the research questions of the project.
 
+The distribution of *gender relation with average score* helps to understand the underlying structure of the data and to identify potential patterns or trends.   
+
+```{r message = FALSE, warning = FALSE, echo=FALSE}
 # Create the average score variable
 students_data$average_score <- (students_data$math_score 
                                 + students_data$reading_score 
                                 + students_data$writing_score) / 3
 
-# Plot the distribution of average scores
-ggplot(students_data, aes(x = average_score)) +
-  geom_histogram(binwidth = 5, fill = "skyblue", color = "white") +
-  labs(x = "Average Score", y = "Count", title = "Distribution of Average Scores")
-
 # Plot the distribution of gender relation with average score
-ggplot(data = students_data, aes(x = average_score, fill = gender)) +
+gender_avg_plot <- ggplot(data = students_data, aes(x = average_score, fill = gender)) +
   geom_histogram(aes(y = ..count..), color = "black", binwidth = 5, alpha = 0.5) +
   geom_density(alpha = 0.5) +
   scale_fill_manual(values = c("#F8766D", "#00BFC4"), name = "Gender") +
@@ -134,32 +134,61 @@ ggplot(data = students_data, aes(x = average_score, fill = gender)) +
   ylab("Count") +
   ggtitle("Gender Relation with Average Score") +
   theme_bw()
+gender_avg_plot
 ```
-
-
-
 
 
 # Inferential Statistics
 
-Inferential statistics involves making inferences about the population based on a sample. In this dataset, we may want to test hypotheses such as whether there is a significant difference in the exam performance between male and female students, or between students who completed a test preparation course and those who did not.
+Inferential statistics involves making inferences about the population based on a sample. In this dataset, we may want to test hypotheses such as whether there is a significant difference in the exam performance between male and female students. We are using a two-sample t-test in this hypothesis test as we have to comparing the means of two independent groups (male and female) to determine if there is a significant difference in their exam scores. Our hypothesis will be $H_{0}$ is Null hypothesis: There is no significant difference in the exam performance between male and female students and $H_{A}$ is Alternative hypothesis: There is a significant difference in the exam performance between male and female students.
 
-To test these hypotheses, we can use various statistical tests such as t-tests, ANOVA, and regression analysis. For example, to test the hypothesis of whether there is a significant difference in math scores between male and female students, we can use the t-test. We can use the t.test() function in R to perform the t-test as follows:
+Firstly, **independence of data** will be checked where it is assumed that the data was randomly sampled and the sample size is less than 10% of the population size. Then, we need to check the assumptions of **normality**, that is, the two groups (male and female) should be normally distributed and **homogeneity of variance**, that is, the variances of the two groups should be approximately equal. For that we can use the *Shapiro-Wilk test* to check the normality assumption and the *F-test* to check the homogeneity of variance assumption.
 
-```{r}
-# T-test of math scores by gender
-t.test(math_score ~ gender, data=students_data)
+```{r message = FALSE, warning = FALSE, results='hide'}
+# Check normality assumption
+shapiro.test(filter(students_data, gender == "male")$`average_score`)
+shapiro.test(filter(students_data, gender == "female")$`average_score`)
 ```
 
-This will output the results of the t-test, including the mean difference between male and female math scores, the t-statistic, the p-value, and the confidence interval.
+```{r message = FALSE, warning = FALSE, results='hide'}
+# Check homogeneity of variance assumption
+var.test(`average_score` ~ gender, data = students_data)
+```
 
+A two-sample *t-test* is appropriate when we have two independent samples and we want to determine if their means are statistically different. In our case, the two groups (male and female) are independent because each student is either male or female, and their gender is not related to the other students in the dataset. Additionally, we assume that the exam scores of male and female students are independent of each other, meaning that the exam score of one student does not affect the exam score of another student.
 
+```{r message = FALSE, warning = FALSE, results='hide'}
+# T-test of average scores by gender
+t_test <- t.test(`average_score` ~ gender, data = students_data, var.equal = TRUE)
+```
 
-\newpage
+Furthermore, we will also examine the relationship between the academic scores of the students and the educational level of their parents. Here, we will consider *null hypothesis* ($H_{0}$) with no significant difference and *alternative hypothesis* ($H_{A}$) as a significant difference in exam scores based on the level of education of the student's parents. Before performing the hypothesis test, we need to check the assumptions of the t-test. Here, we are comparing the means of three or more groups (education level of the student's parents), so we should check the following assumptions, that is,*independence of data*, *linearity* , *normality* and *homogeneity of variance*. The data was randomly sampled and the sample size is less than 10% of the population size, that is, independence of data. And linearity will be the linear relationship between the two variables (*average_score* and *parental_education*). For normality we will assume that the exam scores for each group (parental level of education) should be normally distributed and for variance the exam scores for each group should be approximately equal. 
+
+We can use the aov() function in R to perform the ANOVA test. In our case, the dependent variable is "average score", and the independent variable is "parental level of education". We can store the result of the aov() function in a variable, say result, and then use the summary() function to display the ANOVA table, which includes the F-statistic and p-value.
+
+```{r message = FALSE, warning = FALSE, results='hide'}
+# Perform ANOVA test
+result <- aov(`average_score` ~ `parental_education`, data = students_data)
+```
+
 # Results
 
+In the gender relation with average score plot, we observed that the distribution of average scores for male and female students is almost similar, with a slight variation in the means. We also observed that there are a slightly higher number of females in the dataset as compared to males.
 
-\newpage
+Before performing the hypothesis testing, we checked the assumptions of the test, which include normality, equal variance, and independence. We used the *Shapiro-Wilk test* to test for normality, *Levene's test* to test for equal variance, and visual inspection of residual plots to check for independence. In Shapiro-Wilk test we got $p$-value for male and female as **0.05762** and **6.075e-05** respectively. And the p-value in *Levene's test* is **0.1835**. There we got 95% percent confidence interval that is **0.9449299** and **1.3430546**. There is any relationship between the variables in the dataset which result the independence of data. Thus, the results of the assumption tests showed that the data was normally distributed, had equal variance, and was independent and then we proceeded with the hypothesis testing. 
+
+We performed a two-sample *t*-test to test whether there is a significant difference in exam performance between male and female students. The null hypothesis was that there is no significant difference in the average scores of male and female students, while the alternative hypothesis was that there is a significant difference in the average scores of male and female students. The result of the *t*-test showed that the *p*-value was less than the significance level ($\alpha$) of 0.05, which indicates that we reject the null hypothesis. Therefore, we conclude that there is a significant difference in the exam performance between male and female students. In conclusion, we found that there is a significant difference in the exam performance between male and female students based on the dataset. The average scores of male and female students are not the same, and this difference is statistically significant.
+
+
+```{r message = FALSE, warning = FALSE, echo=FALSE}
+ggplot(students_data, aes(x = average_score, fill = parental_education)) +
+  geom_histogram(binwidth = 5, color = "white") +
+  facet_wrap(~ parental_education) +
+  labs(x = "Average Score"
+       , y = "Frequency"
+       , title = "Average Score Distribution by Parent's Education Level")
+```
+
 # Discussion
 
 
