@@ -86,8 +86,6 @@ The [*dataset*](https://www.kaggle.com/datasets/spscientist/students-performance
 **Table-1**: About the [student's performance in exam's dataset](https://www.kaggle.com/datasets/spscientist/students-performance-in-exams)
 
 
-
-
 ## Data Collection and Cleaning
 
 We will begin by importing the dataset into R using the read.csv() function. We will then check for any missing values in the dataset and remove them using the na.omit() function. We will also check for any duplicates in the dataset and remove them using the unique() function. Finally, we will rename the variables to make them more descriptive using the names() function.
@@ -95,12 +93,9 @@ We will begin by importing the dataset into R using the read.csv() function. We 
 ```{r message = FALSE, warning = FALSE}
 # Importing the dataset
 students_data <- read.csv("StudentsPerformance.csv")
-# Checking the data frame
-# str(students_data)
 
 # Checking for missing values
 students_data <- na.omit(students_data)
-
 # Checking for duplicates
 students_data <- unique(students_data)
 
@@ -113,11 +108,10 @@ names(students_data) <- c("gender", "race_ethnicity", "parental_education"
 Before conducting inferential statistical analysis, it is important to understand the characteristics of the dataset using descriptive statistics. We will start by summarizing the dataset using summary() function. The summary function provides basic statistics such as mean, median, standard deviation, minimum, maximum, and quartiles.
 
 ```{r message = FALSE, warning = FALSE, results='hide'}
-# Summary statistics
-students_data_summary <- summary(students_data)
+students_data_summary <- summary(students_data)   # Summary statistics
 ```
 
-# Exploratory Data Analysis
+## Exploratory Data Analysis
 
 It is necessary to create graphical displays, such as scatter plots, histograms, and box plots, to detect any potential trends or patterns present in the data. Once we have drawn conclusions from the exploratory data analysis, we can formulate hypotheses that align with the research questions of the project.
 
@@ -138,13 +132,29 @@ gender_avg_plot <- ggplot(data = students_data, aes(x = average_score, fill = ge
   ylab("Count") +
   ggtitle("Gender Relation with Average Score") +
   theme_bw()
+# Show the plot
 gender_avg_plot
 ```
 
 **Figure-1**: *Visualization* of the [male and female's relationship between Average Score](https://www.kaggle.com/code/hitman69/students-performance-eda-and-visualization/notebook)
 
+```{r message = FALSE, warning = FALSE}
+# Create the average score variable
+students_data$average_score <- (students_data$math_score 
+                                + students_data$reading_score 
+                                + students_data$writing_score) / 3
+# Plot the distribution of gender relation with average score
+gender_avg_plot <- ggplot(data = students_data, aes(x = average_score, fill = gender)) +
+  geom_histogram(aes(y = ..count..), color = "black", binwidth = 5, alpha = 0.5) +
+  geom_density(alpha = 0.5) +
+  scale_fill_manual(values = c("#F8766D", "#00BFC4"), name = "Gender") +
+  xlab("Average Score") +
+  ylab("Count") +
+  ggtitle("Gender Relation with Average Score") +
+  theme_bw()
+```
 
-# Inferential Statistics
+## Inferential Statistics
 
 Inferential statistics involves making inferences about the population based on a sample. In this dataset, we may want to test hypotheses such as whether there is a significant difference in exam performance between male and female students. We are using a two-sample t-test in this hypothesis test as we have to compare the means of two independent groups (male and female) to determine if there is a significant difference in their exam scores. Our hypothesis will be $H_{0}$ is the Null hypothesis: There is no significant difference in the exam performance between male and female students and $H_{A}$ is the Alternative hypothesis: There is a significant difference in the exam performance between male and female students.
 
@@ -239,7 +249,7 @@ ggplot(students_data, aes(x = average_score, fill = parental_education)) +
 
 Moreover, the histogram created between the average score of students, and the frequency of scores falling within a particular range explains the distribution of average scores of students based on the level of education of their parents (see **Figure-4**). The plot is divided into six facets, one for each level of parental education. Each facet has a separate histogram that shows the distribution of scores for that particular group. The plot visualizes that the students whose parents have a higher level of education tend to have higher average scores. This is especially evident in the "Master's Degree" and "Bachelor's Degree" subplots, where the bars are *skewed* towards the higher end of the range. On the other hand, students whose parents have a lower level of education, such as "High School" or "Some High School", tend to have lower average scores. This is evident in the shape of the bars, which are *skewed* towards the lower end of the range in these subplots. Overall, the plot suggests a **strong correlation** between parental education level and student performance on exams.
 
-
+\newpage
 # Discussion
 
 The research discusses the factors that affect student performance in academic exams, including demographic characteristics, parental involvement, and teaching effectiveness. The introduction highlights the significance of academic assessments in evaluating the effectiveness of teaching methods and curriculum design. The literature review section provides a comprehensive analysis of the research studies conducted on demographic factors, including gender, race/ethnicity, socio-economic status, and parental education level. The section explains that these factors have a significant impact on academic achievement. Additionally, it provides insights into the positive impact of parental involvement on academic success. The research shows that teacher's effectiveness is a crucial factor in student's performance, and effective teaching practices lead to improved learning outcomes.
