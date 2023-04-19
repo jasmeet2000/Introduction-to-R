@@ -128,16 +128,10 @@ conf_int
 # Question 8
 
 ```{r}
-# p_artifacts_in_12_castles <- 1 - p_no_artifacts
-# p_artifacts_outside_12_castles <- 1 - p_artifacts_in_12_castles
-# p_artifacts_outside_12_castles
-# Define parameters
 n <- 9
 p <- 0.25
 p_no_artifacts <-   pbinom(0, size = n, prob = p, lower.tail = FALSE)
 1-p_no_artifacts
-## [1] 0.005688009
-# Probability of Success
 
 pbinom(5-1, n, p, lower.tail = FALSE)
 ```

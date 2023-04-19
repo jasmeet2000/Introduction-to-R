@@ -47,13 +47,13 @@ In conclusion, the modern education system recognizes that evaluating student pe
 
 # Methods
 
-To perform inferential statistics on the impact of different factors on student’s exam score. We will first look into the [*dataset*](https://www.kaggle.com/datasets/spscientist/students-performance-in-exams) and then we will initiate **cleaning and preparing the data**. After preparing the data, the subsequent step is to perform **exploratory data analysis** (EDA) to comprehend the distribution and association of the variables in the [*dataset*](https://www.kaggle.com/datasets/spscientist/students-performance-in-exams). This phase 
+To perform inferential statistics on the impact of different factors on student’s exam scores We will first look into the [*dataset*](https://www.kaggle.com/datasets/spscientist/students-performance-in-exams) and then we will initiate **cleaning and preparing the data**. After preparing the data, the subsequent step is to perform **exploratory data analysis** (EDA) to comprehend the distribution and association of the variables in the [*dataset*](https://www.kaggle.com/datasets/spscientist/students-performance-in-exams). This phase 
 entails generating visual representations, such as scatter plots, histograms, and box plots, to recognize any trends or patterns in the data. Then after drawing insights from the exploratory data analysis, we can develop **hypotheses** that 
-correspond to the research inquiries of the project. After developing hypotheses, we will look for certain **assumptions** like independence of data, randomly sampled data, normality, variance, and linearity. Then the pre-final step is to performing **inferential statistics** to test the hypotheses. This procedure involves executing the selected statistical tests and analyzing the outcomes.    
+correspond to the research inquiries of the project. After developing hypotheses, we will look for certain **assumptions** like the  independence of data, randomly sampled data, normality, variance, and linearity. Then the pre-final step is to perform **inferential statistics** to test the hypotheses. This procedure involves executing the selected statistical tests and analyzing the outcomes.    
 
 ## Data Description
 
-The [**Student Performance in Exams dataset**](https://www.kaggle.com/datasets/spscientist/students-performance-in-exams) is a collection of data on student performance in various subjects. The variables in the dataset are:
+The [**Student Performance in Exams dataset**](https://www.kaggle.com/datasets/spscientist/students-performance-in-exams) is a collection of data on student performance in various subjects (see **Table-1**). The variables in the dataset are:
 
   1. **Gender**: The student's gender, either "male" or "female".
   
@@ -83,6 +83,12 @@ The [*dataset*](https://www.kaggle.com/datasets/spscientist/students-performance
 |Reading Score|Numeric        | 0 - 100            |The student's score on the reading exam	                           |
 |Writing Score|Numeric        | 0 - 100            |The student's score on the writing exam 	                         |
 |Parental Level of Education|Categorical|Types of School| Student's parental level of education, that is, High School, Some College, Associate's Degree, Bachelor's Degree, Master's Degree|
+
+
+**Table-1**: About the [student's performance in exam's dataset](https://www.kaggle.com/datasets/spscientist/students-performance-in-exams)
+
+
+
 
 ## Data Collection and Cleaning
 
@@ -117,7 +123,7 @@ students_data_summary <- summary(students_data)
 
 It is necessary to create graphical displays, such as scatter plots, histograms, and box plots, to detect any potential trends or patterns present in the data. Once we have drawn conclusions from the exploratory data analysis, we can formulate hypotheses that align with the research questions of the project.
 
-The distribution of *gender relation with average score* helps to understand the underlying structure of the data and to identify potential patterns or trends.   
+The distribution of *gender relation with average score* helps to understand the underlying structure of the data and to identify potential patterns or trends (see **Figure-1**).   
 
 ```{r message = FALSE, warning = FALSE, echo=FALSE}
 # Create the average score variable
@@ -137,23 +143,47 @@ gender_avg_plot <- ggplot(data = students_data, aes(x = average_score, fill = ge
 gender_avg_plot
 ```
 
+**Figure-1**: *Visualization* of the [male and female's relationship between Average Score](https://www.kaggle.com/code/hitman69/students-performance-eda-and-visualization/notebook)
+
 
 # Inferential Statistics
 
-Inferential statistics involves making inferences about the population based on a sample. In this dataset, we may want to test hypotheses such as whether there is a significant difference in the exam performance between male and female students. We are using a two-sample t-test in this hypothesis test as we have to comparing the means of two independent groups (male and female) to determine if there is a significant difference in their exam scores. Our hypothesis will be $H_{0}$ is Null hypothesis: There is no significant difference in the exam performance between male and female students and $H_{A}$ is Alternative hypothesis: There is a significant difference in the exam performance between male and female students.
+Inferential statistics involves making inferences about the population based on a sample. In this dataset, we may want to test hypotheses such as whether there is a significant difference in exam performance between male and female students. We are using a two-sample t-test in this hypothesis test as we have to compare the means of two independent groups (male and female) to determine if there is a significant difference in their exam scores. Our hypothesis will be $H_{0}$ is the Null hypothesis: There is no significant difference in the exam performance between male and female students and $H_{A}$ is the Alternative hypothesis: There is a significant difference in the exam performance between male and female students.
 
-Firstly, **independence of data** will be checked where it is assumed that the data was randomly sampled and the sample size is less than 10% of the population size. Then, we need to check the assumptions of **normality**, that is, the two groups (male and female) should be normally distributed and **homogeneity of variance**, that is, the variances of the two groups should be approximately equal. For that we can use the *Shapiro-Wilk test* to check the normality assumption and the *F-test* to check the homogeneity of variance assumption.
+Firstly, the *independence of data* will be checked where it is assumed that the data were randomly sampled and the sample size is less than 10% of the population size. Then, we need to check the assumptions of *normality* (see **Figure-2**), that is, the two groups (male and female) should be normally distributed and *homogeneity of variance* (see **Figure-3**), that is, the variances of the two groups should be approximately equal. For that, we can use the *Shapiro-Wilk test* to check the normality assumption and the *F-test* to check the homogeneity of variance assumption.
 
-```{r message = FALSE, warning = FALSE, results='hide'}
-# Check normality assumption
+
+```{r fig.height = 4, fig.width = 6, fig.align = "center", message = FALSE, warning = FALSE}
+par(mfrow=c(1,2))
+hist(students_data$average_score, main = "Distribution of Average\n Score across Gender"
+     , xlab = "Control", col = "lightblue")
+qqnorm(students_data$average_score, pch = 1, frame = FALSE)
+qqline(students_data$average_score, col = "blue", lwd = 2)
+```
+**Figure-2**: Checking the assumption of [Average Score across gender using **histogram** and **Q-Q Plot**](https://whitlockschluter3e.zoology.ubc.ca/Tutorials%20using%20R/R_tutorial_Normal_and_sample_means.html)
+
+```{r message = FALSE, warning = FALSE}
+# Shapiro-Wilk's test,
+# To check whether or not a sample fits a normal distribution
 shapiro.test(filter(students_data, gender == "male")$`average_score`)
 shapiro.test(filter(students_data, gender == "female")$`average_score`)
 ```
 
-```{r message = FALSE, warning = FALSE, results='hide'}
+
+```{r message = FALSE, warning = FALSE, fig.height = 3, fig.width = 4, fig.align = "center"}
+# To check variance using boxplot
+par(mar = c(3, 3, 3, 3))
+boxplot(students_data$average_score
+        , main = "Variability across \nthe Average Score of Gender"
+        , col = "lightblue")
+```
+**Figure-3**: Checking the assumption of [variability across the Average Score of Gender using **boxplot**](https://www.datamentor.io/r-programming/box-plot/)
+
+```{r message = FALSE, warning = FALSE}
 # Check homogeneity of variance assumption
 var.test(`average_score` ~ gender, data = students_data)
 ```
+
 
 A two-sample *t-test* is appropriate when we have two independent samples and we want to determine if their means are statistically different. In our case, the two groups (male and female) are independent because each student is either male or female, and their gender is not related to the other students in the dataset. Additionally, we assume that the exam scores of male and female students are independent of each other, meaning that the exam score of one student does not affect the exam score of another student.
 
@@ -162,23 +192,41 @@ A two-sample *t-test* is appropriate when we have two independent samples and we
 t_test <- t.test(`average_score` ~ gender, data = students_data, var.equal = TRUE)
 ```
 
-Furthermore, we will also examine the relationship between the academic scores of the students and the educational level of their parents. Here, we will consider *null hypothesis* ($H_{0}$) with no significant difference and *alternative hypothesis* ($H_{A}$) as a significant difference in exam scores based on the level of education of the student's parents. Before performing the hypothesis test, we need to check the assumptions of the t-test. Here, we are comparing the means of three or more groups (education level of the student's parents), so we should check the following assumptions, that is,*independence of data*, *linearity* , *normality* and *homogeneity of variance*. The data was randomly sampled and the sample size is less than 10% of the population size, that is, independence of data. And linearity will be the linear relationship between the two variables (*average_score* and *parental_education*). For normality we will assume that the exam scores for each group (parental level of education) should be normally distributed and for variance the exam scores for each group should be approximately equal. 
+Furthermore, we will also examine the relationship between the academic scores of the students and the educational level of their parents. Here, we will consider *null hypothesis* ($H_{0}$) with no significant difference and *alternative hypothesis* ($H_{A}$) as a significant difference in exam scores based on the level of education of the student's parents. 
 
-We can use the aov() function in R to perform the ANOVA test. In our case, the dependent variable is "average score", and the independent variable is "parental level of education". We can store the result of the aov() function in a variable, say result, and then use the summary() function to display the ANOVA table, which includes the F-statistic and p-value.
+Before performing the hypothesis test, we need to check the assumptions of the **ANOVA test**. Here, we are comparing the means of three or more groups (education level of the student's parents), so we should check the following assumptions, that is, *independence of data*, *linearity* , *normality*  (see **Figure-2**) and *homogeneity of variance* (see **Figure-3**). *Linearity* will be the linear relationship between the two variables (*average_score* and *parental_education*) and it will be check using "*Residuals* vs *x-values*" plot.
 
 ```{r message = FALSE, warning = FALSE, results='hide'}
 # Perform ANOVA test
-result <- aov(`average_score` ~ `parental_education`, data = students_data)
+parental_education_aov <- aov(`average_score` ~ `parental_education`
+                              , data = students_data)
 ```
+
+Here, we can use the aov() function in R to perform the ANOVA test. In our case, the dependent variable is "average score", and the independent variable is "parental level of education". It will store the result of the aov() function in a variable, say *parental_education_aov*, and then use the summary() function to display the ANOVA table, which includes the F-statistic and p-value in result section.
 
 # Results
 
-In the gender relation with average score plot, we observed that the distribution of average scores for male and female students is almost similar, with a slight variation in the means. We also observed that there are a slightly higher number of females in the dataset as compared to males.
+The results of the study indicate that the gender relation with average score plot, we observed that the distribution of the average scores for male and female students is almost similar, with a slight variation in the means. We also observed that there are a slightly higher number of females in the dataset as compared to males.
 
-Before performing the hypothesis testing, we checked the assumptions of the test, which include normality, equal variance, and independence. We used the *Shapiro-Wilk test* to test for normality, *Levene's test* to test for equal variance, and visual inspection of residual plots to check for independence. In Shapiro-Wilk test we got $p$-value for male and female as **0.05762** and **6.075e-05** respectively. And the p-value in *Levene's test* is **0.1835**. There we got 95% percent confidence interval that is **0.9449299** and **1.3430546**. There is any relationship between the variables in the dataset which result the independence of data. Thus, the results of the assumption tests showed that the data was normally distributed, had equal variance, and was independent and then we proceeded with the hypothesis testing. 
+Before performing the hypothesis testing, we checked the assumptions of the test, which include normality, equal variance, and independence. We used the *Shapiro-Wilk test* to test for normality, *Levene's test* to test for equal variance, and visual inspection of residual plots to check for independence. In the Shapiro-Wilk test, we got the $p$-value for males and females as **0.05762** and **6.075e-05** respectively. And the p-value in *Levene's test* is **0.1835**. There we got a 95% percent confidence interval that is **0.9449299** and **1.3430546**. There is any relationship between the variables in the dataset which result in the independence of data. Thus, we got the assumption tests showed that the data were normally distributed, had equal variance, and was independent and then we proceeded with the hypothesis testing. 
 
-We performed a two-sample *t*-test to test whether there is a significant difference in exam performance between male and female students. The null hypothesis was that there is no significant difference in the average scores of male and female students, while the alternative hypothesis was that there is a significant difference in the average scores of male and female students. The result of the *t*-test showed that the *p*-value was less than the significance level ($\alpha$) of 0.05, which indicates that we reject the null hypothesis. Therefore, we conclude that there is a significant difference in the exam performance between male and female students. In conclusion, we found that there is a significant difference in the exam performance between male and female students based on the dataset. The average scores of male and female students are not the same, and this difference is statistically significant.
+```{r message = FALSE, warning = FALSE}
+print(t_test)
+```
 
+
+We performed a **Two Sample _t_-test** to test whether there is a significant difference in exam performance between male and female students. The result of the *t*-test showed that the *p*-value is **3.312e-05** and it was found to be less than the significance level ($\alpha$) of **0.05**, which indicates that we failed to accept the null hypothesis. Therefore, we conclude that there is a significant difference in exam performance between male and female students. In conclusion, we found that there is a significant difference in exam performance between male and female students based on the test summary. 
+
+Also, the sample means for females are **69.56950** and the sample mean for males is **65.83748**. The 95% confidence interval for the difference in means between the two groups is **1.975745** to **5.488286**. These sample means to provide an estimate of the population means for the two groups, which can be used to compare the average exam scores between male and female students. The difference in the sample means of the two groups suggests that there may be a significant difference in the exam performance between male and female students, which is further supported by the *p*-value obtained from the two-sample *t*-test. Thus, it was found that the average scores of male and female students are not the same, and this difference is statistically significant. The *t*-test yielded a *t*-value of **4.1699** and a *p*-value of __3.312e-05__. The *t*-value indicates the magnitude of the difference between the mean average scores of male and female students. The *p*-value, on the other hand, represents the probability of obtaining the observed difference in mean average scores by chance alone, assuming that the true difference in mean scores between males and females is zero. Hence, this means that the observed difference in mean average scores between male and female students is unlikely to have occurred by chance alone, and is therefore statistically significant.
+
+We also used the **ANOVA test** to check "Whether there is a significant difference in exam scores based on the level of education of the student’s parents". Firstly, we check for the assumptions of Independence, homogeneity of variance, and normality in the data and we got the assumption true, even  for the linearity.
+
+
+```{r message = FALSE, warning = FALSE}
+summary(parental_education_aov)
+```
+
+After checking these assumptions, we can perform the ANOVA test and we got the *p*-value of **4.38e-10**. The *p*-value of the ANOVA test is less than the significance level ($\alpha$) of **0.05**. Therefore, we failed to accept the null hypothesis and conclude that there is a statistically significant difference in exam scores based on the level of education of the student’s parents. The *F* value of **10.75** indicates that the variation between the means of different parental education groups is greater than the variation within the groups. The sum of squares for the parental education group is **10,420**, which indicates the amount of variation between the means of different groups. The mean square for parental education is **2084.1**, which is calculated by dividing the sum of squares for parental education by the degrees of freedom for the parental education group (5). The mean square for residuals is **193.8**, which is calculated by dividing the sum of squares for residuals by the degrees of freedom for residuals, that is, **994**. Furthermore, the effect of parental education on exam scores is statistically significant, as indicated by the F-value. The F-value is the ratio of the variance between groups to the variance within groups. In this case, the F-value is **10.75**, which is greater than the critical value of **2.54** for an $\alpha$, alpha level of 0.05. This means that the effect of parental education on exam scores is statistically significant at the 0.05 level.
 
 ```{r message = FALSE, warning = FALSE, echo=FALSE}
 ggplot(students_data, aes(x = average_score, fill = parental_education)) +
@@ -189,7 +237,31 @@ ggplot(students_data, aes(x = average_score, fill = parental_education)) +
        , title = "Average Score Distribution by Parent's Education Level")
 ```
 
+**Figure-4**: The distribution of [average scores of students based on the level of education of their parent's education level](https://www.kaggle.com/code/hitman69/students-performance-eda-and-visualization/notebook)
+
+Moreover, the histogram created between the average score of students, and the frequency of scores falling within a particular range explains the distribution of average scores of students based on the level of education of their parents (see **Figure-4**). The plot is divided into six facets, one for each level of parental education. Each facet has a separate histogram that shows the distribution of scores for that particular group. The plot visualizes that the students whose parents have a higher level of education tend to have higher average scores. This is especially evident in the "Master's Degree" and "Bachelor's Degree" subplots, where the bars are *skewed* towards the higher end of the range. On the other hand, students whose parents have a lower level of education, such as "High School" or "Some High School", tend to have lower average scores. This is evident in the shape of the bars, which are *skewed* towards the lower end of the range in these subplots. Overall, the plot suggests a **strong correlation** between parental education level and student performance on exams.
+
+
 # Discussion
+
+The research discusses the factors that affect student performance in academic exams, including demographic characteristics, parental involvement, and teaching effectiveness. The introduction highlights the significance of academic assessments in evaluating the effectiveness of teaching methods and curriculum design. The literature review section provides a comprehensive analysis of the research studies conducted on demographic factors, including gender, race/ethnicity, socio-economic status, and parental education level. The section explains that these factors have a significant impact on academic achievement. Additionally, it provides insights into the positive impact of parental involvement on academic success. The research shows that teacher's effectiveness is a crucial factor in student's performance, and effective teaching practices lead to improved learning outcomes.
+
+The literature review also discusses the role of socio-economic status (SES) in determining student performance in exams. Various studies have demonstrated that students from low SES backgrounds tend to perform poorly compared to those from high SES backgrounds. The research highlights that students from low SES backgrounds often face financial constraints and inadequate educational resources that limit their academic performance. Moreover, the section discusses the impact of race and gender on student performance. Research conducted by *Reardon et al.* (2019) found that the black-white achievement gap in standardized test scores in the US has remained relatively constant for the past 50 years, despite various efforts to reduce it. Gender differences have also been observed in student performance in exams, with males performing better in subjects such as math.
+
+In the context of my background research, the given text aligns with my understanding of the factors that affect student performance in academic exams. The studies discussed in the literature review section are consistent with my research findings that demographic characteristics, parental involvement, and teaching effectiveness significantly impact academic achievement. Furthermore, the research provides insights into the positive impact of effective teaching practices, such as providing timely feedback, using active learning strategies, and setting high expectations for students, on student learning outcomes. The research studies discussed in the given text provide evidence to support the notion that socio-economic status plays a significant role in determining student performance in exams. My background research has also highlighted that students from low SES backgrounds often face challenges that affect their academic performance. For example, my hypothesis testing provides a result about the low marks for some students (i.e., male and female), and the reason could be their parents were not financially stable. Therefore, it is crucial to provide students from low SES backgrounds with the necessary resources to improve their academic outcomes. The discussion on the impact of race and gender on student performance in exams is consistent with my background research. The studies discussed in the literature review provide evidence of the existence of racial and gender achievement gaps in academic exams. As I had found in my research, the racial and gender achievement gaps often result from historical and ongoing discrimination, limited access to educational resources, and negative stereotypes.
+
+
+The *methodology* for performing inferential statistics on a dataset of student performance in exams contains demographic information about the students, such as their gender, race/ethnicity, and parental education level, as well as information about their performance on three exams: math, reading, and writing. The purpose of the analysis is to understand the impact of different factors on student's exam scores. The researcher provides a detailed description of the data, data cleaning, and exploratory data analysis techniques. It then discusses the inferential statistics procedure, including hypothesis testing, and the assumptions that need to be checked before conducting a two-sample *t*-test. The analysis aims to investigate whether there is a significant difference in the exam performance between male and female students. 
+
+Also, the finding that there is a significant difference in exam performance between male and female students is consistent with previous research on gender differences in academic performance. Research has shown that females tend to perform better in academics, and the current study supports this finding by indicating that females have a slightly higher mean score than males.
+The result that there is a significant difference in exam scores based on the level of education of the student’s parents is also consistent with previous research on the relationship between parental education and academic performance. Studies have shown that students with highly educated parents tend to perform better academically than those with less-educated parents. The current study supports this solutions by showing that students whose parents have a higher level of education tend to have higher average scores.
+
+The background research also indicates that the analysis of student performance data is essential for identifying factors that contribute to academic success. This type of analysis can help educators develop targeted interventions to improve student outcomes, particularly for students who are under performing. Researchers have used various statistical techniques to analyze student performance data, such as multiple regression analysis, logistic regression analysis, and structural equation modeling. These techniques can help identify the factors that have the most significant impact on student performance and develop predictive models to forecast future academic success.
+
+The researcher text also highlights the *limitations* of student performance evaluation through exams. While performance in exams is an essential method to evaluate student's understanding of a subject, it does not consider other essential skills such as critical thinking, problem-solving, and creativity. Therefore, educators must consider other methods of evaluation, such as project-based assessments and collaborative assignments, to assess these skills adequately. Another limitation of the text is that it mainly focuses on factors that affect student performance in exams, such as demographic characteristics, parental involvement, and teacher effectiveness. However, other factors such as learning disabilities, mental health issues, and cultural background can also affect student performance. Therefore, it is essential to consider these factors when evaluating student performance in exams. During performing hypotheses test, we found one a limitation of the analysis described in the text is that it only focuses on the impact of a few factors on student exam scores. The analysis does not account for other factors that may impact student performance, such as the quality of teaching, school resources, or socioeconomic status. These factors may play a crucial role in shaping student outcomes and should be considered in any comprehensive analysis of student performance data. Moreover, we found another limitation of the analysis is that it assumes that the data is normally distributed and that the variances of the two groups(i.e., *average_score* and *parental_education*) being compared are approximately equal. This assumption may not hold true in practice, and alternative statistical techniques may be required to account for non-normality or unequal variances.
+
+
+In conclusion, the researcher provides a comprehensive analysis of the factors that affect student performance in academic exams and the methodology for analyzing student performance data and identifies the factors that have the most significant impact on student outcomes. The research studies discussed in the literature review section align with my background research findings, highlighting the importance of demographic characteristics, parental involvement, and teaching effectiveness in determining academic achievement. Furthermore, the discussion on the impact of socio-economic status, race, and gender on student performance provides evidence to support the need for interventions to address the achievement gaps. The findings of this text have significant implications for education policymakers, educators, and parents, emphasizing the need to provide students with the necessary resources and support to improve their academic outcomes. While the analysis also provides valuable insights into the impact of gender on exam scores, it is limited in scope and does not account for other important factors that may contribute to academic success. Researchers and educators must consider these limitations when interpreting the results and designing interventions to improve student outcomes.
 
 
 \newpage
@@ -198,6 +270,8 @@ ggplot(students_data, aes(x = average_score, fill = parental_education)) +
 [*Student Performance in Exams*](https://www.kaggle.com/datasets/spscientist/students-performance-in-exams):  Dataset of Marks secured by the students in various subjects, Kaggle.
 
 [*R Markdown*](https://rmarkdown.rstudio.com/): High quality documents, reports, see "https://rmarkdown.rstudio.com/"
+
+[*Students Performance*](https://www.kaggle.com/code/hitman69/students-performance-eda-and-visualization/notebook): EDA and Visualization
 
 *Sharma, R., & Gupta, N.* (2019). Impact of Demographic Factors on Academic Achievement: A Study of Higher Secondary Students. International Journal of Indian Psychology, 7(4), 1221-1230. 
 
@@ -228,3 +302,5 @@ ggplot(students_data, aes(x = average_score, fill = parental_education)) +
 *Reardon, S. F., Kalogrides, D., Shores, K. A., & Greenberg, E.* (2019). The continuing importance of racial segregation for the black-white achievement gap in US schools. Sociology of Education, 92(4), 306-324. 
 
 *Else-Quest, N. M., Hyde, J. S., & Linn, M. C.* (2010). Cross-national patterns of gender differences in mathematics: A meta-analysis. Psychological Bulletin, 136(1), 103-127.
+
+

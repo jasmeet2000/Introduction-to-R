@@ -15,11 +15,31 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ### a. Is there a clear difference in the average reading and writing scores?
 
+Yes, there is a difference in the average reading and writing scores. Its can been seen from the box plot that the median of writing score is greater than the median of reading score. Thus, there is a difference in mean scores of reading and writing.
+
 ### b. Are the reading and writing scores of each student independent of each other?
+
+No, the reading and writing scores of each student independent of each other. Both the reading as well as the writing are related with each other. Also, if the reading score decreases then their will be changes in the writing score. 
 
 ### c. Create hypotheses appropriate for the following research question: is there an evident difference in the average scores of students in the reading and writing exam?
 
-### d. Is the average of the observed difference in scores (xbar read-write=-0.545) consistent with the distribution of randomized average differences? Explain.
+## Hypothesis
+
+The $H_{0}$ is Null hypothesis and $H_{A}$ is Alternative hypothesis:
+
+$$
+\begin{aligned}
+H_{0}:\ &\text{ There is no significant difference in the average scores of students in the reading and writing exam} \\
+&\qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \text{vs.} \\
+H_{A}:\ &\text{ There is a significant difference in the average scores of students in the reading and writing exam}
+\end{aligned}
+$$
+
+### d. Is the average of the observed difference in scores ($\bar{X}$ read-write=-0.545) consistent with the distribution of randomized average differences? Explain.
+
+Yes, the average of the observed difference in scores ($\bar{X}$ read - write = -0.545) is consistent with the distribution of randomized average differences. The reason for this is that the observed difference, that is, $\bar{X}$ read - write = - 0.545 (red line) fall in the range of randomization distribution.
+
 
 ### e. Do these data provide convincing evidence of a difference between the average scores on the two exams? Estimate the p-value from the randomization test, and conclude the hypothesis test using words like “score on reading test” and “score on writing test.”
 
+In the histogram of “1000 means of randomized differences”, we have observe that the observed difference of -0.545 (i.e., red line) value is near the center and from this we can say that *p*-value will be more than 0.05 as the most of the data is near to center. Thus, we can estimate the p-value from the randomization test which will be more than the level of significance (0.05). Therefore, we fail to reject the null hypothesis and conclude that there is not enough evidence to suggest a difference between the average scores on the reading and writing exams.

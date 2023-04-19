@@ -15,10 +15,62 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ### a. Write the equation of the regression line. Interpret the slope and intercept in context.
 
+The equation of the regression line, that is, annual_murders_per_mil = $\beta_{o}$ + $\beta_{1}$ perc_pov is given by
+
+$$
+\text{ annual murders per million = (-29.90) + (2.56) * poverty percentage} 
+$$
+
+Here,
+
+$\beta_{0}$ = Intercept (i.e., **-29.90**), and
+
+$\beta_{1}$ = Slope of *perc_pov* (i.e., **2.56**)
+
+
 ### b. What are the hypotheses for evaluating whether the slope of the model predicting annual murder rate from poverty percentage is different than 0?
+
+The $H_{0}$ is Null hypothesis and $H_{A}$ is Alternative hypothesis.
+
+$$
+\begin{aligned}
+H_{0}:\ &\text{ Slope of the linear model is zero} \\
+&\qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \text{vs.} \\
+H_{A}:\ &\text{ Slope of the linear model is not zero}
+\end{aligned}
+$$
 
 ### c. What are the degrees of freedom of the test statistic?
 
+The degrees of freedom of the test statistic for evaluating the slope of the regression line is calculated as:
+
+```{r}
+n <- 20
+df <- n - 2
+df
+```
+
+where, n is the number of observations in the sample.
+
+The degrees of freedom of the test statistic is **18**.
+
 ### d. State the conclusion of the hypothesis test from part (b) in context of the data. What does this say about whether poverty percentage is a useful predictor of annual murder rate?
 
+In the test performed, the *p*-value is **<0.0001**. And we are going to reject the null hypotheses as our *p*-value is less than $alpha$, level of significance. Hence, we can say that there is a significant relationship between murder and percentage of poverty.
+
+The percentage of people living in poverty is a valuable predictor of the annual murder rate. Specifically, for each one percent increase in poverty percentage, we  can anticipate an increase in the annual murder rate by 2.56 murders per one million.
+
+
 ### e. Calculate a 95% confidence interval for the slope of poverty percentage, and interpret it in context of the data.
+
+In the test performed, we have given the value of standard error as 0.39 and estimate as 2.56. A 95% confidence interval for the slope of poverty percentage is:
+
+```{r}
+std_error  <- 0.39
+test_value <- qt(1 - 0.05/2, 18)
+conf_int   <- 2.56 + c(-1,1) * test_value * std_error
+conf_int
+```
+
+**Interpretation:** This means that we are 95% confident that the true population slope lies between **1.74** and **3.38**. In other words, we can be reasonably certain that for every one percent increase in poverty percentage, the annual murder rate is expected to increase by 2.56 between 1.74 and 3.38 murders per million people.
+

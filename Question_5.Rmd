@@ -59,7 +59,7 @@ Here, we get the test statistic as **4.5191** and *p*-value as **0.1044**. Also,
 
 ### Statistical Decision
 
-We **accept** the Null Hypothesis $H_{0}$ as $p$-value is greater than $\alpha$ level of significance.(i.e., *p*-value > 0.05)
+We **fail to reject null hypothesis** $H_{0}$ as $p$-value is greater than $\alpha$ level of significance.(i.e., *p*-value > 0.05)
 
 ### Conclusion
 
